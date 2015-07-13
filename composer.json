@@ -1,0 +1,22 @@
+{
+    "name": "gromver/yii2-platform-core",
+    "description": "CMF Core",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roman Gayazov",
+            "email": "gromver5@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*",
+        "bariew/yii2-module-migration-controller": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "gromver\\platform\\core\\": ""
+        }
+    }
+}
