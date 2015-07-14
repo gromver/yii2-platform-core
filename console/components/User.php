@@ -7,7 +7,7 @@
  * @version 1.0.0
  */
 
-namespace gromver\platform\basic\console\components;
+namespace gromver\platform\core\console\components;
 
 
 use yii\web\IdentityInterface;

@@ -10,6 +10,7 @@
 namespace gromver\platform\core;
 
 
+use gromver\platform\core\traits\ApplicationLanguageTrait;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -18,9 +19,8 @@ use yii\helpers\ArrayHelper;
  * @author Gayazov Roman <gromver5@gmail.com>
  */
 class Application extends \yii\web\Application {
-    public $language = 'en';
-    public $acceptedLanguages = ['en', 'ru'];
-    public $sourceLanguage = 'en';
+    use ApplicationLanguageTrait;
+
     public $defaultRoute = 'grom/frontend/default/index';
     public $layout = '@gromver/platform/basic/views/layouts/main';
 
@@ -118,21 +118,5 @@ class Application extends \yii\web\Application {
      */
     public function getModulesHash() {
         return $this->_modulesHash;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAcceptedLanguagesList()
-    {
-        return array_combine($this->acceptedLanguages, $this->acceptedLanguages);
-    }
-
-    /**
-     * @return \yii\elasticsearch\Connection
-     */
-    public function getElasticSearch()
-    {
-        return $this->get('elasticsearch');
     }
 }

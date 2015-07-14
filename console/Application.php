@@ -10,6 +10,7 @@
 namespace gromver\platform\core\console;
 
 
+use gromver\platform\core\traits\ApplicationLanguageTrait;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -19,9 +20,7 @@ use yii\helpers\ArrayHelper;
  */
 class Application extends \yii\console\Application
 {
-    public $language = 'en';
-    //public $languages = ['en', 'ru'];
-    public $sourceLanguage = 'en';
+    use ApplicationLanguageTrait;
 
     private $_modulesHash;
 
@@ -30,11 +29,17 @@ class Application extends \yii\console\Application
      */
     public function __construct($config = [])
     {
+        $coreConfig = [];
+        if (isset($config['basePath'])) {
+            $coreConfig = @include($config['basePath'] . '/grom/console.php') or $coreConfig = [];
+        }
+
+
         $config = ArrayHelper::merge([
-            /*'controllerMap' => [
-                'migrate' => 'gromver\platform\basic\console\components\ModuleMigrateController'//'bariew\moduleMigration\ModuleMigrateController'
+            'controllerMap' => [
+                'grom-migrate' => 'gromver\platform\core\console\components\ModuleMigrateController'
             ],
-            'components' => [
+            /*'components' => [
                 'authManager' => [
                     'class' => 'yii\rbac\DbManager',
                     'itemTable' => '{{%grom_auth_item}}',
@@ -76,7 +81,7 @@ class Application extends \yii\console\Application
                     ]
                 ]
             ]*/
-        ], $config);
+        ], $coreConfig, $config);
 
         $this->_modulesHash = md5(json_encode($config['modules']));
 
@@ -98,21 +103,5 @@ class Application extends \yii\console\Application
      */
     public function getModulesHash() {
         return $this->_modulesHash;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAcceptedLanguagesList()
-    {
-        return array_combine($this->languages, $this->languages);
-    }
-
-    /**
-     * @return \yii\elasticsearch\Connection
-     */
-    public function getElasticSearch()
-    {
-        return $this->get('elasticsearch');
     }
 }
