@@ -9,11 +9,23 @@
 namespace gromver\platform\core\components;
 
 
-use yii\base\InvalidParamException;
+use gromver\modulequery\ModuleEvent;
+use gromver\platform\core\components\events\FetchParamsEvent;
+use yii\base\InvalidConfigException;
+use yii\base\Object;
+use yii\base\UnknownPropertyException;
 use yii\caching\Cache;
 use yii\di\Instance;
 
-class ParamsManager {
+/**
+ * Class ParamsManager
+ * @package gromver\platform\core\components
+ *
+ * @property array $paramsInfo
+ */
+class ParamsManager extends Object {
+    const EVENT_FETCH_MODULE_PARAMS = 'ParamsManagerParams';
+
     /**
      * @var Cache|string
      */
@@ -30,6 +42,9 @@ class ParamsManager {
     private $_params = [];
     private $_paramsInfo;
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function init()
     {
         if ($this->cache) {
@@ -45,35 +60,72 @@ class ParamsManager {
         }
     }
 
+    /**
+     * @return array
+     * @throws InvalidConfigException
+     * @throws \yii\base\NotSupportedException
+     */
     protected function fetchParamsInfo()
     {
+        $items = ModuleEvent::trigger(self::EVENT_FETCH_MODULE_PARAMS, new FetchParamsEvent([
+            'sender' => $this
+        ]), 'items');
 
-    }
+        $result = [];
 
-    public function __get($name)
-    {
-        return $this->params($name);
+        foreach ($items as $item) {
+            if (is_string($item)) {
+                /** @var \gromver\platform\core\components\ParamsObject $item */
+                $result[$item::paramsType()] = [
+                    'class' => $item
+                ];
+            } elseif (is_array($item)) {
+                /** @var \gromver\platform\core\components\ParamsObject $class */
+                $class = $item['class'];
+                $result[$class::paramsType()] = $item;
+            } else {
+                throw new InvalidConfigException(get_class($this) . '::fetchParamsInfo invalid params configuration.');
+            }
+        }
+
+        return $result;
     }
 
     /**
-     * @param $name
-     * @return ParamsObject|null
+     * @param string $name
+     * @return ParamsObject|mixed|null
+     * @throws UnknownPropertyException
      */
-    public function params($name)
+    public function __get($name)
     {
-        if (!array_key_exists($name, $this->_paramsInfo)) {
-            throw new InvalidParamException('Getting not supported params: ' . get_class($this) . '::' . $name);
+        try {
+            return parent::__get($name);
+        } catch (UnknownPropertyException $e) {
+            return $this->params($name);
         }
+    }
 
-        if (!isset($this->_params[$name])) {
-            $params = include($this->paramsFilePath($name));
+    /**
+     * @param $type string
+     * @return ParamsObject|null
+     * @throws UnknownPropertyException
+     */
+    public function params($type)
+    {
+
+        if (!isset($this->_params[$type])) {
+            if (!array_key_exists($type, $this->_paramsInfo)) {
+                throw new UnknownPropertyException('Getting not supported params: ' . get_class($this) . '::' . $type);
+            }
+
+            $params = @include($this->paramsFilePath($type));
             /** @var ParamsObject $paramsClass */
-            $paramsClass = $this->_paramsInfo[$name]['class'];
+            $paramsClass = $this->_paramsInfo[$type]['class'];
 
-            $this->_params[$name] = $paramsClass::create(is_array($params) ? $params : []);
+            $this->_params[$type] = $paramsClass::create(is_array($params) ? $params : []);
         }
 
-        return $this->_params[$name];
+        return $this->_params[$type];
     }
 
     /**
@@ -84,6 +136,10 @@ class ParamsManager {
         return $this->_paramsInfo;
     }
 
+    /**
+     * @param null|string|array $cases
+     * @throws UnknownPropertyException
+     */
     public function save($cases = null)
     {
         if ($cases) {
@@ -97,10 +153,15 @@ class ParamsManager {
         }
     }
 
-    public function paramsFilePath($name)
+    /**
+     * @param $type string
+     * @param null $language
+     * @return bool|string
+     */
+    public function paramsFilePath($type, $language = null)
     {
-        $language = \Yii::$app->language;
+        $language or $language = \Yii::$app->language;
 
-        return \Yii::getAlias("@app/config/grom/params/{$name}-{$language}.php");
+        return \Yii::getAlias("@app/config/grom/params/{$type}-{$language}.php");
     }
 } 

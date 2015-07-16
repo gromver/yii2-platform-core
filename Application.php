@@ -10,8 +10,17 @@
 namespace gromver\platform\core;
 
 
+use gromver\modulequery\ModuleEvent;
+use gromver\platform\core\components\MenuManager;
+use gromver\platform\core\modules\main\models\DbState;
+use gromver\platform\core\modules\menu\models\MenuItem;
+use gromver\platform\core\modules\search\widgets\SearchResultsBackend;
+use gromver\platform\core\modules\search\widgets\SearchResultsFrontend;
 use gromver\platform\core\traits\ApplicationLanguageTrait;
+use yii\base\Event;
+use yii\caching\ExpressionDependency;
 use yii\helpers\ArrayHelper;
+use Yii;
 
 /**
  * Class Application
@@ -21,32 +30,107 @@ use yii\helpers\ArrayHelper;
 class Application extends \yii\web\Application {
     use ApplicationLanguageTrait;
 
-    public $defaultRoute = 'grom/frontend/default/index';
-    public $layout = '@gromver/platform/basic/views/layouts/main';
+    const SESSION_MODE_KEY = '__grom_mode';
 
+    const MODE_EDIT = 'edit';
+    const MODE_VIEW = 'view';
+
+    const EVENT_FETCH_LIST_ITEMS = 'mainFetchListItems';
+
+    public $defaultRoute = 'main/frontend/default/index';
+    public $language = 'en';
+    public $sourceLanguage = 'en';
+
+    public $layout          = '@gromver/platform/core/views/layouts/frontend';
+
+    public $layoutFrontend  = '@gromver/platform/core/views/layouts/frontend';
+    public $layoutBackend   = '@gromver/platform/core/views/layouts/backend';
+    public $layoutError     = '@gromver/platform/core/views/layouts/error';
+    public $layoutModal     = '@gromver/platform/core/views/layouts/modal';
+
+    /**
+     * Здесь можно указать дополнительные опции для списков, см. \gromver\models\fields\ListField
+     * 'foo\bar\SomeClass::listAttribute' => [
+     *      ['value1' => 'Доп опция 1'],
+     *      [value => text],
+     *      ...
+     * ]
+     * @var array
+     */
+    public $listFieldItems  = [];
+    /**
+     * @var array список компонентов к которым нельзя попасть на прямую(grom/post/frontend/..., grom/page/frontend/...)
+     * эта блокировка нужна для того чтобы управлять структурой сайта только через меню
+     * во время разработки проекта ету блокировку можно снять указав в конфиге приложения
+     * [
+     *      'blockedUrlRules' => []
+     * ]
+     */
+    public $blockingUrlRules = [
+        /*'grom/news/frontend<path:(/.*)?>',
+        'grom/page/frontend<path:(/.*)?>',
+        'grom/tag/frontend<path:(/.*)?>',
+        'grom/user/frontend<path:(/.*)?>',*/
+    ];
+    /**
+     * Список моделей открытых для поиска во фронтенде
+     * [
+     *      'foo\bar\news\Model' => 'Новости',
+     *      'foo\bar\page\Model' => 'Страницы',
+     * ]
+     * @var array
+     */
+    public $frontendSearchableModels = [];
+    /**
+     * Список моделей открытых для поиска в бэкенде
+     * [
+     *      'foo\bar\news\Model' => 'Новости',
+     *      'foo\bar\page\Model' => 'Страницы',
+     *      'foo\bar\user\Model' => 'Пользователи',
+     * ]
+     * @var array
+     */
+    public $backendSearchableModels = [];
+
+    /**
+     * @var string
+     */
     private $_modulesHash;
-    
+    /**
+     * @var null|\yii\caching\Dependency
+     */
+    private $_modulesConfigDependency;
+    /**
+     * @var string
+     */
+    private $_mode;
+
     /**
      * @inheritdoc
      */
     public function __construct($config = [])
     {
+        $coreConfig = [];
+        if (isset($config['basePath'])) {
+            $coreConfig = @include($config['basePath'] . '/grom/web.php') or $coreConfig = [];
+        }
+
         $config = ArrayHelper::merge([
             'components' => [
                 'request' => [
-                    'class' => 'gromver\platform\basic\components\Request',
+                    'class' => 'gromver\platform\core\components\Request',
                 ],
                 'urlManager' => [
-                    'class' => 'gromver\platform\basic\components\UrlManager',
+                    'class' => 'gromver\platform\core\components\UrlManager',
                     'enablePrettyUrl' => true,
                     'showScriptName' => false,
                 ],
                 'user' => [
-                    'class' => 'gromver\platform\basic\components\User',
+                    'class' => 'gromver\platform\core\components\User',
                 ],
                 'errorHandler' => [
                     'class' => 'yii\web\ErrorHandler',
-                    'errorAction' => '/grom/common/default/error'
+                    'errorAction' => '/main/common/default/error'
                 ],
                 'authManager' => [
                     'class' => 'yii\rbac\DbManager',
@@ -56,11 +140,11 @@ class Application extends \yii\web\Application {
                     'ruleTable' => '{{%grom_auth_rule}}'
                 ],
                 'cache' => ['class' => 'yii\caching\FileCache'],
-                'elasticsearch' => ['class' => 'yii\elasticsearch\Connection'],
+                //'elasticsearch' => ['class' => 'yii\elasticsearch\Connection'],
                 'assetManager' => [
                     'bundles' => [
                         'mihaildev\ckeditor\Assets' => [
-                            'sourcePath' => '@gromver/platform/basic/assets/ckeditor',
+                            'sourcePath' => '@gromver/platform/core/assets/ckeditor',
                         ],
                     ],
                 ],
@@ -69,33 +153,30 @@ class Application extends \yii\web\Application {
                         '*' => [
                             'class' => 'yii\i18n\PhpMessageSource'
                         ],
+                        'gromver.*' => [
+                            'class' => 'yii\i18n\PhpMessageSource',
+                            'basePath' => '@gromver/platform/core/messages',
+                        ]
                     ],
                 ],
+                'paramsManager' => ['class' => 'gromver\platform\core\components\ParamsManager'],
             ],
             'modules' => [
-                'grom' => [
-                    'class' => 'gromver\platform\basic\modules\main\Module',
-                    'modules' => [
-                        'user'      => ['class' => 'gromver\platform\basic\modules\user\Module'],
-                        'auth'      => ['class' => 'gromver\platform\basic\modules\auth\Module'],
-                        'menu'      => ['class' => 'gromver\platform\basic\modules\menu\Module'],
-                        'news'      => ['class' => 'gromver\platform\basic\modules\news\Module'],
-                        'page'      => ['class' => 'gromver\platform\basic\modules\page\Module'],
-                        'tag'       => ['class' => 'gromver\platform\basic\modules\tag\Module'],
-                        'version'   => ['class' => 'gromver\platform\basic\modules\version\Module'],
-                        'widget'    => ['class' => 'gromver\platform\basic\modules\widget\Module'],
-                        'media'     => ['class' => 'gromver\platform\basic\modules\media\Module'],
-                        'search'    => [
-                            'class' => 'gromver\platform\basic\modules\search\Module',
-                            'modules' => [
-                                'sql' => ['class' => 'gromver\platform\basic\modules\search\modules\sql\Module']
-                            ]
-                        ],
-                    ]
+                'main'      => ['class' => 'gromver\platform\core\modules\main\Module'],
+                'user'      => ['class' => 'gromver\platform\core\modules\user\Module'],
+                'auth'      => ['class' => 'gromver\platform\core\modules\auth\Module'],
+                'menu'      => ['class' => 'gromver\platform\core\modules\menu\Module'],
+                'widget'    => ['class' => 'gromver\platform\core\modules\widget\Module'],
+                'media'     => ['class' => 'gromver\platform\core\modules\media\Module'],
+                'search'    => [
+                    'class' => 'gromver\platform\core\modules\search\Module',
+                    /*'modules' => [
+                        'sql' => ['class' => 'gromver\platform\core\modules\search\modules\sql\Module']
+                    ]*/
                 ],
                 'gridview' => ['class' => 'kartik\grid\Module']
             ]
-        ], $config);
+        ], $coreConfig, $config);
 
         $this->_modulesHash = md5(json_encode(ArrayHelper::getValue($config, 'modules', [])));
 
@@ -107,7 +188,64 @@ class Application extends \yii\web\Application {
      */
     public function init()
     {
-        $this->bootstrap = array_merge($this->bootstrap, ['grom']);
+        $this->bootstrap = array_merge($this->bootstrap, ['main']);
+
+        $this->_modulesConfigDependency = new ExpressionDependency(['expression' => '\Yii::$app->getModulesHash()']);
+
+        DbState::bootstrap();
+
+        Yii::$container->set('gromver\models\fields\EditorField', [
+            'controller' => 'grom/media/manager',
+            'editorOptions' => [
+                'filebrowserBrowseUrl' => ['/grom/menu/backend/item/ckeditor-select'],
+                'extraPlugins' => 'codesnippet'
+            ]
+        ]);
+        Yii::$container->set('gromver\models\fields\MediaField', [
+            'controller' => 'grom/media/manager'
+        ]);
+        Yii::$container->set('gromver\modulequery\ModuleQuery', [
+            'cache' => $this->cache,
+            'cacheDependency' => $this->_modulesConfigDependency
+        ]);
+        Yii::$container->set('gromver\platform\core\components\MenuMap', [
+            'cache' => $this->cache,
+            'cacheDependency' => DbState::dependency(MenuItem::tableName())
+        ]);
+        Yii::$container->set('gromver\platform\core\components\MenuUrlRule', [
+            'cache' => $this->cache,
+            'cacheDependency' => $this->_modulesConfigDependency
+        ]);
+        Yii::$container->set('gromver\platform\core\modules\main\widgets\Desktop', [
+            'cache' => $this->cache,
+            'cacheDependency' => $this->_modulesConfigDependency
+        ]);
+        /*Yii::$container->set('gromver\platform\core\components\ParamsManager', [
+            'cache' => $this->cache,
+            'cacheDependency' => $this->_modulesConfigDependency
+        ]);*/
+
+        /** @var MenuManager $manager */
+        $rules['auth'] = 'auth/default/login';
+        $rules['admin'] = 'main/backend/default/index';
+        if (is_array($this->blockingUrlRules) && count($this->blockingUrlRules)) {
+            foreach ($this->blockingUrlRules as $rule) {
+                $rules[$rule] = 'main/default/page-not-found'; //блокируем доступ напрямую
+            }
+        }
+
+        $this->urlManager->addRules($rules, false); //вставляем в начало списка
+
+        $this->set('menuManager', \Yii::createObject(MenuManager::className()));
+
+        // пропускаем \gromver\models\fields\events\ListItemsEvent событие, через ModuleEvent - не факт, что нужно, но почему бы и нет
+        Event::on('\gromver\models\fields\ListField', 'fetchItems', function($event) {
+            /** @var $event \gromver\models\fields\events\ListItemsEvent */
+            $additionalItems = @$this->listFieldItems[$event->model->getSourceClass().'::'.$event->attribute];
+            if (is_array($additionalItems)) {
+                $event->items = array_merge($event->items, $additionalItems);
+            }
+        });
 
         parent::init();
     }
@@ -118,5 +256,87 @@ class Application extends \yii\web\Application {
      */
     public function getModulesHash() {
         return $this->_modulesHash;
+    }
+
+    /**
+     * @return null|\yii\caching\Dependency
+     */
+    public function getModulesConfigDependency()
+    {
+        return $this->_modulesConfigDependency;
+    }
+
+    /**
+     * @param string $mode
+     * @param bool $saveInSession
+     */
+    public function setMode($mode, $saveInSession = true)
+    {
+        $this->_mode = in_array($mode, self::modes()) ? $mode : self::MODE_VIEW;
+
+        if ($saveInSession) {
+            Yii::$app->session->set(self::SESSION_MODE_KEY, $mode);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getMode()
+    {
+        if(!isset($this->_mode)) {
+            $this->setMode(Yii::$app->session->get(self::SESSION_MODE_KEY, self::MODE_VIEW));
+        }
+
+        return $this->_mode;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsEditMode()
+    {
+        return $this->getMode() === self::MODE_EDIT;
+    }
+
+    /**
+     * @return array
+     */
+    public static function modes()
+    {
+        return [self::MODE_VIEW, self::MODE_EDIT];
+    }
+
+
+    /**
+     * apply platform's frontend layout
+     */
+    public function applyFrontendLayout()
+    {
+        Yii::$app->layout = $this->layoutFrontend;
+    }
+
+    /**
+     * apply platform's backend layout
+     */
+    public function applyBackendLayout()
+    {
+        Yii::$app->layout = $this->layoutBackend;
+    }
+
+    /**
+     * apply platform's error layout
+     */
+    public function applyErrorLayout()
+    {
+        Yii::$app->layout = $this->layoutError;
+    }
+
+    /**
+     * apply platform's modal layout
+     */
+    public function applyModalLayout()
+    {
+        Yii::$app->layout = $this->layoutModal;
     }
 }

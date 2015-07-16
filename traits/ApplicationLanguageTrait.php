@@ -10,9 +10,7 @@ namespace gromver\platform\core\traits;
 
 
 trait ApplicationLanguageTrait {
-    public $language = 'en';
     public $acceptedLanguages = ['en', 'ru'];
-    public $sourceLanguage = 'en';
 
     /**
      * @return array

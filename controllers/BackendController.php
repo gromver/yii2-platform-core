@@ -7,7 +7,7 @@
  * @version 1.0.0
  */
 
-namespace gromver\platform\core\components;
+namespace gromver\platform\core\controllers;
 
 
 use Yii;
@@ -24,7 +24,7 @@ class BackendController extends \yii\web\Controller
      */
     public function beforeAction($action)
     {
-        Yii::$app->grom->applyBackendLayout();
+        Yii::$app->applyBackendLayout();
 
         if (!Yii::$app->user->can('administrate')) {
             Yii::$app->user->loginRequired();

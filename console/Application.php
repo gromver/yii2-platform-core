@@ -22,6 +22,9 @@ class Application extends \yii\console\Application
 {
     use ApplicationLanguageTrait;
 
+    public $language = 'en';
+    public $sourceLanguage = 'en';
+
     private $_modulesHash;
 
     /**
@@ -39,7 +42,7 @@ class Application extends \yii\console\Application
             'controllerMap' => [
                 'grom-migrate' => 'gromver\platform\core\console\components\ModuleMigrateController'
             ],
-            /*'components' => [
+            'components' => [
                 'authManager' => [
                     'class' => 'yii\rbac\DbManager',
                     'itemTable' => '{{%grom_auth_item}}',
@@ -57,30 +60,23 @@ class Application extends \yii\console\Application
                     ],
                 ],
                 // фэйк для обхода BlamableBehavior
-                'user' => 'gromver\platform\basic\console\components\User'
+                'user' => 'gromver\platform\core\console\components\User',
+                'paramsManager' => ['class' => 'gromver\platform\core\components\ParamsManager'],
             ],
             'modules' => [
-                'grom' => [
-                    'class' => 'gromver\platform\basic\modules\main\console\Module',
-                    'modules' => [
-                        'user'      => ['class' => 'gromver\platform\basic\modules\user\Module'],
-                        'auth'      => ['class' => 'gromver\platform\basic\modules\auth\Module'],
-                        'menu'      => ['class' => 'gromver\platform\basic\modules\menu\Module'],
-                        'news'      => ['class' => 'gromver\platform\basic\modules\news\Module'],
-                        'page'      => ['class' => 'gromver\platform\basic\modules\page\Module'],
-                        'tag'       => ['class' => 'gromver\platform\basic\modules\tag\Module'],
-                        'version'   => ['class' => 'gromver\platform\basic\modules\version\Module'],
-                        'widget'    => ['class' => 'gromver\platform\basic\modules\widget\Module'],
-                        'media'     => ['class' => 'gromver\platform\basic\modules\media\Module'],
-                        'search'    => [
-                            'class' => 'gromver\platform\basic\modules\search\Module',
-                            'modules' => [
-                                'sql' => ['class' => 'gromver\platform\basic\modules\search\modules\sql\Module']
-                            ]
-                        ],
-                    ]
-                ]
-            ]*/
+                'main'      => ['class' => 'gromver\platform\core\modules\main\console\Module'],
+                'user'      => ['class' => 'gromver\platform\core\modules\user\Module'],
+                'auth'      => ['class' => 'gromver\platform\core\modules\auth\Module'],
+                'menu'      => ['class' => 'gromver\platform\core\modules\menu\Module'],
+                'widget'    => ['class' => 'gromver\platform\core\modules\widget\Module'],
+                'media'     => ['class' => 'gromver\platform\core\modules\media\Module'],
+                'search'    => [
+                    'class' => 'gromver\platform\core\modules\search\Module',
+                    /*'modules' => [
+                        'sql' => ['class' => 'gromver\platform\core\modules\search\modules\sql\Module']
+                    ]*/
+                ],
+            ]
         ], $coreConfig, $config);
 
         $this->_modulesHash = md5(json_encode($config['modules']));
