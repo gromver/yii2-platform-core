@@ -45,7 +45,7 @@ class DummyPage extends Widget
         if ($activeMenu = Yii::$app->menuManager->activeMenu) {
             return [
                 [
-                    'url' => ['/grom/menu/backend/item/update', 'id' => $activeMenu->id, 'backUrl' => $this->getBackUrl()],
+                    'url' => ['/menu/backend/item/update', 'id' => $activeMenu->id, 'backUrl' => $this->getBackUrl()],
                     'label' => '<i class="glyphicon glyphicon-pencil"></i>',
                     'options' => ['title' => Yii::t('gromver.platform', 'Update Page')]
                 ],

@@ -18,6 +18,6 @@ use yii\web\AssetBundle;
  * @author Gayazov Roman <gromver5@gmail.com>
  */
 class TagAsset extends AssetBundle {
-    public $sourcePath = '@gromver/platform/basic/modules/tag/widgets/assets/tag';
+    public $sourcePath = '@gromver/platform/core/modules/tag/widgets/assets/tag';
     public $css = ['css/style.css'];
 } 

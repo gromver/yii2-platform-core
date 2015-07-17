@@ -15,6 +15,7 @@
         "bariew/yii2-module-migration-controller": "*",
         "mihaildev/yii2-ckeditor": "*",
         "mihaildev/yii2-elfinder": "*",
+        "vova07/yii2-imperavi-widget": "*",
         "kartik-v/yii2-widgets": "dev-master",
         "kartik-v/yii2-helpers": "dev-master",
         "kartik-v/yii2-grid": "dev-master",

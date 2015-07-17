@@ -17,7 +17,7 @@ namespace gromver\platform\core\modules\page\widgets\assets;
  */
 class PageAsset extends \yii\web\AssetBundle
 {
-    public $sourcePath = '@gromver/platform/basic/modules/page/widgets/assets';
+    public $sourcePath = '@gromver/platform/core/modules/page/widgets/assets';
     public $css = [
         'page/css/style.css'
     ];

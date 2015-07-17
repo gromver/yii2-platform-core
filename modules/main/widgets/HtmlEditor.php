@@ -97,7 +97,7 @@ class HtmlEditor extends WidgetPersonal {
                     'value' => $this->value,
                     'options' => ['class' => 'form-control', 'rows' => 10],
                     'editorOptions' => ElFinder::ckeditorOptions('grom/media/manager', [
-                        'filebrowserBrowseUrl' => ['/grom/menu/backend/item/ckeditor-select'],
+                        'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
                         'extraPlugins' => 'codesnippet',
                         'preset' => 'basic',
                         'tabSpaces' => 4
@@ -112,7 +112,7 @@ class HtmlEditor extends WidgetPersonal {
                     'value' => $this->value,
                     'options' => ['class' => 'form-control', 'rows' => 10],
                     'editorOptions' => ElFinder::ckeditorOptions('grom/media/manager', [
-                        'filebrowserBrowseUrl' => ['/grom/menu/backend/item/ckeditor-select'],
+                        'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
                         'extraPlugins' => 'codesnippet',
                         'preset' => 'standard',
                         'tabSpaces' => 4
@@ -127,7 +127,7 @@ class HtmlEditor extends WidgetPersonal {
                     'value' => $this->value,
                     'options' => ['class' => 'form-control', 'rows' => 10],
                     'editorOptions' => ElFinder::ckeditorOptions('grom/media/manager', [
-                        'filebrowserBrowseUrl' => ['/grom/menu/backend/item/ckeditor-select'],
+                        'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
                         'extraPlugins' => 'codesnippet',
                         'preset' => 'full',
                         'tabSpaces' => 4

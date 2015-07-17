@@ -18,7 +18,6 @@ namespace gromver\platform\core\modules\main\widgets;
 class PlatformPanel extends \yii\bootstrap\Widget
 {
     public $layout = 'platform/panelFrontend';
-    public $searchRoute = '/grom/sqlsearch/frontend/default/index';
 
     public function run()
     {
