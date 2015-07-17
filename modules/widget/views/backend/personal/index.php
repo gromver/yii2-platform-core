@@ -56,13 +56,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'vAlign' => GridView::ALIGN_MIDDLE,
             ],
             [
-                'attribute' => 'language',
-                'hAlign' => GridView::ALIGN_CENTER,
-                'vAlign' => GridView::ALIGN_MIDDLE,
-                'width' => '80px',
-                'filter' => Yii::$app->getAcceptedLanguagesList()
-            ],
-            [
                 'attribute' => 'context',
                 'vAlign' => GridView::ALIGN_MIDDLE,
             ],
