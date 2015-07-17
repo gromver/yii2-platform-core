@@ -1,6 +1,6 @@
 <?php
 
-class m000006_000000_grom_media_rbac extends \yii\db\Migration
+class m000009_000000_media_rbac extends \yii\db\Migration
 {
     public function up()
     {

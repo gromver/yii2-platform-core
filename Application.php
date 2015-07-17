@@ -162,6 +162,9 @@ class Application extends \yii\web\Application {
                 'menu'      => ['class' => 'gromver\platform\core\modules\menu\Module'],
                 'widget'    => ['class' => 'gromver\platform\core\modules\widget\Module'],
                 'media'     => ['class' => 'gromver\platform\core\modules\media\Module'],
+                'page'      => ['class' => 'gromver\platform\core\modules\page\Module'],
+                'tag'       => ['class' => 'gromver\platform\core\modules\tag\Module'],
+                'version'   => ['class' => 'gromver\platform\core\modules\version\Module'],
                 'search'    => [
                     'class' => 'gromver\platform\core\modules\search\Module',
                     /*'modules' => [
