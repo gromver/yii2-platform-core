@@ -152,8 +152,9 @@ class PersonalController extends \gromver\platform\core\controllers\BackendContr
     {
         $this->findModel($id)->delete();
 
-        if(Yii::$app->request->getIsDelete())
+        if (Yii::$app->request->getIsDelete()) {
             return $this->redirect(ArrayHelper::getValue(Yii::$app->request, 'referrer', ['index']));
+        }
 
         return $this->redirect(['index']);
     }
@@ -162,7 +163,7 @@ class PersonalController extends \gromver\platform\core\controllers\BackendContr
     {
         $data = Yii::$app->request->getBodyParam('data', []);
 
-        $models = WidgetConfigPersonal::findAll(['id'=>$data]);
+        $models = WidgetConfigPersonal::findAll(['id' => $data]);
 
         foreach ($models as $model) {
             $model->delete();

@@ -51,17 +51,15 @@ class ConfigurePersonalAction extends \yii\base\Action
 
         if ($task == 'delete') {
             if (Yii::$app->request->getBodyParam('bulk-method')) {
-                foreach (WidgetConfigPersonal::find()->where('widget_id=:widget_id AND context>=:context AND language=:language', [
+                foreach (WidgetConfigPersonal::find()->where('widget_id=:widget_id AND context>=:context', [
                     ':widget_id' => $widget_id,
-                    ':context' => $selected_context,
-                    ':language' => Yii::$app->language
+                    ':context' => $selected_context
                 ])->each() as $configModel) {
                     $configModel->delete();
                 }
             } elseif ($configModel = WidgetConfigPersonal::findOne([
                 'widget_id' => $widget_id,
-                'context' => $selected_context,
-                'language' => Yii::$app->language
+                'context' => $selected_context
             ])) {
                 $configModel->delete();
             }
@@ -85,8 +83,7 @@ class ConfigurePersonalAction extends \yii\base\Action
             if ($model->validate() && $task=='save') {
                 $configModel = WidgetConfigPersonal::findOne([
                     'widget_id' => $widget_id,
-                    'context' => $selected_context,
-                    'language' => Yii::$app->language
+                    'context' => $selected_context
                 ]) or $configModel = new WidgetConfigPersonal;
 
                 $configModel->loadDefaultValues();
@@ -99,10 +96,9 @@ class ConfigurePersonalAction extends \yii\base\Action
                 $configModel->save();
 
                 if (Yii::$app->request->getBodyParam('bulk-method')) {
-                    foreach (WidgetConfigPersonal::find()->where('widget_id=:widget_id AND context>:context AND language=:language', [
+                    foreach (WidgetConfigPersonal::find()->where('widget_id=:widget_id AND context>:context', [
                         ':widget_id' => $widget_id,
-                        ':context' => $selected_context,
-                        ':language' => Yii::$app->language
+                        ':context' => $selected_context
                     ])->each() as $configModel) {
                         /** @var $configModel WidgetConfigPersonal */
                         $configModel->delete();

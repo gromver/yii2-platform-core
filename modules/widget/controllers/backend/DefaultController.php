@@ -155,8 +155,9 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
     {
         $this->findModel($id)->delete();
 
-        if(Yii::$app->request->getIsDelete())
+        if (Yii::$app->request->getIsDelete()) {
             return $this->redirect(ArrayHelper::getValue(Yii::$app->request, 'referrer', ['index']));
+        }
 
         return $this->redirect(['index']);
     }
@@ -165,10 +166,11 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
     {
         $data = Yii::$app->request->getBodyParam('data', []);
 
-        $models = WidgetConfig::findAll(['id'=>$data]);
+        $models = WidgetConfig::findAll(['id' => $data]);
 
-        foreach($models as $model)
+        foreach ($models as $model) {
             $model->delete();
+        }
 
         return $this->redirect(ArrayHelper::getValue(Yii::$app->request, 'referrer', ['index']));
     }

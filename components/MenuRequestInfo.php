@@ -19,7 +19,7 @@ namespace gromver\platform\core\components;
 class MenuRequestInfo extends \yii\base\Object
 {
     /**
-     * Карта меню в контексте которой рассматривается текущий запрос (карты различаются в зависимости от языка)
+     * Карта меню в контексте которой рассматривается текущий запрос
      * @var MenuMap
      */
     public $menuMap;

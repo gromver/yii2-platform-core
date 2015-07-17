@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('<i class="glyphicon glyphicon-plus"></i> ' . Yii::t('gromver.platform', 'Add'), ['create', 'menuTypeId' => $model->menu_type_id, 'parentId' => $model->parent_id, 'language' => $model->language], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('<i class="glyphicon glyphicon-plus"></i> ' . Yii::t('gromver.platform', 'Add'), ['create', 'menuTypeId' => $model->menu_type_id, 'parentId' => $model->parent_id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('<i class="glyphicon glyphicon-pencil"></i> ' . Yii::t('gromver.platform', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('<i class="glyphicon glyphicon-trash"></i> ' . Yii::t('gromver.platform', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger pull-right',
@@ -34,15 +34,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'translation_id',
             'menu_type_id',
             'parent_id',
             'status',
-            [
-                'attribute' => 'language',
-                'value' => \gromver\platform\core\modules\main\widgets\TranslationsBackend::widget(['model' => $model]),
-                'format' => 'raw'
-            ],
             'title',
             'alias',
             'path',

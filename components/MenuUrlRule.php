@@ -214,8 +214,7 @@ class MenuUrlRule extends Object implements UrlRuleInterface
      */
     public function createUrl($manager, $route, $params)
     {
-        $language = $manager->getLanguageContext();
-        $menuMap = $this->menuManager->getMenuMap($language);
+        $menuMap = $this->menuManager->getMenuMap();
 
         if ($path = $menuMap->getMenuPathByRoute(MenuItem::toRoute($route, $params))) {
             return $path;
@@ -276,7 +275,7 @@ class MenuUrlRule extends Object implements UrlRuleInterface
         if (!isset($this->_metaData)) {
             $menu = $this->menuManager->getActiveMenu();
             if ($this->cache) {
-                $cacheKey = [__CLASS__, $menu->id];
+                $cacheKey = [__CLASS__, 'metadata', $menu->id];
                 if (($this->_metaData = $this->cache->get($cacheKey)) === false) {
                     $this->_metaData = $this->buildMenuMetaData($menu);
                     $this->cache->set($cacheKey, $this->_metaData, $this->cacheDuration, $this->menuManager->getMenuMap()->cacheDependency);

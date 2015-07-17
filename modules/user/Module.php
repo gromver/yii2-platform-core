@@ -46,7 +46,8 @@ class Module extends \yii\base\Module implements ModuleEventsInterface
         $event->items[] = [
             'label' => Yii::t('gromver.platform', 'Users'),
             'items' => [
-                ['label' => Yii::t('gromver.platform', 'Users'), 'url' => ['/user/backend/default/index']]
+                ['label' => Yii::t('gromver.platform', 'Users'), 'url' => ['/user/backend/default/index']],
+                ['label' => Yii::t('gromver.platform', 'Account'), 'url' => ['/user/backend/account/index']]
             ]
         ];
     }

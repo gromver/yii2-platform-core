@@ -27,7 +27,7 @@ class WidgetConfigPersonalSearch extends WidgetConfigPersonal
     {
         return [
             [['id', 'valid', 'created_at', 'updated_at', 'updated_by', 'lock'], 'integer'],
-            [['widget_id', 'widget_class', 'context', 'url', 'params', 'language', 'created_by'], 'safe'],
+            [['widget_id', 'widget_class', 'context', 'url', 'params', 'created_by'], 'safe'],
         ];
     }
 
@@ -58,7 +58,6 @@ class WidgetConfigPersonalSearch extends WidgetConfigPersonal
             //'{{%grom_widget_config_personal}}.created_by' => $this->created_by,
             '{{%grom_widget_config_personal}}.updated_by' => $this->updated_by,
             '{{%grom_widget_config_personal}}.lock' => $this->lock,
-            '{{%grom_widget_config_personal}}.language' => $this->language,
         ]);
 
         $query->andFilterWhere(['like', '{{%grom_widget_config_personal}}.widget_id', $this->widget_id])

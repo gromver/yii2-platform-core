@@ -36,7 +36,7 @@ class MenuItemSearch extends MenuItem
     {
         return [
             [['id', 'menu_type_id', 'parent_id', 'status', 'link_type', 'secure', 'created_at', 'updated_at', 'created_by', 'updated_by', 'lft', 'rgt', 'level', 'ordering', 'hits', 'lock', 'excludeItem', 'excludeRoots'], 'integer'],
-            [['language', 'title', 'alias', 'path', 'note', 'link', 'link_params', 'layout_path', 'access_rule', 'metakey', 'metadesc', 'robots'], 'safe'],
+            [['title', 'alias', 'path', 'note', 'link', 'link_params', 'layout_path', 'access_rule', 'metakey', 'metadesc', 'robots'], 'safe'],
         ];
     }
 
@@ -49,7 +49,7 @@ class MenuItemSearch extends MenuItem
     public function search($params)
     {
         $query = MenuItem::find();
-        $query->with(['menuType', 'translations']);
+        $query->with(['menuType']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -87,8 +87,7 @@ class MenuItemSearch extends MenuItem
             'lock' => $this->lock,
         ]);
 
-        $query->andFilterWhere(['like', 'language', $this->language])
-            ->andFilterWhere(['like', 'title', $this->title])
+        $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'alias', $this->alias])
             ->andFilterWhere(['like', 'path', $this->path])
             ->andFilterWhere(['like', 'note', $this->note])

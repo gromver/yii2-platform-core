@@ -30,11 +30,7 @@ class m100000_000001_app_site_setup extends \yii\db\Migration
         $this->readStdinUser('Support Email (support@email.com)', $model, 'supportEmail', 'support@email.com');
 
         if ($model->validate()) {
-            $saveParams = \gromver\platform\core\modules\main\models\MainParams::create($model->toArray());
-            // сохраняем первичные настройки для всех локализаций
-            foreach (Yii::$app->acceptedLanguages as $language) {
-                $saveParams->save($language);
-            }
+            \gromver\platform\core\modules\main\models\MainParams::create($model->toArray())->save();
         }
 
         echo 'Setup complete.' . PHP_EOL;

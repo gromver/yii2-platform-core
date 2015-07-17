@@ -10,13 +10,9 @@
 namespace gromver\platform\core;
 
 
-use gromver\modulequery\ModuleEvent;
 use gromver\platform\core\components\MenuManager;
 use gromver\platform\core\modules\main\models\DbState;
 use gromver\platform\core\modules\menu\models\MenuItem;
-use gromver\platform\core\modules\search\widgets\SearchResultsBackend;
-use gromver\platform\core\modules\search\widgets\SearchResultsFrontend;
-use gromver\platform\core\traits\ApplicationLanguageTrait;
 use yii\base\Event;
 use yii\caching\ExpressionDependency;
 use yii\helpers\ArrayHelper;
@@ -28,8 +24,6 @@ use Yii;
  * @author Gayazov Roman <gromver5@gmail.com>
  */
 class Application extends \yii\web\Application {
-    use ApplicationLanguageTrait;
-
     const SESSION_MODE_KEY = '__grom_mode';
 
     const MODE_EDIT = 'edit';
@@ -38,8 +32,8 @@ class Application extends \yii\web\Application {
     const EVENT_FETCH_LIST_ITEMS = 'mainFetchListItems';
 
     public $defaultRoute = 'main/frontend/default/index';
-    public $language = 'en';
-    public $sourceLanguage = 'en';
+//    public $language = 'en';
+//    public $sourceLanguage = 'en';
 
     public $layout          = '@gromver/platform/core/views/layouts/frontend';
 
@@ -117,11 +111,11 @@ class Application extends \yii\web\Application {
 
         $config = ArrayHelper::merge([
             'components' => [
-                'request' => [
+                /*'request' => [
                     'class' => 'gromver\platform\core\components\Request',
-                ],
+                ],*/
                 'urlManager' => [
-                    'class' => 'gromver\platform\core\components\UrlManager',
+                    //'class' => 'gromver\platform\core\components\UrlManager',
                     'enablePrettyUrl' => true,
                     'showScriptName' => false,
                 ],
@@ -220,10 +214,10 @@ class Application extends \yii\web\Application {
             'cache' => $this->cache,
             'cacheDependency' => $this->_modulesConfigDependency
         ]);
-        /*Yii::$container->set('gromver\platform\core\components\ParamsManager', [
+        Yii::$container->set('gromver\platform\core\components\ParamsManager', [
             'cache' => $this->cache,
             'cacheDependency' => $this->_modulesConfigDependency
-        ]);*/
+        ]);
 
         /** @var MenuManager $manager */
         $rules['auth'] = 'auth/default/login';

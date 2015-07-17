@@ -53,15 +53,6 @@ class MenuItemQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * @param $language
-     * @return static
-     */
-    public function language($language)
-    {
-        return $this->andFilterWhere(['{{%grom_menu_item}}.language' => $language]);
-    }
-
-    /**
      * @return static
      */
     public function excludeRoots()

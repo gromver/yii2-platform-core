@@ -37,6 +37,6 @@ class WidgetPersonal extends Widget {
             $contexts[] = $context;
         }
 
-        return WidgetConfigPersonal::find()->orderBy('context desc')->where(['widget_id' => $this->id, 'language' => Yii::$app->language, 'context' => $contexts, 'created_by' => Yii::$app->user->id])->one();
+        return WidgetConfigPersonal::find()->orderBy('context desc')->where(['widget_id' => $this->id, 'context' => $contexts, 'created_by' => Yii::$app->user->id])->one();
     }
 }

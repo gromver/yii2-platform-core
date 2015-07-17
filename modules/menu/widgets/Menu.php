@@ -43,13 +43,6 @@ class Menu extends Widget
      */
     public $type;
     /**
-     * @field list
-     * @items languages
-     * @empty Autodetect
-     * @translation gromver.platform
-     */
-    public $language;
-    /**
      * @field yesno
      * @translation gromver.platform
      */
@@ -89,8 +82,6 @@ class Menu extends Widget
         if (empty($this->type)) {
             throw new InvalidConfigException(Yii::t('gromver.platform', 'Menu type must be set.'));
         }
-
-        $this->language or $this->language = Yii::$app->language;
     }
 
     /**
@@ -100,7 +91,7 @@ class Menu extends Widget
     {
         if (!isset($this->_items)) {
             if ($cache = $this->ensureCache()) {
-                $cacheKey = [__CLASS__, $this->type, $this->activateItems, $this->activateParents, $this->language];
+                $cacheKey = [__CLASS__, $this->type, $this->activateItems, $this->activateParents];
                 if (($this->_items = $cache->get($cacheKey)) === false) {
                     $this->_items = $this->items();
                     $cache->set($cacheKey, $this->_items, $this->cacheDuration, $this->cacheDependency ? $this->cacheDependency : DbState::dependency(MenuItem::tableName()));
@@ -118,7 +109,7 @@ class Menu extends Widget
      */
     protected function items()
     {
-        $rawItems = MenuItem::find()->type($this->type)->published()->language($this->language)->orderBy('lft')->all();
+        $rawItems = MenuItem::find()->type($this->type)->published()->orderBy('lft')->all();
 
         if (count($rawItems)) {
             return $this->prepareItems($rawItems, $rawItems[0]->level);
@@ -221,23 +212,15 @@ class Menu extends Widget
     {
         return [
             [
-                'url' => ['/grom/menu/backend/item/create', 'menuTypeId' => (int)$this->type, 'backUrl' => $this->getBackUrl()],
+                'url' => ['/menu/backend/item/create', 'menuTypeId' => (int)$this->type, 'backUrl' => $this->getBackUrl()],
                 'label' => '<i class="glyphicon glyphicon-plus"></i>',
                 'options' => ['title' => Yii::t('gromver.platform', 'Create Menu Item')]
             ],
             [
-                'url' => ['/grom/menu/backend/item/index', 'MenuItemSearch' => ['menu_type_id' => (int)$this->type, 'language' => $this->language]],
+                'url' => ['/menu/backend/item/index', 'MenuItemSearch' => ['menu_type_id' => (int)$this->type]],
                 'label' => '<i class="glyphicon glyphicon-th-list"></i>',
                 'options' => ['title' => Yii::t('gromver.platform', 'Menu Items list'), 'target' => '_blank']
             ],
         ];
-    }
-
-    /**
-     * @return array
-     */
-    public static function languages()
-    {
-        return Yii::$app->getAcceptedLanguagesList();
     }
 }

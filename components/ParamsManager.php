@@ -155,13 +155,10 @@ class ParamsManager extends Object {
 
     /**
      * @param $type string
-     * @param null $language
      * @return bool|string
      */
-    public function paramsFilePath($type, $language = null)
+    public function paramsFilePath($type)
     {
-        $language or $language = \Yii::$app->language;
-
-        return \Yii::getAlias("@app/config/grom/params/{$type}-{$language}.php");
+        return \Yii::getAlias("@app/config/grom/params/{$type}.php");
     }
 } 

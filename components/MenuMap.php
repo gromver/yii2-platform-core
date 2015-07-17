@@ -11,10 +11,9 @@ namespace gromver\platform\core\components;
 
 
 use gromver\platform\core\modules\menu\models\MenuItem;
-use Yii;
-use yii\base\InvalidConfigException;
 use yii\di\Instance;
 use yii\caching\Cache;
+use Yii;
 
 /**
  * Class MenuMap
@@ -25,7 +24,6 @@ use yii\caching\Cache;
  */
 class MenuMap extends \yii\base\Object
 {
-    public $language;
     /**
      * @var Cache|string
      */
@@ -46,14 +44,10 @@ class MenuMap extends \yii\base\Object
 
     public function init()
     {
-        if (!$this->language) {
-            throw new InvalidConfigException(get_called_class().'::language must be set.');
-        }
-
         if ($this->cache) {
             /** @var Cache $cache */
             $this->cache = Instance::ensure($this->cache, Cache::className());
-            $cacheKey = [__CLASS__, $this->language];
+            $cacheKey = __CLASS__;
             if ((list($paths, $routes, $links) = $this->cache->get($cacheKey)) === false) {
                 $this->createMap();
                 $this->cache->set($cacheKey, [$this->_paths, $this->_routes, $this->_links], $this->cacheDuration, $this->cacheDependency);
@@ -69,7 +63,7 @@ class MenuMap extends \yii\base\Object
 
     private function createMap()
     {
-        $items = MenuItem::find()->published()->language($this->language)->orderBy('link_weight ASC')->asArray()->all();
+        $items = MenuItem::find()->published()->orderBy('link_weight ASC')->asArray()->all();
 
         foreach ($items as $item) {
             if ($item['link_type'] == MenuItem::LINK_ROUTE) {
@@ -88,7 +82,7 @@ class MenuMap extends \yii\base\Object
     public function getMainMenu()
     {
         if (!isset($this->_mainMenu)) {
-            $this->_mainMenu = MenuItem::findOne(['language' => $this->language, 'status' => MenuItem::STATUS_MAIN_PAGE]);
+            $this->_mainMenu = MenuItem::findOne(['status' => MenuItem::STATUS_MAIN_PAGE]);
         }
 
         return $this->_mainMenu;

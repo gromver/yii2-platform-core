@@ -50,13 +50,12 @@ class ParamsObject extends Object {
     }
 
     /**
-     * @param null|string $language
      * @return $this
      * @throws NotSupportedException
      */
-    public function save($language = null)
+    public function save()
     {
-        $paramsFilePath = \Yii::$app->paramsManager->paramsFilePath($this->paramsType(), $language);
+        $paramsFilePath = \Yii::$app->paramsManager->paramsFilePath($this->paramsType());
         file_put_contents($paramsFilePath, '<?php return ' . var_export(ArrayHelper::toArray($this), true) . ';');
         @chmod($paramsFilePath, 0775);
 

@@ -5,7 +5,6 @@ use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model gromver\platform\core\modules\menu\models\MenuItem */
-/* @var $sourceModel gromver\platform\core\modules\menu\models\MenuItem */
 /* @var $linkParamsModel gromver\platform\core\modules\menu\models\MenuLinkParams */
 /* @var $form yii\bootstrap\ActiveForm */
 
@@ -21,19 +20,10 @@ use yii\bootstrap\ActiveForm;
 
     <div class="row">
         <div class="col-sm-6">
-            <?= $form->field($model, 'title', ['wrapperOptions' => ['class' => 'col-sm-9']])->textInput(['maxlength' => 1024, 'placeholder' => isset($sourceModel) ? $sourceModel->title : null]) ?>
+            <?= $form->field($model, 'title', ['wrapperOptions' => ['class' => 'col-sm-9']])->textInput(['maxlength' => 1024]) ?>
         </div>
         <div class="col-sm-6">
             <?= $form->field($model, 'alias', ['wrapperOptions' => ['class' => 'col-sm-9']])->textInput(['maxlength' => 255, 'placeholder' => Yii::t('gromver.platform', 'Auto-generate')]) ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-6">
-            <?= $form->field($model, 'language', ['horizontalCssClasses' => ['wrapper' => 'col-xs-8 col-sm-4', 'label' => 'col-xs-4 col-sm-3']])->dropDownList(Yii::$app->getAcceptedLanguagesList(), ['prompt' => Yii::t('gromver.platform', 'Select ...')]) ?>
-        </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'note', ['wrapperOptions' => ['class' => 'col-sm-9']])->textInput(['maxlength' => 255]) ?>
         </div>
     </div>
 
@@ -157,6 +147,8 @@ JS
                     'placeholder' => Yii::t('gromver.platform', 'Default'),
                 ],
             ]);?>
+
+            <?= $form->field($model, 'note')->textInput(['maxlength' => 255]) ?>
         </div>
 
         <div id="link-options" class="tab-pane">

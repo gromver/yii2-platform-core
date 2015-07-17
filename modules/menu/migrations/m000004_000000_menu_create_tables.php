@@ -25,9 +25,7 @@ class m000004_000000_menu_create_tables extends \yii\db\Migration
             'id' => Schema::TYPE_PK,
             'menu_type_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'parent_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
-            'translation_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
             'status' => Schema::TYPE_SMALLINT,
-            'language' => Schema::TYPE_STRING . '(7) NOT NULL',
             'title' => Schema::TYPE_STRING . '(1024)',
             'alias' => Schema::TYPE_STRING,
             'path' => Schema::TYPE_STRING . '(2048)',
@@ -55,9 +53,7 @@ class m000004_000000_menu_create_tables extends \yii\db\Migration
         ]);
         $this->createIndex('MenuTypeId_idx', '{{%grom_menu_item}}', 'menu_type_id');
         $this->createIndex('ParentId_idx', '{{%grom_menu_item}}', 'parent_id');
-        $this->createIndex('TranslationId_idx', '{{%grom_menu_item}}', 'translation_id');
         $this->createIndex('Lft_Rgt_idx', '{{%grom_menu_item}}', 'lft, rgt');
-        $this->createIndex('Language_idx', '{{%grom_menu_item}}', 'language');
         $this->createIndex('Path_idx', '{{%grom_menu_item}}', 'path');
         $this->createIndex('Alias_idx', '{{%grom_menu_item}}', 'alias');
         $this->createIndex('Status_idx', '{{%grom_menu_item}}', 'status');
@@ -66,7 +62,6 @@ class m000004_000000_menu_create_tables extends \yii\db\Migration
             'menu_type_id' => 0,
             'status' => 1,
             'title' => 'Root',
-            'language' => '',
             'created_at' => time(),
             'created_by' => 1,
             'lft' => 1,

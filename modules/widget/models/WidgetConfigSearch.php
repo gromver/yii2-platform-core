@@ -28,7 +28,7 @@ class WidgetConfigSearch extends WidgetConfig
     {
         return [
             [['id', 'valid', 'created_at', 'updated_at', 'created_by', 'updated_by', 'lock'], 'integer'],
-            [['widget_id', 'widget_class', 'context', 'url', 'params', 'language'], 'safe'],
+            [['widget_id', 'widget_class', 'context', 'url', 'params'], 'safe'],
         ];
     }
 
@@ -68,7 +68,6 @@ class WidgetConfigSearch extends WidgetConfig
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'lock' => $this->lock,
-            'language' => $this->language,
         ]);
 
         $query->andFilterWhere(['like', 'widget_id', $this->widget_id])

@@ -13,7 +13,6 @@ namespace gromver\platform\core\modules\menu\models;
 use dosamigos\transliterator\TransliteratorHelper;
 use gromver\platform\core\behaviors\NestedSetsBehavior;
 use gromver\platform\core\components\UrlManager;
-use gromver\platform\core\interfaces\model\TranslatableInterface;
 use gromver\platform\core\interfaces\model\ViewableInterface;
 use gromver\platform\core\modules\widget\models\WidgetConfig;
 use Yii;
@@ -31,9 +30,7 @@ use yii\helpers\Json;
  * @property integer $id
  * @property integer $menu_type_id
  * @property integer $parent_id
- * @property integer $translation_id
  * @property integer $status
- * @property string $language
  * @property string $title
  * @property string $alias
  * @property string $path
@@ -64,10 +61,9 @@ use yii\helpers\Json;
  * @property integer $context
  * @property MenuType $menuType
  * @property MenuItem $parent
- * @property MenuItem[] $translations
  * @property array $layoutLabels
  */
-class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface, TranslatableInterface
+class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface
 {
     const STATUS_UNPUBLISHED = 0;
     const STATUS_PUBLISHED = 1;
@@ -96,13 +92,6 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface, Transl
             [['menu_type_id', 'parent_id', 'status', 'link_type', 'link_weight', 'secure', 'created_at', 'updated_at', 'created_by', 'updated_by', 'lft', 'rgt', 'level', 'ordering', 'hits', 'lock'], 'integer'],
             [['menu_type_id'], 'required'],
             [['menu_type_id'], 'exist', 'targetAttribute' => 'id', 'targetClass' => MenuType::className()],
-            [['language'], 'required'],
-            [['language'], 'string', 'max' => 7],
-            [['language'], function($attribute) {
-                if (($parent = self::findOne($this->parent_id)) && !$parent->isRoot() && $parent->language != $this->language) {
-                    $this->addError($attribute, Yii::t('gromver.platform', 'Language has to match with the parental.'));
-                }
-            }],
             [['layout_path'], 'filter', 'filter' => function($value) {
                 // если во вьюхе используется select2, отфильтровываем значение из массива [0 => 'значение'] -> 'значение'
                 return is_array($value) ? reset($value) : $value;
@@ -133,20 +122,15 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface, Transl
             [['alias'], 'unique', 'filter' => function($query) {
                     /** @var $query \yii\db\ActiveQuery */
                     if ($parent = self::findOne($this->parent_id)){
-                        $query->andWhere('lft>=:lft AND rgt<=:rgt AND level=:level AND language=:language', [
+                        $query->andWhere('lft>=:lft AND rgt<=:rgt AND level=:level', [
                                 'lft' => $parent->lft,
                                 'rgt' => $parent->rgt,
                                 'level' => $parent->level + 1,
-                                'language' => $this->language
                             ]);
                     }
                 }],
             [['alias'], 'string', 'max' => 255],
             [['alias'], 'required', 'enableClientValidation' => false],
-            [['translation_id'], 'unique', 'filter' => function($query) {
-                /** @var $query \yii\db\ActiveQuery */
-                $query->andWhere(['language' => $this->language]);
-            }, 'message' => Yii::t('gromver.platform', 'Localization ({language}) for item (ID: {id}) already exists.', ['language' => $this->language, 'id' => $this->translation_id])],
             [['title',  'link', 'status'], 'required'],
             [['ordering'], 'filter', 'filter' => 'intVal'], //for proper $changedAttributes
         ];
@@ -161,9 +145,7 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface, Transl
             'id' => Yii::t('gromver.platform', 'ID'),
             'menu_type_id' => Yii::t('gromver.platform', 'Menu Type ID'),
             'parent_id' => Yii::t('gromver.platform', 'Parent ID'),
-            'translation_id' => Yii::t('gromver.platform', 'Translation ID'),
             'status' => Yii::t('gromver.platform', 'Status'),
-            'language' => Yii::t('gromver.platform', 'Language'),
             'title' => Yii::t('gromver.platform', 'Title'),
             'alias' => Yii::t('gromver.platform', 'Alias'),
             'path' => Yii::t('gromver.platform', 'Path'),
@@ -267,18 +249,6 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface, Transl
     {
         parent::afterSave($insert, $changedAttributes);
 
-        // устанавливаем translation_id по умолчанию
-        if ($insert && $this->translation_id === null) {
-            $this->updateAttributes([
-                'translation_id' => $this->id
-            ]);
-        }
-
-        //Если изменен тип меню или язык, смена языка возможна только для корневых элементов
-        if (array_key_exists('menu_type_id', $changedAttributes) || array_key_exists('language', $changedAttributes)) {
-            $this->normalizeLanguage();
-        }
-
         if (array_key_exists('status', $changedAttributes)) {
             $this->normalizeStatus();
         }
@@ -323,17 +293,11 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface, Transl
         }
     }
 
-    public function normalizeLanguage()
-    {
-        $ids = $this->children()->select('id')->column();
-        self::updateAll(['menu_type_id' => $this->menu_type_id, 'language' => $this->language], ['id' => $ids]);
-    }
-
-    //для каждого языка возможен только один пукнт меню со статусом главной страницы
+    //только один пункт меню может быть главным
     public function normalizeStatus()
     {
         if ($this->status == self::STATUS_MAIN_PAGE) {
-            self::updateAll(['status' => self::STATUS_PUBLISHED], 'status=:status AND language=:language AND id!=:id', [':status' => self::STATUS_MAIN_PAGE, ':id' => $this->id, ':language' => $this->language]);
+            self::updateAll(['status' => self::STATUS_PUBLISHED], 'status=:status AND id!=:id', [':status' => self::STATUS_MAIN_PAGE, ':id' => $this->id]);
         }
     }
 
@@ -498,24 +462,6 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface, Transl
         return $this->_context === self::CONTEXT_APPLICABLE;
     }
 
-    //TranslatableInterface
-    /**
-     * @inheritdoc
-     */
-    public function getTranslations()
-    {
-        return self::hasMany(self::className(), ['translation_id' => 'translation_id'])->indexBy('language');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getLanguage()
-    {
-        return $this->language;
-    }
-
-
     // ViewableInterface
     /**
      * @inheritdoc
@@ -523,7 +469,7 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface, Transl
     public function getFrontendViewLink()
     {
         if ($this->link_type == self::LINK_ROUTE) {
-            return ['/' . $this->path, UrlManager::LANGUAGE_PARAM => $this->language];
+            return ['/' . $this->path];
         } else {
             return $this->link;
         }
@@ -535,7 +481,7 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface, Transl
     public static function frontendViewLink($model)
     {
         if ($model['link_type'] == self::LINK_ROUTE) {
-            return ['/' . $model['path'], UrlManager::LANGUAGE_PARAM => $model['language']];
+            return ['/' . $model['path']];
         } else {
             return $model['link'];
         }

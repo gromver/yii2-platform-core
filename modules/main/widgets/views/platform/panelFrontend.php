@@ -25,7 +25,8 @@ $navBar = NavBar::begin(\yii\helpers\ArrayHelper::merge([
     'id' => 'fPanelForm',
     'options' => ['class' => 'navbar-form'],
     'wrapperOptions' => ['class' => 'navbar-left'],
-    'query' => ''
+    'query' => '',
+    'context' => '',
 ]); ?>
 
 <?php if (Yii::$app->user->can('customize')) { ?>
@@ -44,14 +45,6 @@ $navBar = NavBar::begin(\yii\helpers\ArrayHelper::merge([
 <?php }
 
 if (Yii::$app->user->isGuest) { ?>
-    <div class="input-group navbar-right">
-        <?= Html::tag('span', Yii::t('gromver.platform', 'Language'), ['class' => 'navbar-text']) . '&nbsp;' ?>
-        <div class="btn-group">
-            <?= implode('', array_map(function($language) {
-                return Html::a($language, Yii::$app->urlManager->createUrl(Yii::$app->getHomeUrl(), $language), ['class' => 'btn navbar-btn btn-xs' . ($language === Yii::$app->language ? ' btn-primary active' : ' btn-default')]);
-            }, Yii::$app->acceptedLanguages)) ?>
-        </div>
-    </div>
     <div class="navbar-text navbar-right">
         <i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;
         <?php
@@ -92,15 +85,6 @@ if (Yii::$app->user->isGuest) { ?>
             ],
             'encodeLabels' => false
         ]) ?>
-
-        <div class="input-group navbar-left">
-            <?= Html::tag('span', Yii::t('gromver.platform', 'Language'), ['class' => 'navbar-text']) . '&nbsp;' ?>
-            <div class="btn-group">
-                <?= implode('', array_map(function($language) {
-                    return Html::a($language, Yii::$app->urlManager->createUrl(Yii::$app->getHomeUrl(), $language), ['class' => 'btn navbar-btn btn-xs' . ($language === Yii::$app->language ? ' btn-primary active' : ' btn-default')]);
-                }, Yii::$app->acceptedLanguages)) ?>
-            </div>
-        </div>
 
     </div>
 <?php } ?>

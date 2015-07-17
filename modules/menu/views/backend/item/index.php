@@ -40,18 +40,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'width' => '60px'
             ],
             [
-                'attribute' => 'language',
-                'hAlign' => GridView::ALIGN_CENTER,
-                'vAlign' => GridView::ALIGN_MIDDLE,
-                'width' => '80px',
-                'value' => function ($model) {
-                    /** @var $model \gromver\platform\core\modules\menu\models\MenuItem */
-                    return \gromver\platform\core\modules\main\widgets\TranslationsBackend::widget(['model' => $model]);
-                },
-                'format' => 'raw',
-                'filter' => Yii::$app->getAcceptedLanguagesList()
-            ],
-            [
                 'attribute' => 'menu_type_id',
                 'vAlign' => GridView::ALIGN_MIDDLE,
                 'width' => '100px',

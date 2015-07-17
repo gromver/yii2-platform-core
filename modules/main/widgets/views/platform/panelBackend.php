@@ -22,7 +22,8 @@ $navBar = NavBar::begin(\yii\helpers\ArrayHelper::merge([
     'id' => 'bPanelForm',
     'options' => ['class' => 'navbar-form'],
     'wrapperOptions' => ['class' => 'navbar-left'],
-    'query' => ''
+    'query' => '',
+    'context' => '',
 ]); ?>
 
 <?php
@@ -44,7 +45,7 @@ $menuItems = [
         /** @var $value \gromver\platform\core\modules\menu\models\MenuType */
         return ['label' => $value->title, 'url' => ['/menu/backend/item/index', 'MenuItemSearch' => ['menu_type_id' => $value->id]]];
     }, \gromver\platform\core\modules\menu\models\MenuType::find()->all()))],
-    ['label' => Yii::t('gromver.platform', 'Content'), 'items' => [
+    /*['label' => Yii::t('gromver.platform', 'Content'), 'items' => [
         ['label' => Yii::t('gromver.platform', 'Pages'), 'url' => ['/page/backend/default/index']],
         '<li class="divider"></li>',
         ['label' => Yii::t('gromver.platform', 'Categories'), 'url' => ['/news/backend/category/index']],
@@ -54,7 +55,7 @@ $menuItems = [
         '<li class="divider"></li>',
         ['label' => Yii::t('gromver.platform', 'Media Manager'), 'url' => ['/media/backend/default/index']],
     ]],
-    /*['label' => Yii::t('gromver.platform', 'Components'), 'items' => [
+    ['label' => Yii::t('gromver.platform', 'Components'), 'items' => [
         ['label' => Yii::t('gromver.platform', 'Version Manager'), 'url' => ['/grom/version/backend/default/index']],
         ['label' => Yii::t('gromver.platform', "Widget's Settings"), 'url' => ['/grom/widget/backend/default/index']],
         ['label' => Yii::t('gromver.platform', 'Search'), 'url' => ['/grom/sqlsearch/backend/default/index']],
@@ -82,14 +83,14 @@ if (Yii::$app->user->isGuest) {
         'encodeLabels' => false
     ]) ?>
 
-    <div class="input-group navbar-left">
+    <?/*<div class="input-group navbar-left">
         <?= Html::tag('span', Yii::t('gromver.platform', 'Language'), ['class' => 'navbar-text']) . '&nbsp;' ?>
         <div class="btn-group">
             <?= implode('', array_map(function($language) {
                 return Html::a($language, Yii::$app->urlManager->createUrl([Yii::$app->request->getPathInfo()] + Yii::$app->request->getQueryParams(), $language), ['class' => 'btn navbar-btn btn-xs' . ($language === Yii::$app->language ? ' btn-primary active' : ' btn-default')]);
             }, Yii::$app->acceptedLanguages)) ?>
         </div>
-    </div>
+    </div>*/?>
 
 </div>
 <style>

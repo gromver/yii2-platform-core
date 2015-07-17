@@ -42,29 +42,11 @@ class ItemController extends \gromver\platform\core\controllers\BackendControlle
                     'publish' => ['post'],
                     'unpublish' => ['post'],
                     'status' => ['post'],
-                    //'type-items' => ['post'],
                 ],
             ],
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
-                    /*[
-                        'allow' => true,
-                        'actions' => ['create', 'update', 'ordering', 'publish', 'unpublish', 'status'],
-                        'roles' => ['update'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['delete', 'bulk-delete'],
-                        'roles' => ['delete'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['index', 'view', 'type-items', 'routers', 'select', 'item-list', 'ckeditor-select', 'ckeditor-select-component', 'ckeditor-select-menu'],
-                        'roles' => ['read'],
-                    ],*/
-
-
                     [
                         'allow' => true,
                         'actions' => ['index', 'view', 'routers', 'select', 'item-list', 'ckeditor-select', 'ckeditor-select-component', 'ckeditor-select-menu'],
@@ -222,19 +204,16 @@ class ItemController extends \gromver\platform\core\controllers\BackendControlle
      * Creates a new MenuItem model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @param null $menuTypeId
-     * @param null $sourceId
      * @param null $parentId
-     * @param null $language
      * @param string|null $backUrl
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException
      */
-    public function actionCreate($menuTypeId = null, $sourceId = null, $parentId = null, $language = null, $backUrl = null)
+    public function actionCreate($menuTypeId = null, $parentId = null, $backUrl = null)
     {
         $model = new MenuItem();
         $model->loadDefaultValues();
         $model->status = MenuItem::STATUS_PUBLISHED;
-        $model->language = $language ? $language : Yii::$app->language;
         // по дефолту выставляем ендпоинт на "временную старницу"
         $model->link_type = MenuItem::LINK_ROUTE;
         $model->link = 'main/frontend/default/dummy-page';
@@ -244,33 +223,6 @@ class ItemController extends \gromver\platform\core\controllers\BackendControlle
         if (isset($parentId)) {
             $parentCategory = $this->findModel($parentId);
             $model->parent_id = $parentCategory->id;
-            if ($parentCategory->language) {
-                $model->language = $parentCategory->language;
-            }
-        }
-
-        if (isset($sourceId) && $language) {
-            $sourceModel = $this->findModel($sourceId);
-            /** @var MenuItem $parentItem */
-            // если локализуемый пункт меню имеет родителя, то пытаемся найти релевантную локализацию для родителя создаваемого пункта меню
-            if (!($sourceModel->level > 2 && $parentItem = @$sourceModel->parent->translations[$language])) {
-                $parentItem = MenuItem::find()->roots()->one();
-            }
-
-            $model->language = $language;
-            $model->parent_id = $parentItem->id;
-            $model->menu_type_id = $sourceModel->menu_type_id;
-            $model->translation_id = $sourceModel->translation_id;
-            $model->alias = $sourceModel->alias;
-            $model->status = $sourceModel->status;
-            $model->link = $sourceModel->link;
-            $model->link_type = $sourceModel->link_type;
-            $model->ordering = $sourceModel->ordering;
-            $model->layout_path = $sourceModel->layout_path;
-            $model->access_rule = $sourceModel->access_rule;
-            $model->link_params = $sourceModel->link_params;
-        } else {
-            $sourceModel = null;
         }
 
         $linkParamsModel = new MenuLinkParams();
@@ -285,7 +237,6 @@ class ItemController extends \gromver\platform\core\controllers\BackendControlle
             return $this->render('create', [
                     'model' => $model,
                     'linkParamsModel' => $linkParamsModel,
-                    'sourceModel' => $sourceModel
                 ]);
         }
     }
@@ -427,47 +378,6 @@ class ItemController extends \gromver\platform\core\controllers\BackendControlle
         }
 
         return $this->redirect(ArrayHelper::getValue(Yii::$app->request, 'referrer', ['index']));
-    }
-
-    /**
-     * todo remove
-     * @param null $update_item_id
-     * @param string $selected
-     */
-    public function actionTypeItems($update_item_id = null, $selected = '')
-    {
-        if (isset($_POST['depdrop_parents'])) {
-            $parents = $_POST['depdrop_parents'];
-            if ($parents != null) {
-                $typeId = $parents[0];
-                $language = $parents[1];
-                //исключаем редактируемый пункт и его подпункты из списка
-                if (!empty($update_item_id) && $updateItem = MenuItem::findOne($update_item_id)) {
-                    $excludeIds = array_merge([$update_item_id], $updateItem->children()->select('id')->column());
-                    //если выбранный тип меню совпадает с типом меню редактируемого пункта, выбираем текущее значение родительского элемента
-                    $selected = $updateItem->menu_type_id == $typeId ? $updateItem->parent_id : '';
-                } else {
-                    $excludeIds = [];
-                }
-
-                $out = array_map(function($value) {
-                    return [
-                        'id' => $value['id'],
-                        'name' => str_repeat(" • ", $value['level'] - 1) . $value['title']
-                    ];
-                }, MenuItem::find()->excludeRoots()->type($typeId)->language($language)->orderBy('lft')->andWhere(['not in', 'id', $excludeIds])->asArray()->all());
-                /** @var MenuItem $root */
-                $root = MenuItem::find()->roots()->one();
-                array_unshift($out, [
-                    'id' => $root->id,
-                    'name' => Yii::t('gromver.platform', 'Root')
-                ]);
-
-                echo Json::encode(['output' => $out, 'selected' => $selected ? $selected : $root->id]);
-                return;
-            }
-        }
-        echo Json::encode(['output' => '', 'selected' => $selected]);
     }
 
     /**

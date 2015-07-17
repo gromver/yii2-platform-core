@@ -10,7 +10,6 @@
 namespace gromver\platform\core\console;
 
 
-use gromver\platform\core\traits\ApplicationLanguageTrait;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -20,10 +19,8 @@ use yii\helpers\ArrayHelper;
  */
 class Application extends \yii\console\Application
 {
-    use ApplicationLanguageTrait;
-
-    public $language = 'en';
-    public $sourceLanguage = 'en';
+//    public $language = 'en';
+//    public $sourceLanguage = 'en';
 
     private $_modulesHash;
 
@@ -87,12 +84,12 @@ class Application extends \yii\console\Application
     /**
      * @inheritdoc
      */
-    /*public function init()
+    public function init()
     {
-        $this->bootstrap = array_merge($this->bootstrap, ['grom']);
+        $this->bootstrap = array_merge($this->bootstrap, ['main']);
 
         parent::init();
-    }*/
+    }
 
     /**
      * @return string

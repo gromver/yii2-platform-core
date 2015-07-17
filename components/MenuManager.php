@@ -30,8 +30,14 @@ class MenuManager extends \yii\base\Object
      * @var MenuItem
      */
     private $_activeMenu;
+    /**
+     * @var integer[]
+     */
     private $_activeMenuIds = [];
-    private $_maps = [];
+    /**
+     * @var MenuMap
+     */
+    private $_map;
 
     public function init()
     {
@@ -42,19 +48,15 @@ class MenuManager extends \yii\base\Object
     }
 
     /**
-     * @param null $language
      * @return MenuMap
      */
-    public function getMenuMap($language = null)
+    public function getMenuMap()
     {
-        $language or $language = Yii::$app->language;
-        if(!isset($this->_maps[$language]))
-            $this->_maps[$language] = Yii::createObject([
-                'class' => MenuMap::className(),
-                'language' => $language,
-            ]);
+        if (!isset($this->_map)) {
+            $this->_map = Yii::createObject(MenuMap::className());
+        }
 
-        return $this->_maps[$language];
+        return $this->_map;
     }
 
     public function setActiveMenu($value)

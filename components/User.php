@@ -16,7 +16,6 @@ namespace gromver\platform\core\components;
  * is returned if the user is not logged in (not authenticated).
  *
  * @package yii2-platform-basic
- * @author Ricardo Obregón <robregonm@gmail.com>
  * @author Gayazov Roman <gromver5@gmail.com>
  */
 class User extends \yii\web\User

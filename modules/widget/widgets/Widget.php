@@ -175,7 +175,7 @@ class Widget extends \yii\base\Widget implements SpecificationInterface
             $contexts[] = $context;
         }
 
-        return WidgetConfig::find()->orderBy('context desc')->where(['widget_id' => $this->id, 'language' => Yii::$app->language, 'context' => $contexts])->one();
+        return WidgetConfig::find()->orderBy('context desc')->where(['widget_id' => $this->id, 'context' => $contexts])->one();
     }
 
     /**

@@ -11,10 +11,10 @@ namespace gromver\platform\core\modules\menu\models;
 
 
 use dosamigos\transliterator\TransliteratorHelper;
-use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\Inflector;
+use Yii;
 
 /**
  * This is the model class for table "grom_menu_type".

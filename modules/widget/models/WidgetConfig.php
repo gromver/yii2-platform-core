@@ -23,7 +23,6 @@ use yii\helpers\Json;
  * @property integer $id
  * @property string $widget_id
  * @property string $widget_class
- * @property string $language
  * @property string $context
  * @property string $url
  * @property string $params
@@ -56,10 +55,6 @@ class WidgetConfig extends \yii\db\ActiveRecord
             [['widget_id'], 'string', 'max' => 50],
             [['widget_class'], 'string', 'max' => 255],
             [['context', 'url'], 'string', 'max' => 1024],
-            [['language'], 'default', 'value' => function () {
-                return Yii::$app->language;
-            }],
-            [['language'], 'required'],
         ];
     }
 
@@ -72,7 +67,6 @@ class WidgetConfig extends \yii\db\ActiveRecord
             'id' => Yii::t('gromver.platform', 'ID'),
             'widget_id' => Yii::t('gromver.platform', 'Widget ID'),
             'widget_class' => Yii::t('gromver.platform', 'Widget Class'),
-            'language' => Yii::t('gromver.platform', 'Language'),
             'context' => Yii::t('gromver.platform', 'Context'),
             'url' => Yii::t('gromver.platform', 'Url'),
             'params' => Yii::t('gromver.platform', 'Params'),
