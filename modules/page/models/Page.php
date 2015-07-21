@@ -77,8 +77,10 @@ class Page extends \yii\db\ActiveRecord implements ViewableInterface, Searchable
         return [
             [['title', 'detail_text', 'status'], 'required'],
             [['preview_text', 'detail_text'], 'string'],
+            [['detail_text'], 'filter', 'filter' => 'yii\helpers\HtmlPurifier::process'],
             [['parent_id', 'created_at', 'updated_at', 'status', 'created_by', 'updated_by', 'lft', 'rgt', 'level', 'ordering', 'hits', 'lock'], 'integer'],
             [['title'], 'string', 'max' => 1024],
+            [['title'], 'filter', 'filter' => 'strip_tags'],
             [['alias', 'metakey'], 'string', 'max' => 255],
             [['metadesc'], 'string', 'max' => 2048],
 

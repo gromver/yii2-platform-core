@@ -96,7 +96,7 @@ class HtmlEditor extends WidgetPersonal {
                     'name' => $this->name,
                     'value' => $this->value,
                     'options' => ['class' => 'form-control', 'rows' => 10],
-                    'editorOptions' => ElFinder::ckeditorOptions('grom/media/manager', [
+                    'editorOptions' => ElFinder::ckeditorOptions('media/manager', [
                         'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
                         'extraPlugins' => 'codesnippet',
                         'preset' => 'basic',
@@ -111,7 +111,7 @@ class HtmlEditor extends WidgetPersonal {
                     'name' => $this->name,
                     'value' => $this->value,
                     'options' => ['class' => 'form-control', 'rows' => 10],
-                    'editorOptions' => ElFinder::ckeditorOptions('grom/media/manager', [
+                    'editorOptions' => ElFinder::ckeditorOptions('media/manager', [
                         'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
                         'extraPlugins' => 'codesnippet',
                         'preset' => 'standard',
@@ -126,7 +126,7 @@ class HtmlEditor extends WidgetPersonal {
                     'name' => $this->name,
                     'value' => $this->value,
                     'options' => ['class' => 'form-control', 'rows' => 10],
-                    'editorOptions' => ElFinder::ckeditorOptions('grom/media/manager', [
+                    'editorOptions' => ElFinder::ckeditorOptions('media/manager', [
                         'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
                         'extraPlugins' => 'codesnippet',
                         'preset' => 'full',

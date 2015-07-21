@@ -22,7 +22,7 @@ class WidgetPersonal extends Widget {
     /**
      * @inheritdoc
      */
-    protected $_configureRoute = '/grom/widget/backend/personal/configure';
+    protected $_configureRoute = '/widget/backend/personal/configure';
 
     /**
      * @inheritdoc
