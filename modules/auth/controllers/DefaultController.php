@@ -192,9 +192,9 @@ class DefaultController extends \yii\web\Controller
             $mailer = Instance::ensure($this->mailer, BaseMailer::className());
 
             return $mailer->compose('@gromver/platform/core/modules/auth/views/emails/passwordResetToken', ['user' => $user])
-                ->setFrom(Yii::$app->paramsManager->main->supportEmail, Yii::t('gromver.platform', '{name} robot', ['name' => Yii::$app->grom->siteName]))
+                ->setFrom(Yii::$app->paramsManager->main->supportEmail, Yii::t('gromver.platform', '{name} robot', ['name' => Yii::$app->siteName]))
                 ->setTo($user->email)
-                ->setSubject(Yii::t('gromver.platform', 'Password reset for {name}.', ['name' => Yii::$app->grom->siteName]))
+                ->setSubject(Yii::t('gromver.platform', 'Password reset for {name}.', ['name' => Yii::$app->siteName]))
                 ->send();
         }
 

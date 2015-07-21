@@ -10,26 +10,12 @@
 namespace gromver\platform\core\modules\main;
 
 
-use gromver\modulequery\ModuleEvent;
 use gromver\modulequery\ModuleEventsInterface;
-use gromver\modulequery\ModuleQuery;
-use gromver\platform\core\components\events\FetchParamsEvent;
-use gromver\platform\core\components\MenuManager;
 use gromver\platform\core\components\ParamsManager;
-use gromver\platform\core\modules\main\events\ListItemsModuleEvent;
-use gromver\platform\core\modules\main\models\DbState;
-use gromver\platform\core\modules\menu\models\MenuItem;
-use gromver\platform\core\modules\search\widgets\SearchResultsBackend;
-use gromver\platform\core\modules\search\widgets\SearchResultsFrontend;
-use gromver\platform\core\modules\user\models\User;
 use gromver\platform\core\modules\main\widgets\Desktop;
 use gromver\platform\core\modules\menu\widgets\MenuItemRoutes;
 use gromver\platform\core\modules\main\models\MainParams;
 use Yii;
-use yii\base\BootstrapInterface;
-use yii\base\Event;
-use yii\caching\ExpressionDependency;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class Module
@@ -39,7 +25,7 @@ use yii\helpers\ArrayHelper;
  * @property string $siteName
  * @property bool $isEditMode
  */
-class Module extends \yii\base\Module implements BootstrapInterface, ModuleEventsInterface
+class Module extends \yii\base\Module implements ModuleEventsInterface
 {
     public $controllerNamespace = '\gromver\platform\core\modules\main\controllers';
     public $defaultRoute = 'frontend/default';
@@ -48,40 +34,7 @@ class Module extends \yii\base\Module implements BootstrapInterface, ModuleEvent
      */
     public $paramsClass = 'gromver\platform\core\modules\main\models\MainParams';
 
-    /**
-     * @inheritdoc
-     */
-    public function bootstrap($app)
-    {
-        $app->set('grom', $this);
-
-        /** @var MainParams $params */
-        $params = Yii::$app->paramsManager->main;
-
-        // устанавливает мета описание сайта по умолчанию
-        $view = Yii::$app->getView();
-        $view->title = $params->siteTitle;
-        if (!empty($params->keywords)) {
-            $view->registerMetaTag(['name' => 'keywords', 'content' => $params->keywords], 'keywords');
-        }
-        if (!empty($params->description)) {
-            $view->registerMetaTag(['name' => 'description', 'content' => $params->description], 'description');
-        }
-        if (!empty($params->robots)) {
-            $view->registerMetaTag(['name' => 'robots', 'content' => $params->robots], 'robots');
-        }
-        $view->registerMetaTag(['name' => 'generator', 'content' => 'Grom Platform - Open Source Yii2 Development Platform.'], 'generator');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    /*public function init()
-    {
-
-    }
-
-    public function initI18N()
+    /*public function initI18N()
     {
         Yii::$app->i18n->translations['gromver.*'] = [
             'class' => 'yii\i18n\PhpMessageSource',
@@ -113,19 +66,10 @@ class Module extends \yii\base\Module implements BootstrapInterface, ModuleEvent
         $event->items[] = [
             'label' => Yii::t('gromver.platform', 'System'),
             'items' => [
-                //['label' => Yii::t('gromver.platform', 'Sitemap'), 'route' => 'main/frontend/default/sitemap'/*, 'icon' => '<i class="glyphicon glyphicon-cog"></i>'*/],
                 ['label' => Yii::t('gromver.platform', 'Dummy Page'), 'route' => 'main/frontend/default/dummy-page'],
                 ['label' => Yii::t('gromver.platform', 'Contact Form'), 'route' => 'main/frontend/default/contact'],
             ]
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getSiteName()
-    {
-        return !empty(Yii::$app->paramsManager->main->siteName) ? Yii::$app->paramsManager->main->siteName : Yii::$app->name;
     }
 
     /**
@@ -138,8 +82,6 @@ class Module extends \yii\base\Module implements BootstrapInterface, ModuleEvent
             Desktop::EVENT_FETCH_ITEMS => 'addDesktopItem',
             MenuItemRoutes::EVENT_FETCH_ITEMS => 'addMenuItemRoutes',
             ParamsManager::EVENT_FETCH_MODULE_PARAMS => 'addParams',
-            SearchResultsBackend::EVENT_FETCH_SEARCHABLE_MODELS => 'addSearchableModelsBackend',
-            SearchResultsFrontend::EVENT_FETCH_SEARCHABLE_MODELS => 'addSearchableModelsFrontend'
         ];
     }
 
@@ -150,31 +92,6 @@ class Module extends \yii\base\Module implements BootstrapInterface, ModuleEvent
     {
         $event->items[] = MainParams::className();
     }
-
-    /**
-     * @param $event \gromver\platform\core\modules\search\widgets\events\SearchableModelsEvent
-     */
-    public function addSearchableModelsBackend($event)
-    {
-        $event->items = array_merge($event->items, Yii::$app->backendSearchableModels/*[
-            'gromver\platform\core\modules\page\models\Page' => Yii::t('gromver.platform', 'Pages'),
-            'gromver\platform\core\modules\news\models\Post' => Yii::t('gromver.platform', 'Posts'),
-            'gromver\platform\core\modules\news\models\Category' => Yii::t('gromver.platform', 'Categories'),
-        ]*/);
-    }
-
-    /**
-     * @param $event \gromver\platform\core\modules\search\widgets\events\SearchableModelsEvent
-     */
-    public function addSearchableModelsFrontend($event)
-    {
-        $event->items = array_merge($event->items, Yii::$app->frontendSearchableModels/*[
-            'gromver\platform\core\modules\page\models\Page' => Yii::t('gromver.platform', 'Pages'),
-            'gromver\platform\core\modules\news\models\Post' => Yii::t('gromver.platform', 'Posts'),
-            'gromver\platform\core\modules\news\models\Category' => Yii::t('gromver.platform', 'Categories'),
-        ]*/);
-    }
-
 
     /**
      * @param $event \gromver\platform\core\modules\user\models\events\BeforeRolesSaveEvent

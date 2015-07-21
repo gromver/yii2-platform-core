@@ -22,7 +22,7 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 <?php
 \yii\bootstrap\NavBar::begin([
-    'brandLabel' => Yii::$app->grom->siteName,
+    'brandLabel' => Yii::$app->siteName,
     'brandUrl' => Yii::$app->homeUrl,
     'options' => [
         'class' => 'navbar-inverse navbar-fixed-top',
@@ -64,7 +64,7 @@ echo \yii\bootstrap\Nav::widget([
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; <?= Yii::$app->grom->siteName . ' ' . date('Y') ?></p>
+        <p class="pull-left">&copy; <?= Yii::$app->siteName . ' ' . date('Y') ?></p>
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>

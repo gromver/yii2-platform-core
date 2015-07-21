@@ -30,7 +30,7 @@ class SearchFormFrontend extends Widget
      * @items url
      * @empty
      */
-    public $url = '/grom/search/sql/frontend/default/index';
+    public $url = '/search/sql/frontend/default/index';
     /**
      * @var string
      * @ignore

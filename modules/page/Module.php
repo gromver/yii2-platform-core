@@ -15,9 +15,11 @@ use gromver\platform\core\components\MenuUrlRule;
 use gromver\platform\core\modules\main\widgets\Desktop;
 use gromver\platform\core\modules\menu\widgets\MenuItemRoutes;
 use gromver\platform\core\modules\page\components\MenuRouterPage;
+use gromver\platform\core\modules\search\widgets\SearchResultsBackend;
+use gromver\platform\core\modules\search\widgets\SearchResultsFrontend;
 use gromver\platform\core\modules\page\models\Page;
-//use gromver\platform\core\modules\search\modules\sql\widgets\SearchResultsFrontend as SqlSearchResults;
-//use gromver\platform\core\modules\search\modules\elastic\widgets\SearchResultsFrontend as ElasticSearchResults;
+use gromver\platform\core\modules\search\modules\sql\widgets\SearchResultsFrontend as SqlSearchResults;
+use gromver\platform\core\modules\search\modules\elastic\widgets\SearchResultsFrontend as ElasticSearchResults;
 use Yii;
 
 /**
@@ -29,6 +31,22 @@ class Module extends \yii\base\Module implements ModuleEventsInterface
 {
     public $controllerNamespace = 'gromver\platform\core\modules\page\controllers';
     public $defaultRoute = 'frontend/default';
+
+    /**
+     * @inheritdoc
+     */
+    public function events()
+    {
+        return [
+            Desktop::EVENT_FETCH_ITEMS => 'addDesktopItem',
+            MenuItemRoutes::EVENT_FETCH_ITEMS => 'addMenuItemRoutes',
+            MenuUrlRule::EVENT_FETCH_MODULE_ROUTERS => 'addMenuRouter',
+            SqlSearchResults::EVENT_BEFORE_SEARCH => [Page::className(), 'sqlBeforeFrontendSearch'],
+            ElasticSearchResults::EVENT_BEFORE_SEARCH => [Page::className(), 'elasticBeforeFrontendSearch'],
+            SearchResultsBackend::EVENT_FETCH_SEARCHABLE_MODELS => 'addSearchableModelsBackend',
+            SearchResultsFrontend::EVENT_FETCH_SEARCHABLE_MODELS => 'addSearchableModelsFrontend'
+        ];
+    }
 
     /**
      * @param $event \gromver\platform\core\modules\main\widgets\events\DesktopEvent
@@ -66,16 +84,18 @@ class Module extends \yii\base\Module implements ModuleEventsInterface
     }
 
     /**
-     * @inheritdoc
+     * @param $event \gromver\platform\core\modules\search\widgets\events\SearchableModelsEvent
      */
-    public function events()
+    public function addSearchableModelsBackend($event)
     {
-        return [
-            Desktop::EVENT_FETCH_ITEMS => 'addDesktopItem',
-            MenuItemRoutes::EVENT_FETCH_ITEMS => 'addMenuItemRoutes',
-            MenuUrlRule::EVENT_FETCH_MODULE_ROUTERS => 'addMenuRouter',
-            //SqlSearchResults::EVENT_BEFORE_SEARCH . Page::className()  => [Page::className(), 'sqlBeforeFrontendSearch'],
-            //ElasticSearchResults::EVENT_BEFORE_SEARCH . Page::className() => [Page::className(), 'elasticBeforeFrontendSearch'],
-        ];
+        $event->items['gromver\platform\core\modules\page\models\Page'] = Yii::t('gromver.platform', 'Pages');
+    }
+
+    /**
+     * @param $event \gromver\platform\core\modules\search\widgets\events\SearchableModelsEvent
+     */
+    public function addSearchableModelsFrontend($event)
+    {
+        $event->items['gromver\platform\core\modules\page\models\Page'] = Yii::t('gromver.platform', 'Pages');
     }
 }

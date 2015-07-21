@@ -405,14 +405,16 @@ class Page extends \yii\db\ActiveRecord implements ViewableInterface, Searchable
      */
     static public function sqlBeforeFrontendSearch($event)
     {
-        $event->query->leftJoin('{{%grom_page}}', [
-                'AND',
-                ['=', 'model_class', self::className()],
-                'model_id={{%grom_page}}.id',
-                ['NOT IN', '{{%grom_page}}.parent_id', Page::find()->unpublished()->select('{{%grom_page}}.id')->column()]
-            ]
-        )->addSelect('{{%grom_page}}.id')
-            ->andWhere('model_class=:pageClassName XOR {{%grom_page}}.id IS NULL', [':pageClassName' => self::className()]);
+        if ($event->modelClass == self::className()) {
+            $event->query->leftJoin('{{%grom_page}}', [
+                    'AND',
+                    ['=', 'model_class', self::className()],
+                    'model_id={{%grom_page}}.id',
+                    ['NOT IN', '{{%grom_page}}.parent_id', Page::find()->unpublished()->select('{{%grom_page}}.id')->column()]
+                ]
+            )->addSelect('{{%grom_page}}.id')
+                ->andWhere('model_class=:pageClassName XOR {{%grom_page}}.id IS NULL', [':pageClassName' => self::className()]);
+        }
     }
 
     // ElasticSearch integration
@@ -421,17 +423,19 @@ class Page extends \yii\db\ActiveRecord implements ViewableInterface, Searchable
      */
     static public function elasticBeforeFrontendSearch($event)
     {
-        $event->sender->filters[] = [
-            'not' => [
-                'and' => [
-                    [
-                        'term' => ['model_class' => self::className()]
-                    ],
-                    [
-                        'terms' => ['model_id' => self::find()->unpublished()->select('{{%grom_page}}.id')->column()]
-                    ],
+        if ($event->modelClass == self::className()) {
+            $event->sender->filters[] = [
+                'not' => [
+                    'and' => [
+                        [
+                            'term' => ['model_class' => self::className()]
+                        ],
+                        [
+                            'terms' => ['model_id' => self::find()->unpublished()->select('{{%grom_page}}.id')->column()]
+                        ],
+                    ]
                 ]
-            ]
-        ];
+            ];
+        }
     }
 }

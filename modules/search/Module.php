@@ -15,7 +15,10 @@ use gromver\platform\core\modules\search\behaviors\SearchBehavior;
 use gromver\platform\core\interfaces\model\SearchableInterface;
 use gromver\platform\core\interfaces\model\ViewableInterface;
 use gromver\platform\core\modules\search\behaviors\events\SearchBehaviorEvent;
+use gromver\platform\core\modules\search\widgets\SearchResultsBackend;
+use gromver\platform\core\modules\search\widgets\SearchResultsFrontend;
 use yii\base\InvalidParamException;
+use Yii;
 
 /**
  * Class Module
@@ -24,6 +27,26 @@ use yii\base\InvalidParamException;
  */
 class Module extends \yii\base\Module implements ModuleEventsInterface
 {
+    /**
+     * Список моделей открытых для поиска во фронтенде
+     * [
+     *      'foo\bar\news\Model' => 'Новости',
+     *      'foo\bar\page\Model' => 'Страницы',
+     * ]
+     * @var array
+     */
+    public $frontendSearchableModels = [];
+    /**
+     * Список моделей открытых для поиска в бэкенде
+     * [
+     *      'foo\bar\news\Model' => 'Новости',
+     *      'foo\bar\page\Model' => 'Страницы',
+     *      'foo\bar\user\Model' => 'Пользователи',
+     * ]
+     * @var array
+     */
+    public $backendSearchableModels = [];
+
     /**
      * Инедксация сохраненой модели для последующего поиска по этому индексу
      * @param SearchBehaviorEvent $event
@@ -57,6 +80,24 @@ class Module extends \yii\base\Module implements ModuleEventsInterface
         return [
             SearchBehavior::EVENT_INDEX_PAGE => [$this, 'indexPage'],
             SearchBehavior::EVENT_DELETE_PAGE => [$this, 'deletePage'],
+            SearchResultsBackend::EVENT_FETCH_SEARCHABLE_MODELS => 'addSearchableModelsBackend',
+            SearchResultsFrontend::EVENT_FETCH_SEARCHABLE_MODELS => 'addSearchableModelsFrontend'
         ];
+    }
+
+    /**
+     * @param $event \gromver\platform\core\modules\search\widgets\events\SearchableModelsEvent
+     */
+    public function addSearchableModelsBackend($event)
+    {
+        $event->items = array_merge($event->items, $this->backendSearchableModels);
+    }
+
+    /**
+     * @param $event \gromver\platform\core\modules\search\widgets\events\SearchableModelsEvent
+     */
+    public function addSearchableModelsFrontend($event)
+    {
+        $event->items = array_merge($event->items, $this->frontendSearchableModels);
     }
 } 

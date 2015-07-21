@@ -19,9 +19,6 @@ use yii\helpers\ArrayHelper;
  */
 class Application extends \yii\console\Application
 {
-//    public $language = 'en';
-//    public $sourceLanguage = 'en';
-
     private $_modulesHash;
 
     /**
@@ -72,9 +69,9 @@ class Application extends \yii\console\Application
                 'version'   => ['class' => 'gromver\platform\core\modules\version\Module'],
                 'search'    => [
                     'class' => 'gromver\platform\core\modules\search\Module',
-                    /*'modules' => [
+                    'modules' => [
                         'sql' => ['class' => 'gromver\platform\core\modules\search\modules\sql\Module']
-                    ]*/
+                    ]
                 ],
             ]
         ], $coreConfig, $config);

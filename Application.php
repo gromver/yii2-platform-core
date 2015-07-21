@@ -22,6 +22,11 @@ use Yii;
  * Class Application
  * @package yii2-platform-basic
  * @author Gayazov Roman <gromver5@gmail.com>
+ *
+ * @property \gromver\platform\core\components\ParamsManager $paramsManager
+ * @property string $siteName
+ * @property string $siteTitle
+ * @property string $siteSlogan
  */
 class Application extends \yii\web\Application {
     const SESSION_MODE_KEY = '__grom_mode';
@@ -32,8 +37,6 @@ class Application extends \yii\web\Application {
     const EVENT_FETCH_LIST_ITEMS = 'mainFetchListItems';
 
     public $defaultRoute = 'main/frontend/default/index';
-//    public $language = 'en';
-//    public $sourceLanguage = 'en';
 
     public $layout          = '@gromver/platform/core/views/layouts/frontend';
 
@@ -66,25 +69,6 @@ class Application extends \yii\web\Application {
         'grom/tag/frontend<path:(/.*)?>',
         'grom/user/frontend<path:(/.*)?>',*/
     ];
-    /**
-     * Список моделей открытых для поиска во фронтенде
-     * [
-     *      'foo\bar\news\Model' => 'Новости',
-     *      'foo\bar\page\Model' => 'Страницы',
-     * ]
-     * @var array
-     */
-    public $frontendSearchableModels = [];
-    /**
-     * Список моделей открытых для поиска в бэкенде
-     * [
-     *      'foo\bar\news\Model' => 'Новости',
-     *      'foo\bar\page\Model' => 'Страницы',
-     *      'foo\bar\user\Model' => 'Пользователи',
-     * ]
-     * @var array
-     */
-    public $backendSearchableModels = [];
 
     /**
      * @var string
@@ -134,7 +118,7 @@ class Application extends \yii\web\Application {
                     'ruleTable' => '{{%grom_auth_rule}}'
                 ],
                 'cache' => ['class' => 'yii\caching\FileCache'],
-                //'elasticsearch' => ['class' => 'yii\elasticsearch\Connection'],
+                'elasticsearch' => ['class' => 'yii\elasticsearch\Connection'],
                 'assetManager' => [
                     'bundles' => [
                         'mihaildev\ckeditor\Assets' => [
@@ -167,9 +151,9 @@ class Application extends \yii\web\Application {
                 'version'   => ['class' => 'gromver\platform\core\modules\version\Module'],
                 'search'    => [
                     'class' => 'gromver\platform\core\modules\search\Module',
-                    /*'modules' => [
+                    'modules' => [
                         'sql' => ['class' => 'gromver\platform\core\modules\search\modules\sql\Module']
-                    ]*/
+                    ]
                 ],
                 'gridview' => ['class' => 'kartik\grid\Module']
             ]
@@ -185,7 +169,7 @@ class Application extends \yii\web\Application {
      */
     public function init()
     {
-        $this->bootstrap = array_merge($this->bootstrap, ['main']);
+        //$this->bootstrap = array_merge($this->bootstrap, ['main']);
 
         $this->_modulesConfigDependency = new ExpressionDependency(['expression' => '\Yii::$app->getModulesHash()']);
 
@@ -243,6 +227,8 @@ class Application extends \yii\web\Application {
                 $event->items = array_merge($event->items, $additionalItems);
             }
         });
+
+        $this->applyDefaultMetadata();
 
         parent::init();
     }
@@ -304,6 +290,63 @@ class Application extends \yii\web\Application {
         return [self::MODE_VIEW, self::MODE_EDIT];
     }
 
+    /**
+     * @return string
+     */
+    public function getSiteName()
+    {
+        /** @var \gromver\platform\core\modules\main\models\MainParams $params */
+        $params = $this->paramsManager->params('main');
+
+        return !empty($params->siteName) ? $params->siteName : $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiteTitle()
+    {
+        return $this->paramsManager->params('main')->siteTitle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiteSlogan()
+    {
+        return $this->paramsManager->params('main')->siteSlogan;
+    }
+
+    /**
+     * @return \yii\elasticsearch\Connection
+     */
+    public function getElasticSearch()
+    {
+        return $this->get('elasticsearch');
+    }
+
+    /**
+     * apply platform's frontend layout
+     */
+    public function applyDefaultMetadata()
+    {
+        /** @var \gromver\platform\core\modules\main\models\MainParams $params */
+        $params = $this->paramsManager->params('main');
+
+        // устанавливает мета описание сайта по умолчанию
+        $view = $this->getView();
+        $view->title = $params->siteTitle ? $params->siteTitle : $params->siteName;
+        if (!empty($params->keywords)) {
+            $view->registerMetaTag(['name' => 'keywords', 'content' => $params->keywords], 'keywords');
+        }
+        if (!empty($params->description)) {
+            $view->registerMetaTag(['name' => 'description', 'content' => $params->description], 'description');
+        }
+        if (!empty($params->robots)) {
+            $view->registerMetaTag(['name' => 'robots', 'content' => $params->robots], 'robots');
+        }
+        $view->registerMetaTag(['name' => 'generator', 'content' => 'Grom Platform - Open Source Yii2 Development Platform.'], 'generator');
+    }
 
     /**
      * apply platform's frontend layout
