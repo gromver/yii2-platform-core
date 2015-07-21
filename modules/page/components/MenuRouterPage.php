@@ -27,7 +27,7 @@ class MenuRouterPage extends \gromver\platform\core\components\MenuRouter
     {
         return [
             [
-                'menuRoute' => 'grom/page/frontend/default/guide',
+                'menuRoute' => 'page/frontend/default/guide',
                 'handler' => 'parsePageGuide'
             ],
         ];
@@ -40,12 +40,12 @@ class MenuRouterPage extends \gromver\platform\core\components\MenuRouter
     {
         return [
             [
-                'requestRoute' => 'grom/page/frontend/default/view',
+                'requestRoute' => 'page/frontend/default/view',
                 'requestParams' => ['id'],
                 'handler' => 'createPageView'
             ],
             [
-                'requestRoute' => 'grom/page/frontend/default/guide',
+                'requestRoute' => 'page/frontend/default/guide',
                 'requestParams' => ['id'],
                 'handler' => 'createPageGuide'
             ],
@@ -62,10 +62,9 @@ class MenuRouterPage extends \gromver\platform\core\components\MenuRouter
         if ($menuPage = Page::findOne($requestInfo->menuParams['id'])) {
             /** @var Page $page */
             if ($page = Page::findOne([
-                'path' => $menuPage->path . '/' . $requestInfo->requestRoute,
-                'language' => $menuPage->language
+                'path' => $menuPage->path . '/' . $requestInfo->requestRoute
             ])) {
-                return ['grom/page/frontend/default/guide', ['id' => $page->id]];
+                return ['page/frontend/default/guide', ['id' => $page->id]];
             }
         }
     }
@@ -77,7 +76,7 @@ class MenuRouterPage extends \gromver\platform\core\components\MenuRouter
     public function createPageView($requestInfo)
     {
         //пытаемся найти пункт меню ссылющийся на данный пост
-        if ($path = $requestInfo->menuMap->getMenuPathByRoute(MenuItem::toRoute('grom/page/frontend/default/view', ['id' => $requestInfo->requestParams['id']]))) {
+        if ($path = $requestInfo->menuMap->getMenuPathByRoute(MenuItem::toRoute('page/frontend/default/view', ['id' => $requestInfo->requestParams['id']]))) {
             unset($requestInfo->requestParams['id'], $requestInfo->requestParams['alias']);
             return MenuItem::toRoute($path, $requestInfo->requestParams);
         }
@@ -113,16 +112,16 @@ class MenuRouterPage extends \gromver\platform\core\components\MenuRouter
     private function findPageMenuPath($pageId, $menuMap)
     {
         /** @var Page $page */
-        if (!isset($this->_pagePaths[$menuMap->language][$pageId])) {
-            if ($path = $menuMap->getMenuPathByRoute(MenuItem::toRoute('grom/page/frontend/default/guide', ['id' => $pageId]))) {
-                $this->_pagePaths[$menuMap->language][$pageId] = $path;
+        if (!isset($this->_pagePaths[$pageId])) {
+            if ($path = $menuMap->getMenuPathByRoute(MenuItem::toRoute('page/frontend/default/guide', ['id' => $pageId]))) {
+                $this->_pagePaths[$pageId] = $path;
             } elseif (($page = Page::findOne($pageId)) && !$page->isRoot() && $path = $this->findPageMenuPath($page->parent_id, $menuMap)) {
-                $this->_pagePaths[$menuMap->language][$pageId] = $path . '/' . $page->alias;
+                $this->_pagePaths[$pageId] = $path . '/' . $page->alias;
             } else {
-                $this->_pagePaths[$menuMap->language][$pageId] = false;
+                $this->_pagePaths[$pageId] = false;
             }
         }
 
-        return $this->_pagePaths[$menuMap->language][$pageId];
+        return $this->_pagePaths[$pageId];
     }
 }

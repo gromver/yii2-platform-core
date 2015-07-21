@@ -30,8 +30,8 @@ use Yii;
  */
 class Module extends \gromver\platform\core\modules\search\Module implements ModuleEventsInterface
 {
-    const EVENT_BEFORE_CREATE_INDEX = 'SqlBeforeCreateIndex_';
-    const EVENT_BEFORE_DELETE_INDEX = 'SqlBeforeDeleteIndex_';
+    const EVENT_BEFORE_CREATE_INDEX = 'SqlBeforeCreateIndex';
+    const EVENT_BEFORE_DELETE_INDEX = 'SqlBeforeDeleteIndex';
 
     public $controllerNamespace = 'gromver\platform\core\modules\search\modules\sql\controllers';
     public $defaultRoute = 'frontend/default';
@@ -100,7 +100,7 @@ class Module extends \gromver\platform\core\modules\search\Module implements Mod
         $index->url_backend = $event->model->getBackendViewLink();
         $index->url_frontend = $event->model->getFrontendViewLink();
 
-        ModuleEvent::trigger(self::EVENT_BEFORE_CREATE_INDEX . $event->model->className(), new SqlIndexEvent([
+        ModuleEvent::trigger(self::EVENT_BEFORE_CREATE_INDEX, new SqlIndexEvent([
             'model' => $event->model,
             'index' => $index
         ]));
@@ -117,7 +117,7 @@ class Module extends \gromver\platform\core\modules\search\Module implements Mod
     public function deletePage($event)
     {
         $index = Index::find()->where(['model_id' => $event->model->getPrimaryKey(), 'model_class' => $event->model->className()])->one();
-        ModuleEvent::trigger(self::EVENT_BEFORE_DELETE_INDEX . $event->model->className(), new SqlIndexEvent([
+        ModuleEvent::trigger(self::EVENT_BEFORE_DELETE_INDEX, new SqlIndexEvent([
             'model' => $event->model,
             'index' => $index
         ]));

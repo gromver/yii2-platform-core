@@ -18,7 +18,7 @@ use Yii;
  * @package yii2-platform-basic
  * @author Gayazov Roman <gromver5@gmail.com>
  */
-class DefaultController extends \gromver\platform\core\components\BackendController
+class DefaultController extends \gromver\platform\core\controllers\BackendController
 {
     public function behaviors()
     {

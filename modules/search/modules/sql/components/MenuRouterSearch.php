@@ -26,7 +26,7 @@ class MenuRouterSearch extends \gromver\platform\core\components\MenuRouter {
     {
         return [
             [
-                'requestRoute' => 'grom/search/sql/frontend/default/index',
+                'requestRoute' => 'search/sql/frontend/default/index',
                 'handler' => 'createSearch'
             ],
         ];
@@ -38,7 +38,7 @@ class MenuRouterSearch extends \gromver\platform\core\components\MenuRouter {
      */
     public function createSearch($requestInfo)
     {
-        if($path = $requestInfo->menuMap->getMenuPathByRoute('grom/search/sql/frontend/default/index')) {
+        if($path = $requestInfo->menuMap->getMenuPathByRoute('search/sql/frontend/default/index')) {
             return MenuItem::toRoute($path, $requestInfo->requestParams);
         }
     }

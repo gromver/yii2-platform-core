@@ -70,7 +70,7 @@ class Module extends \yii\base\Module implements ModuleEventsInterface
             'label' => Yii::t('gromver.platform', 'Pages'),
             'items' => [
                 ['label' => Yii::t('gromver.platform', 'Page View'), 'url' => ['/page/backend/default/select']],
-                ['label' => Yii::t('gromver.platform', 'Page Guide'), 'url' => ['/page/backend/default/select', 'route' => 'grom/page/frontend/default/guide']],
+                ['label' => Yii::t('gromver.platform', 'Page Guide'), 'url' => ['/page/backend/default/select', 'route' => 'page/frontend/default/guide']],
             ]
         ];
     }

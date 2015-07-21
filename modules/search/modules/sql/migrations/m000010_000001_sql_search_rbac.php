@@ -1,6 +1,6 @@
 <?php
 
-class m000009_000001_grom_sql_search_rbac extends \yii\db\Migration
+class m000010_000001_sql_search_rbac extends \yii\db\Migration
 {
     public function up()
     {
