@@ -98,9 +98,11 @@ class HtmlEditor extends WidgetPersonal {
                     'options' => ['class' => 'form-control', 'rows' => 10],
                     'editorOptions' => ElFinder::ckeditorOptions('media/manager', [
                         'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
-                        'extraPlugins' => 'codesnippet',
+                        //'extraPlugins' => 'codesnippet',
                         'preset' => 'basic',
-                        'tabSpaces' => 4
+                        'tabSpaces' => 4,
+                        'autoGrow_onStartup' => true,
+                        'autoGrow_bottomSpace' => 50,
                     ])
                 ]);
                 break;
@@ -113,9 +115,11 @@ class HtmlEditor extends WidgetPersonal {
                     'options' => ['class' => 'form-control', 'rows' => 10],
                     'editorOptions' => ElFinder::ckeditorOptions('media/manager', [
                         'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
-                        'extraPlugins' => 'codesnippet',
+                        //'extraPlugins' => 'codesnippet',
                         'preset' => 'standard',
-                        'tabSpaces' => 4
+                        'tabSpaces' => 4,
+                        'autoGrow_onStartup' => true,
+                        'autoGrow_bottomSpace' => 50,
                     ])
                 ]);
                 break;
@@ -128,9 +132,11 @@ class HtmlEditor extends WidgetPersonal {
                     'options' => ['class' => 'form-control', 'rows' => 10],
                     'editorOptions' => ElFinder::ckeditorOptions('media/manager', [
                         'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
-                        'extraPlugins' => 'codesnippet',
+                        //'extraPlugins' => 'autogrow',//'codesnippet',
                         'preset' => 'full',
-                        'tabSpaces' => 4
+                        'tabSpaces' => 4,
+                        'autoGrow_onStartup' => true,
+                        'autoGrow_bottomSpace' => 50,
                     ])
                 ]);
                 break;

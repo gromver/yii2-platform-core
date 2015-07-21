@@ -176,14 +176,16 @@ class Application extends \yii\web\Application {
         DbState::bootstrap();
 
         Yii::$container->set('gromver\models\fields\EditorField', [
-            'controller' => 'grom/media/manager',
+            'controller' => 'media/manager',
             'editorOptions' => [
-                'filebrowserBrowseUrl' => ['/grom/menu/backend/item/ckeditor-select'],
-                'extraPlugins' => 'codesnippet'
+                'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
+                //'extraPlugins' => 'codesnippet',
+                'autoGrow_onStartup' => true,
+                'autoGrow_bottomSpace' => 50,
             ]
         ]);
         Yii::$container->set('gromver\models\fields\MediaField', [
-            'controller' => 'grom/media/manager'
+            'controller' => 'media/manager'
         ]);
         Yii::$container->set('gromver\modulequery\ModuleQuery', [
             'cache' => $this->cache,
