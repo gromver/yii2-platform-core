@@ -27,5 +27,5 @@ class SearchFormBackend extends SearchFormFrontend
      * @items url
      * @empty
      */
-    public $url = '/grom/search/sql/backend/default/index';
+    public $url = '/search/sql/backend/default/index';
 }

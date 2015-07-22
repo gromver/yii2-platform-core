@@ -24,7 +24,7 @@ use Yii;
  */
 class SearchResultsFrontend extends \gromver\platform\core\modules\search\widgets\SearchResultsFrontend
 {
-    const EVENT_BEFORE_SEARCH = 'SqlBeforeFrontendSearch_';
+    const EVENT_BEFORE_SEARCH = 'SqlBeforeFrontendSearch';
 
     /**
      * @field list
