@@ -210,7 +210,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         if ($status === null) {
             return Yii::t('gromver.platform', self::$_statuses[$this->status]);
         }
-        
+
         return Yii::t('gromver.platform', self::$_statuses[$status]);
     }
 
