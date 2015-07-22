@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'vAlign' => GridView::ALIGN_MIDDLE,
                 'value' => function($model) {
                         /** @var User $model */
-                        return $model->getIsSuperAdmin() ? '<span class="text-muted">superadmin</span>' : implode(", ", $model->getRoles());
+                        return $model->getIsSuperAdmin() ? '<span class="text-muted">' . Yii::t('gromver.platform', 'Super Administrator') . '</span>' : implode(", ", $model->getRoles());
                     },
                 'format' => 'html',
                 'filter' => \yii\helpers\ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name')

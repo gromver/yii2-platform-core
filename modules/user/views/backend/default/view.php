@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'email:email',
             [
                 'attribute' => 'roles',
-                'value' => implode(', ', $model->roles),
+                'value' => $model->isSuperAdmin ? Yii::t('gromver.platform', 'Super Administrator') : implode(', ', $model->roles),
             ],
             'password_hash',
             'password_reset_token',
