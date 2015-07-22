@@ -207,8 +207,12 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
             throw new ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
         }
 
-        if ($model->getIsTrashed() && $this->module->allowDelete) {
-            $model->delete();
+        if ($model->getIsTrashed() ) {
+            if ($this->module->allowDelete) {
+                $model->delete();
+            } else {
+                throw new ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
+            }
         }
 
         if(Yii::$app->request->getIsDelete()) {
