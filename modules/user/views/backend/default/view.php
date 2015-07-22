@@ -36,6 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'username',
             'email:email',
+            [
+                'attribute' => 'roles',
+                'value' => implode(', ', $model->roles),
+            ],
             'password_hash',
             'password_reset_token',
             'auth_key',
