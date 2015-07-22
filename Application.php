@@ -54,7 +54,7 @@ class Application extends \yii\web\Application {
      * ]
      * @var array
      */
-    public $listFieldItems  = [];
+    public $listFieldItems = [];
     /**
      * @var array список компонентов к которым нельзя попасть на прямую(grom/post/frontend/..., grom/page/frontend/...)
      * эта блокировка нужна для того чтобы управлять структурой сайта только через меню
@@ -69,6 +69,11 @@ class Application extends \yii\web\Application {
         'grom/tag/frontend<path:(/.*)?>',
         'grom/user/frontend<path:(/.*)?>',*/
     ];
+    /**
+     * @var array список дополнительных поведений для модели пользователя
+     * Используется в \gromver\platform\core\modules\user\models\User::behaviors()
+     */
+    public $userBehaviors = [];
 
     /**
      * @var string

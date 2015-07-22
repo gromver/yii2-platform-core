@@ -183,6 +183,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     }
 
     /**
+     * todo replace this
      * @return \yii\db\ActiveQuery
      */
     public function getViewedPosts()
@@ -201,7 +202,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
                     self::EVENT_BEFORE_SAFE_DELETE => 'deleted_at',
                 ]
             ]
-        ];
+        ] + Yii::$app->userBehaviors;
     }
 
     public function getStatusLabel($status = null)
@@ -209,6 +210,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         if ($status === null) {
             return Yii::t('gromver.platform', self::$_statuses[$this->status]);
         }
+        
         return Yii::t('gromver.platform', self::$_statuses[$status]);
     }
 

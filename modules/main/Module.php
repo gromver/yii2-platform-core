@@ -15,6 +15,7 @@ use gromver\platform\core\components\ParamsManager;
 use gromver\platform\core\modules\main\widgets\Desktop;
 use gromver\platform\core\modules\menu\widgets\MenuItemRoutes;
 use gromver\platform\core\modules\main\models\MainParams;
+use gromver\platform\core\modules\user\models\User;
 use Yii;
 
 /**
@@ -78,7 +79,7 @@ class Module extends \yii\base\Module implements ModuleEventsInterface
     public function events()
     {
         return [
-            //User::EVENT_BEFORE_USER_ROLES_SAVE => 'beforeUserRolesSave',
+            User::EVENT_BEFORE_USER_ROLES_SAVE => 'beforeUserRolesSave',
             Desktop::EVENT_FETCH_ITEMS => 'addDesktopItem',
             MenuItemRoutes::EVENT_FETCH_ITEMS => 'addMenuItemRoutes',
             ParamsManager::EVENT_FETCH_MODULE_PARAMS => 'addParams',
