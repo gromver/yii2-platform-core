@@ -11,8 +11,6 @@ namespace gromver\platform\core\modules\user\models;
 
 
 use gromver\modulequery\ModuleEvent;
-use gromver\platform\core\modules\news\models\Post;
-use gromver\platform\core\modules\news\models\PostViewed;
 use gromver\platform\core\modules\user\models\events\BeforeRolesSaveEvent;
 use Yii;
 use yii\base\ModelEvent;
@@ -32,16 +30,16 @@ use yii\web\IdentityInterface;
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $auth_key
- * @property string $params
+ * @property string $profile_data
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
  * @property integer $deleted_at
  * @property integer $last_visit_at
- * @property \gromver\platform\core\modules\news\models\Post[] $viewedPosts
  * @property string[] $roles
  * @property bool $isSuperAdmin
  * @property bool $isTrashed
+ * @property UserParam[] $params
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
@@ -146,7 +144,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'password_new' => Yii::t('gromver.platform', 'New Password'),
             'password_confirm' => Yii::t('gromver.platform', 'Confirm Password'),
             'auth_key' => Yii::t('gromver.platform', 'Auth Key'),
-            'params' => Yii::t('gromver.platform', 'Params'),
+            'profile_data' => Yii::t('gromver.platform', 'Profile Data'),
             'status' => Yii::t('gromver.platform', 'Status'),
             'roles' => Yii::t('gromver.platform', 'Roles'),
             'created_at' => Yii::t('gromver.platform', 'Created At'),
@@ -180,15 +178,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public static function find()
     {
         return new UserQuery(get_called_class());
-    }
-
-    /**
-     * todo replace this
-     * @return \yii\db\ActiveQuery
-     */
-    public function getViewedPosts()
-    {
-        return $this->hasMany(Post::className(), ['id' => 'post_id'])->viaTable(PostViewed::tableName(), ['user_id' => 'id']);
     }
 
     public function behaviors()
@@ -259,7 +248,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findByPasswordResetToken($token)
     {
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+        $expire = Yii::$app->getModule('auth')->passwordResetTokenExpire;
         $parts = explode('_', $token);
         $timestamp = (int)end($parts);
         if ($timestamp + $expire < time()) {
@@ -315,6 +304,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
                 $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
                 $this->password_reset_token = null;
             }
+
             if ($this->isNewRecord) {
                 $this->auth_key = Yii::$app->security->generateRandomString();
             }
@@ -328,28 +318,43 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         parent::afterSave($insert, $changedAttributes);
 
+        // сохраняем/удаляем роли
         if(is_array($this->_roles)) {
             ModuleEvent::trigger(self::EVENT_BEFORE_USER_ROLES_SAVE, new BeforeRolesSaveEvent([
                 'sender' => $this
             ]));
             $newRoles = $this->_roles;
             $this->_roles = null;
-        } else {
-            return;
+
+            $oldRoles = $this->getRoles();
+
+            $toAssign = array_diff($newRoles, $oldRoles);
+            $toRevoke = array_diff($oldRoles, $newRoles);
+
+            $auth = Yii::$app->authManager;
+
+            foreach($toAssign as $role) {
+                $auth->assign($auth->getRole($role), $this->id);
+            }
+
+            foreach($toRevoke as $role) {
+                $auth->revoke($auth->getRole($role), $this->id);
+            }
         }
 
-        $oldRoles = $this->getRoles();
 
-        $toAssign = array_diff($newRoles, $oldRoles);
-        $toRevoke = array_diff($oldRoles, $newRoles);
-
-        $auth = Yii::$app->authManager;
-
-        foreach($toAssign as $role)
-            $auth->assign($auth->getRole($role), $this->id);
-
-        foreach($toRevoke as $role)
-            $auth->revoke($auth->getRole($role), $this->id);
+        // сохраняем/удаляем параметры пользователя
+        $params = $this->params;
+        foreach ($params as $name => $param) {
+            if (is_null($param->value)) {
+                if (!$param->isNewRecord) {
+                    // удаляем параметр из БД
+                    $param->delete();
+                }
+            } else {
+                $param->save();
+            }
+        }
     }
 
     public function trash()
@@ -426,14 +431,57 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return $this->_roles;
     }
 
-    public function getParamsArray()
+    public function getProfile()
     {
-        return Json::decode($this->params);
+        return Json::decode($this->profile_data);
     }
 
-    public function setParamsArray($value)
+    public function setProfile($value)
     {
-        $this->params = Json::encode($value);
+        $this->profile_data = Json::encode($value);
+    }
+
+    public function getParams()
+    {
+        return self::hasMany(UserParam::className(), ['user_id' => 'id'])->indexBy('name');
+    }
+
+    public function setParams($params)
+    {
+        $remove = array_diff(array_keys($this->params), array_keys($params));
+
+        foreach ($params as $name => $value) {
+            $this->setParam($name, $value);
+        }
+
+        foreach ($remove as $name) {
+            $this->setParam($name, null);
+        }
+    }
+
+    /**
+     * @param $name string
+     * @param $value mixed любое приводимое к строке значение,
+     * если указан null то при сохранении пользователя параметр будет удален из БД
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function setParam($name, $value)
+    {
+        /** @var UserParam[] $params */
+        $params = $this->params;
+
+        if (array_key_exists($name, $params) && ($p = $params[$name]) instanceof UserParam) {
+            $p->value = $value;
+        } else {
+            $params[$name] = Yii::createObject([
+                'class' => UserParam::className(),
+                'user_id' => $this->id,
+                'name' => $name,
+                'value' => $value
+            ]);
+        }
+
+        $this->populateRelation('params', $params);
     }
 
     /**

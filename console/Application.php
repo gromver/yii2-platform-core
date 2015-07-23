@@ -19,6 +19,12 @@ use yii\helpers\ArrayHelper;
  */
 class Application extends \yii\console\Application
 {
+    /**
+     * @var array список дополнительных поведений для модели пользователя
+     * Используется в \gromver\platform\core\modules\user\models\User::behaviors()
+     */
+    public $userBehaviors = [];
+
     private $_modulesHash;
 
     /**

@@ -32,7 +32,7 @@ class m000007_000000_tag_create_tables extends \yii\db\Migration
             'item_class' => Schema::TYPE_STRING . '(1024) NOT NULL',
         ]);
         $this->createIndex('TagId_ItemId_idx', '{{%grom_tag_to_item}}', 'tag_id, item_id');
-        $this->addForeignKey('CmsTagToItem_TagId_fk', '{{%grom_tag_to_item}}', 'tag_id', '{{%grom_tag}}', 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('Grom_TagToItem_TagId_fk', '{{%grom_tag_to_item}}', 'tag_id', '{{%grom_tag}}', 'id', 'CASCADE', 'CASCADE');
     }
 
     public function down()

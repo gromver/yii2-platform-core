@@ -30,9 +30,10 @@ class Module extends \yii\base\Module implements ModuleEventsInterface
      * @var int
      * @desc Remember Me Time (seconds), default = 2592000 (30 days)
      */
-    public $rememberMeTime = 2592000; // 30 days
-    public $attemptsBeforeCaptcha = 3; // Unsuccessful Login Attempts before Captcha
-    public $authLayout = 'auth';    // если null то применится макет приложения
+    public $rememberMeTime = 2592000;           // 30 дней
+    public $passwordResetTokenExpire = 3600;    // час
+    public $attemptsBeforeCaptcha = 3;          // Unsuccessful Login Attempts before Captcha
+    public $authLayout = 'auth';                // если null то применится макет приложения
 
     public function init()
     {

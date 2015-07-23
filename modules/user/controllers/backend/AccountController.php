@@ -94,7 +94,7 @@ class AccountController extends \gromver\platform\core\controllers\BackendContro
         $model = $this->extractParamsModel($user);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $user->setParamsArray($model->toArray());
+            $user->setProfile($model->toArray());
 
             if ($user->save()) {
                 $this->redirect(['index']);
@@ -117,7 +117,7 @@ class AccountController extends \gromver\platform\core\controllers\BackendContro
     {
         if ($this->module->userParamsClass) {
             try {
-                $attributes = $user->getParamsArray();
+                $attributes = $user->getProfile();
             } catch(InvalidParamException $e) {
                 $attributes = [];
             }

@@ -55,8 +55,8 @@ class Contact extends Widget
         if (!Yii::$app->user->isGuest) {
             /** @var \gromver\platform\core\modules\user\models\User $user */
             $user = Yii::$app->user->identity;
-            $userParams = $user->getParamsArray();
-            $model->name = $userParams['name'] ? $userParams['name'] : $user->username;
+            $userProfile = $user->getProfile();
+            $model->name = $userProfile['name'] ? $userProfile['name'] : $user->username;
             $model->email = $user->email;
         }
 

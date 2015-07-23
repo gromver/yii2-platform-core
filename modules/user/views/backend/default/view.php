@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= $model->getIsTrashed() ? null : Html::a('<i class="glyphicon glyphicon-plus"></i> ' . Yii::t('gromver.platform', 'Add'), ['create'], ['class' => 'btn btn-success']) ?>
         <?= Html::a('<i class="glyphicon glyphicon-pencil"></i> ' . Yii::t('gromver.platform', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('<i class="glyphicon glyphicon-user"></i> ' . Yii::t('gromver.platform', 'Params'), ['params', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
+        <?= Html::a('<i class="glyphicon glyphicon-user"></i> ' . Yii::t('gromver.platform', 'Profile'), ['params', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
         <?= Html::a('<i class="glyphicon glyphicon-trash"></i> ' . Yii::t('gromver.platform', $model->getIsTrashed() ? 'Delete' : 'Trash It'), [$model->getIsTrashed() ? 'delete' : 'trash', 'id' => $model->id, 'backUrl' => \yii\helpers\Url::to(['index-trash'])], [
             'class' => 'btn btn-danger pull-right',
             'data' => [
@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'password_reset_token',
             'auth_key',
             'status',
-            'params',
+            'profile_data',
             'created_at:datetime',
             'updated_at:datetime',
             'deleted_at:datetime',

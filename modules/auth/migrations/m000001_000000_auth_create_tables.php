@@ -27,7 +27,7 @@ class m000001_000000_auth_create_tables extends \yii\db\Migration
             'PRIMARY KEY (name)',
         ]);
 
-        $this->addForeignKey('CmsAuthItem_RuleName_fk', '{{%grom_auth_item}}', 'rule_name', '{{%grom_auth_rule}}', 'name', 'SET NULL', 'CASCADE');
+        $this->addForeignKey('Grom_AuthItem_RuleName_fk', '{{%grom_auth_item}}', 'rule_name', '{{%grom_auth_rule}}', 'name', 'SET NULL', 'CASCADE');
 
         $this->createIndex('AuthItem_type_idx', '{{%grom_auth_item}}', 'type');
 
@@ -38,8 +38,8 @@ class m000001_000000_auth_create_tables extends \yii\db\Migration
             'PRIMARY KEY (parent,child)',
         ]);
 
-        $this->addForeignKey('CmsAuthItemChild_Parent_fk', '{{%grom_auth_item_child}}', 'parent', '{{%grom_auth_item}}', 'name', 'CASCADE', 'CASCADE');
-        $this->addForeignKey('CmsAuthItemChild_Child_fk', '{{%grom_auth_item_child}}', 'child', '{{%grom_auth_item}}', 'name', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('Grom_AuthItemChild_Parent_fk', '{{%grom_auth_item_child}}', 'parent', '{{%grom_auth_item}}', 'name', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('Grom_AuthItemChild_Child_fk', '{{%grom_auth_item_child}}', 'child', '{{%grom_auth_item}}', 'name', 'CASCADE', 'CASCADE');
 
         // auth assignment
         $this->createTable('{{%grom_auth_assignment}}', [
@@ -49,7 +49,7 @@ class m000001_000000_auth_create_tables extends \yii\db\Migration
             'PRIMARY KEY (item_name,user_id)',
         ]);
 
-        $this->addForeignKey('CmsAuthAssignment_ItemName_fk', '{{%grom_auth_assignment}}', 'item_name', '{{%grom_auth_item}}', 'name', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('Grom_AuthAssignment_ItemName_fk', '{{%grom_auth_assignment}}', 'item_name', '{{%grom_auth_item}}', 'name', 'CASCADE', 'CASCADE');
     }
 
     public function down()

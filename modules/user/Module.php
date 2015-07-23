@@ -25,7 +25,7 @@ class Module extends \yii\base\Module implements ModuleEventsInterface
     public $controllerNamespace = 'gromver\platform\core\modules\user\controllers';
     public $defaultRoute = 'frontend/default';
     public $allowDelete = true;   //позволяет удалять пользователей из БД, при условии что они уже имеют статус User::STATUS_DELETED
-    public $userParamsClass = 'gromver\platform\core\modules\user\models\UserParams';
+    public $userParamsClass = 'gromver\platform\core\modules\user\models\UserProfile';
 
     /**
      * @inheritdoc

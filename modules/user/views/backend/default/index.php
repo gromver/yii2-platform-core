@@ -79,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                     'params' => function ($url, $model, $key) {
                             /** @var User $model */
-                            return Html::a('<i class="glyphicon glyphicon-user"></i>', ['params', 'id' => $model->id], ['title' => Yii::t('gromver.platform', 'User params')]);
+                            return Html::a('<i class="glyphicon glyphicon-user"></i>', ['params', 'id' => $model->id], ['title' => Yii::t('gromver.platform', 'User Profile')]);
                         },
                     'login' => function ($url, $model, $key) {
                         /** @var User $model */
