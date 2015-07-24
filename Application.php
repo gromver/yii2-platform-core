@@ -136,10 +136,6 @@ class Application extends \yii\web\Application {
                         '*' => [
                             'class' => 'yii\i18n\PhpMessageSource'
                         ],
-                        'gromver.*' => [
-                            'class' => 'yii\i18n\PhpMessageSource',
-                            'basePath' => '@gromver/platform/core/messages',
-                        ]
                     ],
                 ],
                 'paramsManager' => ['class' => 'gromver\platform\core\components\ParamsManager'],
@@ -174,6 +170,8 @@ class Application extends \yii\web\Application {
      */
     public function init()
     {
+        $this->initI18N();
+
         //$this->bootstrap = array_merge($this->bootstrap, ['main']);
 
         $this->_modulesConfigDependency = new ExpressionDependency(['expression' => '\Yii::$app->getModulesHash()']);
@@ -240,6 +238,13 @@ class Application extends \yii\web\Application {
         parent::init();
     }
 
+    public function initI18N()
+    {
+        $this->i18n->translations['gromver.*'] = [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@gromver/platform/core/messages',
+        ];
+    }
 
     /**
      * @return string
