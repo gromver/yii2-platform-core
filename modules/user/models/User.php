@@ -36,10 +36,12 @@ use yii\web\IdentityInterface;
  * @property integer $updated_at
  * @property integer $deleted_at
  * @property integer $last_visit_at
+ *
  * @property string[] $roles
  * @property bool $isSuperAdmin
  * @property bool $isTrashed
  * @property UserParam[] $params
+ * @property array $profile
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
