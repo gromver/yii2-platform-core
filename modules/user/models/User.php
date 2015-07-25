@@ -352,6 +352,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
                     $param->delete();
                 }
             } else {
+                $param->user_id = $this->id;
                 $param->save();
             }
         }
