@@ -478,7 +478,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
                 'class' => UserParam::className(),
                 'user_id' => $this->id,
                 'name' => $name,
-                'value' => $value
+                'value' => (string)$value
             ]);
         }
 
