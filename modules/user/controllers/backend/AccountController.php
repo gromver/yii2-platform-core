@@ -36,7 +36,7 @@ class AccountController extends \gromver\platform\core\controllers\BackendContro
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'params', 'reset-password'],
+                        'actions' => ['index', 'profile', 'reset-password'],
                         'roles' => ['authenticated'],
                     ],
                 ]
@@ -86,7 +86,7 @@ class AccountController extends \gromver\platform\core\controllers\BackendContro
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
-    public function actionParams()
+    public function actionProfile()
     {
         /** @var User $user */
         $user = Yii::$app->user->getIdentity();
@@ -103,7 +103,7 @@ class AccountController extends \gromver\platform\core\controllers\BackendContro
             }
         }
 
-        return $this->render('params', [
+        return $this->render('profile', [
             'user' => $user,
             'model' => $model
         ]);
