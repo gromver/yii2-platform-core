@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'vAlign' => GridView::ALIGN_MIDDLE,
                 'value' => function($model) {
                         /** @var User $model */
-                        return $model->getIsSuperAdmin() ? '<span class="text-muted">' . Yii::t('gromver.platform', 'Super Administrator') . '</span>' : implode(", ", $model->getRoles());
+                        return implode(', ', $model->isSuperAdmin ? array_merge([Html::tag('span', Yii::t('gromver.platform', 'Super Administrator'), ['class' => 'text-muted'])], $model->roles) : $model->roles);
                     },
                 'format' => 'html',
                 'filter' => \yii\helpers\ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name')
@@ -79,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                     'params' => function ($url, $model, $key) {
                             /** @var User $model */
-                            return Html::a('<i class="glyphicon glyphicon-user"></i>', ['params', 'id' => $model->id], ['title' => Yii::t('gromver.platform', 'User Profile')]);
+                            return Html::a('<i class="glyphicon glyphicon-user"></i>', ['profile', 'id' => $model->id], ['title' => Yii::t('gromver.platform', 'User Profile')]);
                         },
                     'login' => function ($url, $model, $key) {
                         /** @var User $model */

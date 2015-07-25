@@ -51,7 +51,7 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view'],
+                        'actions' => ['index', 'view', 'params'],
                         'roles' => ['readUser'],
                     ],
                     [
@@ -61,7 +61,7 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update', 'params'],
+                        'actions' => ['update', 'profile'],
                         'roles' => ['updateUser'],
                     ],
                     [
@@ -356,7 +356,7 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
-    public function actionParams($id)
+    public function actionProfile($id)
     {
         $user = $this->findModel($id);
 
@@ -377,9 +377,24 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
             }
         }
 
-        return $this->render('params', [
+        return $this->render('profile', [
             'user' => $user,
             'model' => $model
+        ]);
+    }
+
+    /**
+     * @param $id integer
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionParams($id)
+    {
+        $user = $this->findModel($id);
+
+        return $this->render('params', [
+            'user' => $user,
+            'params' => $user->params,
         ]);
     }
 

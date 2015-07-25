@@ -125,7 +125,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             ['password', 'string', 'min' => 6],
 
             ['password_confirm', 'compare', 'compareAttribute' => 'password', 'skipOnEmpty' => false, 'on' => ['create', 'resetPassword', 'update', 'profile']],
-            ['verifyCode', 'captcha', 'captchaAction' => 'grom/auth/default/captcha', 'on' => 'signupWithCaptcha']
+            ['verifyCode', 'captcha', 'captchaAction' => 'auth/default/captcha', 'on' => 'signupWithCaptcha']
         ];
     }
 

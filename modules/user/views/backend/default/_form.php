@@ -24,13 +24,9 @@ use yii\bootstrap\ActiveForm;
 
     <?= $form->field($model, 'password_confirm')->passwordInput(['autocomplete'=>'off']) ?>
 
-    <?php if ($model->getIsSuperAdmin()) {
-        echo $form->field($model, 'roles')->textInput(['value' => Yii::t('gromver.platform', 'Super Administrator'), 'disabled' => true]);
-    } else {
-        echo $form->field($model, 'roles')->listBox(\yii\helpers\ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name'), [
-            'multiple' => 'multiple'
-        ]);
-    } ?>
+    <?= $form->field($model, 'roles')->listBox(\yii\helpers\ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name'), [
+        'multiple' => 'multiple'
+    ]) ?>
 
     <div>
         <?= Html::submitButton($model->isNewRecord ? ('<i class="glyphicon glyphicon-plus"></i> ' . Yii::t('gromver.platform', 'Create')) : ('<i class="glyphicon glyphicon-pencil"></i> ' . Yii::t('gromver.platform', 'Update')), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
