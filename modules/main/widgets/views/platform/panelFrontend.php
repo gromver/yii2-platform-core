@@ -87,8 +87,6 @@ if (Yii::$app->user->isGuest) { ?>
         ]) ?>
 
     </div>
-<?php } ?>
-<style>
-    <?= '#' . $navBar->id ?> .navbar-right { margin-right: 0; }
-</style>
-<?php NavBar::end() ?>
+<?php }
+
+NavBar::end() ?>
