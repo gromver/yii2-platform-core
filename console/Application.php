@@ -34,7 +34,10 @@ class Application extends \yii\console\Application
     {
         $coreConfig = [];
         if (isset($config['basePath'])) {
-            $coreConfig = @include($config['basePath'] . '/grom/console.php') or $coreConfig = [];
+            $coreConfig = @include($config['basePath'] . '/config/grom/console.php');
+            if (!is_array($coreConfig)) {
+                $coreConfig = [];
+            }
         }
 
 

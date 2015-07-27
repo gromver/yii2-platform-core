@@ -95,7 +95,10 @@ class Application extends \yii\web\Application {
     {
         $coreConfig = [];
         if (isset($config['basePath'])) {
-            $coreConfig = @include($config['basePath'] . '/grom/web.php') or $coreConfig = [];
+            $coreConfig = @include($config['basePath'] . '/config/grom/web.php');
+            if (!is_array($coreConfig)) {
+                $coreConfig = [];
+            }
         }
 
         $config = ArrayHelper::merge([
