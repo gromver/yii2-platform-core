@@ -33,7 +33,7 @@ $items = [
 ];
 
 if (Yii::$app->user->can('administrate')) {
-    $items[] = ['label' => '<i class="glyphicon glyphicon-cog"></i> ' . Yii::t('gromver.platform', 'Admin Panel'), 'url' => ['/backend/default/index']];
+    $items[] = ['label' => '<i class="glyphicon glyphicon-cog"></i> ' . Yii::t('gromver.platform', 'Admin Panel'), 'url' => ['/main/backend/default/index']];
 }
 if (Yii::$app->request->referrer) {
     $items[] = ['label' => '<i class="glyphicon glyphicon-step-backward"></i> ' . Yii::t('gromver.platform', 'Back'), 'url' => Yii::$app->request->referrer];
