@@ -474,7 +474,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         $params = $this->params;
 
         if (array_key_exists($name, $params) && ($p = $params[$name]) instanceof UserParam) {
-            $p->value = $value;
+            $p->value = (string)$value;
         } else {
             $params[$name] = Yii::createObject([
                 'class' => UserParam::className(),
