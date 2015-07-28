@@ -56,9 +56,7 @@ echo \yii\bootstrap\Nav::widget([
                 'type' => $type,
                 'body' => $body
             ]) ?>
-        <div class="row">
-            <?= $content ?>
-        </div>
+        <?= $content ?>
     </div>
 </div>
 
