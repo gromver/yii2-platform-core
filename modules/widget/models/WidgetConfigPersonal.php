@@ -43,7 +43,7 @@ class WidgetConfigPersonal extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%grom_widget_config_personal}}';
+        return '{{%core_widget_config_personal}}';
     }
 
     /**

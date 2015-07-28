@@ -56,9 +56,9 @@ $menuItems = [
         ['label' => Yii::t('gromver.platform', 'Media Manager'), 'url' => ['/media/backend/default/index']],
     ]],
     ['label' => Yii::t('gromver.platform', 'Components'), 'items' => [
-        ['label' => Yii::t('gromver.platform', 'Version Manager'), 'url' => ['/grom/version/backend/default/index']],
-        ['label' => Yii::t('gromver.platform', "Widget's Settings"), 'url' => ['/grom/widget/backend/default/index']],
-        ['label' => Yii::t('gromver.platform', 'Search'), 'url' => ['/grom/sqlsearch/backend/default/index']],
+        ['label' => Yii::t('gromver.platform', 'Version Manager'), 'url' => ['/version/backend/default/index']],
+        ['label' => Yii::t('gromver.platform', "Widget's Settings"), 'url' => ['/widget/backend/default/index']],
+        ['label' => Yii::t('gromver.platform', 'Search'), 'url' => ['/sqlsearch/backend/default/index']],
     ]],*/
 ];
 if (Yii::$app->user->isGuest) {

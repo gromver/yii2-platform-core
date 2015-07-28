@@ -11,7 +11,7 @@ if ($menu) {
     $this->params['breadcrumbs'] = $menu->getBreadcrumbs($menu->isApplicableContext());
 } else {
     $this->title = Yii::t('gromver.platform', 'Tag: {tag}', ['tag' => $model->title]);
-    $this->params['breadcrumbs'][] = ['label' => 'Tag cloud', 'url' => ['/grom/tag/default/index']];
+    $this->params['breadcrumbs'][] = ['label' => 'Tag cloud', 'url' => ['/tag/default/index']];
 }
 //$this->params['breadcrumbs'][] = $this->title;
 //мета теги

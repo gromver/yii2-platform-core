@@ -22,7 +22,7 @@ use yii\captcha\Captcha;
                 <?= $form->field($model, 'body')->textArea(['rows' => 6]) ?>
                 <?php if ($model->scenario == 'withCaptcha') {
                     echo $form->field($model, 'verifyCode')->widget(Captcha::className(), [
-                        'captchaAction' => '/grom/common/default/captcha',
+                        'captchaAction' => '/main/common/default/captcha',
                         'template' => '<div class="row"><div class="col-lg-4">{image}</div><div class="col-lg-6">{input}</div></div>',
                     ]);
                 } ?>

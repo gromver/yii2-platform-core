@@ -40,7 +40,7 @@ class WidgetConfig extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%grom_widget_config}}';
+        return '{{%core_widget_config}}';
     }
 
     /**

@@ -7,7 +7,7 @@ class m000008_000000_page_create_tables extends \yii\db\Migration
     public function up()
     {
         // page
-        $this->createTable('{{%grom_page}}', [
+        $this->createTable('{{%core_page}}', [
             'id' => Schema::TYPE_PK,
             'parent_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
             'title' => Schema::TYPE_STRING . '(1024)',
@@ -29,13 +29,13 @@ class m000008_000000_page_create_tables extends \yii\db\Migration
             'hits' => Schema::TYPE_BIGINT . ' UNSIGNED',
             'lock' => Schema::TYPE_BIGINT . ' UNSIGNED DEFAULT 1',
         ]);
-        $this->createIndex('Alias_idx', '{{%grom_page}}', 'alias');
-        $this->createIndex('Path_idx', '{{%grom_page}}', 'path');
-        $this->createIndex('Status_idx', '{{%grom_page}}', 'status');
-        $this->createIndex('ParentId_idx', '{{%grom_page}}', 'parent_id');
-        $this->createIndex('Lft_Rgt_idx', '{{%grom_page}}', 'lft, rgt');
+        $this->createIndex('Alias_idx', '{{%core_page}}', 'alias');
+        $this->createIndex('Path_idx', '{{%core_page}}', 'path');
+        $this->createIndex('Status_idx', '{{%core_page}}', 'status');
+        $this->createIndex('ParentId_idx', '{{%core_page}}', 'parent_id');
+        $this->createIndex('Lft_Rgt_idx', '{{%core_page}}', 'lft, rgt');
         //вставляем рутовый элемент
-        $this->insert('{{%grom_page}}', [
+        $this->insert('{{%core_page}}', [
             'status' => 1,
             'title' => 'Root',
             'created_at' => time(),
@@ -49,6 +49,6 @@ class m000008_000000_page_create_tables extends \yii\db\Migration
 
     public function down()
     {
-        $this->dropTable('{{%grom_page}}');
+        $this->dropTable('{{%core_page}}');
     }
 }

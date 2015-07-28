@@ -42,7 +42,7 @@ class Version extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%grom_version}}';
+        return '{{%core_version}}';
     }
 
     /**

@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'allowClear' => true,
                         'placeholder' => Yii::t('gromver.platform', 'Select ...'),
                         'ajax' => [
-                            'url' => \yii\helpers\Url::to(['/grom/tag/backend/default/tag-list']),
+                            'url' => \yii\helpers\Url::to(['/tag/backend/default/tag-list']),
                         ],
                     ],
                 ]

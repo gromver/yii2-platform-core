@@ -7,7 +7,7 @@ class m000006_000000_version_create_tables extends \yii\db\Migration
     public function up()
     {
         // version
-        $this->createTable('{{%grom_version}}', [
+        $this->createTable('{{%core_version}}', [
             'id' => Schema::TYPE_PK,
             'item_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'item_class' => Schema::TYPE_STRING . '(1024)',
@@ -19,13 +19,13 @@ class m000006_000000_version_create_tables extends \yii\db\Migration
             'created_at' => Schema::TYPE_INTEGER . ' NOT NULL',
             'created_by' => Schema::TYPE_INTEGER . ' NOT NULL',
         ]);
-        $this->createIndex('Item_idx', '{{%grom_version}}', 'item_id');
-        $this->createIndex('ItemClass_idx', '{{%grom_version}}', 'item_class');
-        $this->createIndex('VersionHash_idx', '{{%grom_version}}', 'version_hash');
+        $this->createIndex('Item_idx', '{{%core_version}}', 'item_id');
+        $this->createIndex('ItemClass_idx', '{{%core_version}}', 'item_class');
+        $this->createIndex('VersionHash_idx', '{{%core_version}}', 'version_hash');
     }
 
     public function down()
     {
-        $this->dropTable('{{%grom_version}}');
+        $this->dropTable('{{%core_version}}');
     }
 }

@@ -28,7 +28,7 @@ class MenuRouterTag extends \gromver\platform\core\components\MenuRouter
     {
         return [
             [
-                'menuRoute' => 'grom/tag/frontend/default/index',
+                'menuRoute' => 'tag/frontend/default/index',
                 'handler' => 'parseTagCloud'
             ],
         ];
@@ -41,7 +41,7 @@ class MenuRouterTag extends \gromver\platform\core\components\MenuRouter
     {
         return [
             [
-                'requestRoute' => 'grom/tag/frontend/default/view',
+                'requestRoute' => 'tag/frontend/default/view',
                 'requestParams' => ['id'],
                 'handler' => 'createTagItems'
             ],
@@ -55,11 +55,11 @@ class MenuRouterTag extends \gromver\platform\core\components\MenuRouter
     public function parseTagCloud($requestInfo)
     {
         if (preg_match('/^\d+$/', $requestInfo->requestRoute)) {
-            return ['grom/tag/frontend/default/view', ['id' => $requestInfo->requestRoute]];
+            return ['tag/frontend/default/view', ['id' => $requestInfo->requestRoute]];
         } else {
             /** @var Tag $tag */
             if ($tag = Tag::findOne(['alias' => $requestInfo->requestRoute, 'language' => $requestInfo->menuMap->language])) {
-                return ['grom/tag/frontend/default/view', ['id' => $tag->id, 'alias' => $tag->alias, UrlManager::LANGUAGE_PARAM => $requestInfo->menuMap->language]];
+                return ['tag/frontend/default/view', ['id' => $tag->id, 'alias' => $tag->alias, UrlManager::LANGUAGE_PARAM => $requestInfo->menuMap->language]];
             }
         }
     }
@@ -70,7 +70,7 @@ class MenuRouterTag extends \gromver\platform\core\components\MenuRouter
      */
     public function createTagItems($requestInfo)
     {
-        if($path = $requestInfo->menuMap->getMenuPathByRoute('grom/tag/frontend/default/index')) {
+        if($path = $requestInfo->menuMap->getMenuPathByRoute('tag/frontend/default/index')) {
             $path .= '/' . (isset($requestInfo->requestParams['alias']) ? $requestInfo->requestParams['alias'] : $requestInfo->requestParams['id']);
             unset($requestInfo->requestParams['id'], $requestInfo->requestParams['alias']);
             return MenuItem::toRoute($path, $requestInfo->requestParams);

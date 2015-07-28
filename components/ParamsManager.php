@@ -159,6 +159,6 @@ class ParamsManager extends Object {
      */
     public function paramsFilePath($type)
     {
-        return \Yii::getAlias("@app/config/grom/params/{$type}.php");
+        return \Yii::getAlias("@app/config/core/params/{$type}.php");
     }
 } 

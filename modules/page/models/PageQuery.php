@@ -34,15 +34,15 @@ class PageQuery extends \yii\db\ActiveQuery
     {
         $badcatsQuery = new Query([
             'select' => ['badcats.id'],
-            'from' => ['{{%grom_page}} AS unpublished'],
+            'from' => ['{{%core_page}} AS unpublished'],
             'join' => [
-                ['LEFT JOIN', '{{%grom_page}} AS badcats', 'unpublished.lft <= badcats.lft AND unpublished.rgt >= badcats.rgt']
+                ['LEFT JOIN', '{{%core_page}} AS badcats', 'unpublished.lft <= badcats.lft AND unpublished.rgt >= badcats.rgt']
             ],
             'where' => 'unpublished.status != ' . Page::STATUS_PUBLISHED,
             'groupBy' => ['badcats.id']
         ]);
 
-        return $this->andWhere(['NOT IN', '{{%grom_page}}.id', $badcatsQuery]);
+        return $this->andWhere(['NOT IN', '{{%core_page}}.id', $badcatsQuery]);
     }
 
     /**
@@ -50,7 +50,7 @@ class PageQuery extends \yii\db\ActiveQuery
      */
     public function unpublished()
     {
-        return $this->innerJoin('{{%grom_page}} AS ancestors', '{{%grom_page}}.lft >= ancestors.lft AND {{%grom_page}}.rgt <= ancestors.rgt')->andWhere('ancestors.status != ' . Page::STATUS_PUBLISHED)->addGroupBy(['{{%grom_page}}.id']);
+        return $this->innerJoin('{{%core_page}} AS ancestors', '{{%core_page}}.lft >= ancestors.lft AND {{%core_page}}.rgt <= ancestors.rgt')->andWhere('ancestors.status != ' . Page::STATUS_PUBLISHED)->addGroupBy(['{{%core_page}}.id']);
     }
 
     /**
@@ -60,7 +60,7 @@ class PageQuery extends \yii\db\ActiveQuery
      */
     public function parent($id)
     {
-        return $this->andWhere(['{{%grom_page}}.parent_id' => $id]);
+        return $this->andWhere(['{{%core_page}}.parent_id' => $id]);
     }
 
     /**
@@ -68,7 +68,7 @@ class PageQuery extends \yii\db\ActiveQuery
      */
     public function excludeRoots()
     {
-        return $this->andWhere('{{%grom_page}}.lft!=1');
+        return $this->andWhere('{{%core_page}}.lft!=1');
     }
 
     /**
@@ -78,6 +78,6 @@ class PageQuery extends \yii\db\ActiveQuery
      */
     public function excludePage($page)
     {
-        return $this->andWhere('{{%grom_page}}.lft < :excludeLft OR {{%grom_page}}.lft > :excludeRgt', [':excludeLft' => $page->lft, ':excludeRgt' => $page->rgt]);
+        return $this->andWhere('{{%core_page}}.lft < :excludeLft OR {{%core_page}}.lft > :excludeRgt', [':excludeLft' => $page->lft, ':excludeRgt' => $page->rgt]);
     }
 } 

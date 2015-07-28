@@ -8,15 +8,15 @@ class m000000_000000_app_init extends Migration
     public function up()
     {
         // создаем дефолтные конфигурационные файлы
-        \yii\helpers\FileHelper::createDirectory(Yii::getAlias('@app/config/grom/params'), 0777);
+        \yii\helpers\FileHelper::createDirectory(Yii::getAlias('@app/config/core/params'), 0777);
 
         // конфиг консольного приложения
-        $filePath = Yii::getAlias('@app/config/grom/console.php');
+        $filePath = Yii::getAlias('@app/config/core/console.php');
         file_put_contents($filePath, '<?php return [];');
         @chmod($filePath, 0775);
 
         // конфиг веб приложения
-        $filePath = Yii::getAlias('@app/config/grom/web.php');
+        $filePath = Yii::getAlias('@app/config/core/web.php');
         file_put_contents($filePath, '<?php return [];');
         @chmod($filePath, 0775);
     }
@@ -24,7 +24,7 @@ class m000000_000000_app_init extends Migration
     public function down()
     {
         // удаляем конфиг файлы
-        \yii\helpers\FileHelper::removeDirectory(Yii::getAlias('@app/config/grom'));
+        \yii\helpers\FileHelper::removeDirectory(Yii::getAlias('@app/config/core'));
     }
     
     /*

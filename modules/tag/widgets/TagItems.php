@@ -28,7 +28,7 @@ class TagItems extends Widget
      * Tag model or TagId
      * @var Tag|string
      * @field modal
-     * @url /grom/tag/backend/default/select
+     * @url /tag/backend/default/select
      * @translation gromver.platform
      */
     public $tag;
@@ -79,7 +79,7 @@ class TagItems extends Widget
     {
         return [
             [
-                'url' => ['/grom/tag/backend/default/update', 'id' => $this->tag->id, 'backUrl' => $this->getBackUrl()],
+                'url' => ['/tag/backend/default/update', 'id' => $this->tag->id, 'backUrl' => $this->getBackUrl()],
                 'label' => '<i class="glyphicon glyphicon-pencil"></i>',
                 'options' => ['title' => Yii::t('gromver.platform', 'Update Tag')]
             ],

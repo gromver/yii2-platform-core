@@ -12,5 +12,5 @@
 <ul class="nav nav-pills nav-stacked">
     <li><a href="<?= \yii\helpers\Url::toRoute(['ckeditor-select-component', 'CKEditor' => $CKEditor, 'CKEditorFuncNum' => $CKEditorFuncNum, 'langCode' => $langCode]) ?>"><?= Yii::t('gromver.platform', 'Components') ?></a></li>
     <li><a href="<?= \yii\helpers\Url::toRoute(['ckeditor-select-menu', 'CKEditor' => $CKEditor, 'CKEditorFuncNum' => $CKEditorFuncNum, 'langCode' => $langCode]) ?>"><?= Yii::t('gromver.platform', 'Menu Items') ?></a></li>
-    <li><a href="<?= \yii\helpers\Url::toRoute(['/grom/media/manager/manager', 'CKEditor' => $CKEditor, 'CKEditorFuncNum' => $CKEditorFuncNum, 'langCode' => $langCode]) ?>"><?= Yii::t('gromver.platform', 'Media Manager') ?></a></li>
+    <li><a href="<?= \yii\helpers\Url::toRoute(['/media/manager/manager', 'CKEditor' => $CKEditor, 'CKEditorFuncNum' => $CKEditorFuncNum, 'langCode' => $langCode]) ?>"><?= Yii::t('gromver.platform', 'Media Manager') ?></a></li>
 </ul>

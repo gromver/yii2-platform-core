@@ -27,6 +27,8 @@ use Yii;
  * @property string $siteName
  * @property string $siteTitle
  * @property string $siteSlogan
+ * @property string[] $adminEmail
+ * @property array $supportEmail
  */
 class Application extends \yii\web\Application {
     const SESSION_MODE_KEY = '__grom_mode';
@@ -56,7 +58,7 @@ class Application extends \yii\web\Application {
      */
     public $listFieldItems = [];
     /**
-     * @var array список компонентов к которым нельзя попасть на прямую(grom/post/frontend/..., grom/page/frontend/...)
+     * @var array список компонентов к которым нельзя попасть на прямую(post/frontend/..., page/frontend/...)
      * эта блокировка нужна для того чтобы управлять структурой сайта только через меню
      * во время разработки проекта ету блокировку можно снять указав в конфиге приложения
      * [
@@ -95,7 +97,7 @@ class Application extends \yii\web\Application {
     {
         $coreConfig = [];
         if (isset($config['basePath'])) {
-            $coreConfig = @include($config['basePath'] . '/config/grom/web.php');
+            $coreConfig = @include($config['basePath'] . '/config/core/web.php');
             if (!is_array($coreConfig)) {
                 $coreConfig = [];
             }
@@ -120,10 +122,10 @@ class Application extends \yii\web\Application {
                 ],
                 'authManager' => [
                     'class' => 'yii\rbac\DbManager',
-                    'itemTable' => '{{%grom_auth_item}}',
-                    'itemChildTable' => '{{%grom_auth_item_child}}',
-                    'assignmentTable' => '{{%grom_auth_assignment}}',
-                    'ruleTable' => '{{%grom_auth_rule}}'
+                    'itemTable' => '{{%core_auth_item}}',
+                    'itemChildTable' => '{{%core_auth_item_child}}',
+                    'assignmentTable' => '{{%core_auth_assignment}}',
+                    'ruleTable' => '{{%core_auth_rule}}'
                 ],
                 'cache' => ['class' => 'yii\caching\FileCache'],
                 'elasticsearch' => ['class' => 'yii\elasticsearch\Connection'],
@@ -243,8 +245,6 @@ class Application extends \yii\web\Application {
         });
 
         $this->applyDefaultMetadata();
-
-        //parent::init();
     }
 
     /*public function initI18N()
@@ -344,6 +344,28 @@ class Application extends \yii\web\Application {
     public function getElasticSearch()
     {
         return $this->get('elasticsearch');
+    }
+
+    /**
+     * @return string[]
+     * @throws \yii\base\UnknownPropertyException
+     */
+    public function getAdminEmail()
+    {
+        return $this->paramsManager->params('main')->adminEmail;
+    }
+
+    /**
+     * @return array ['support@example.com' => 'Support Name']
+     * @throws \yii\base\UnknownPropertyException
+     */
+    public function getSupportEmail()
+    {
+        $email = $this->paramsManager->params('main')->supportEmail;
+
+        return [
+            $email['fromEmail'] => $email['fromName']
+        ];
     }
 
     /**

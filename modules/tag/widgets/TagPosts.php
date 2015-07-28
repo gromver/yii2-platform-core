@@ -29,7 +29,7 @@ class TagPosts extends Widget
      * Tag or TagId or TagId:TagAlias
      * @var Tag|string
      * @field modal
-     * @url /grom/tag/backend/default/select
+     * @url /tag/backend/default/select
      * @translation gromver.platform
      */
     public $tag;
@@ -37,7 +37,7 @@ class TagPosts extends Widget
      * CategoryId
      * @var string
      * @field modal
-     * @url /grom/news/backend/category/select
+     * @url /news/backend/category/select
      * @translation gromver.platform
      */
     public $categoryId;
@@ -108,14 +108,14 @@ class TagPosts extends Widget
 
     protected function getQuery()
     {
-        return Post::find()->published()->category($this->categoryId)->innerJoinWith('tags', false)->andWhere(['{{%grom_tag}}.id' => $this->tag->id]);
+        return Post::find()->published()->category($this->categoryId)->innerJoinWith('tags', false)->andWhere(['{{%core_tag}}.id' => $this->tag->id]);
     }
 
     public function customControls()
     {
         return [
             [
-                'url' => ['/grom/tag/backend/default/update', 'id' => $this->tag->id, 'backUrl' => $this->getBackUrl()],
+                'url' => ['/tag/backend/default/update', 'id' => $this->tag->id, 'backUrl' => $this->getBackUrl()],
                 'label' => '<i class="glyphicon glyphicon-pencil"></i>',
                 'options' => ['title' => Yii::t('gromver.platform', 'Update Tag')]
             ],

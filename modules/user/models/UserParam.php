@@ -6,7 +6,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "{{%grom_user_param}}".
+ * This is the model class for table "{{%core_user_param}}".
  *
  * @property integer $user_id
  * @property string $name
@@ -22,7 +22,7 @@ class UserParam extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%grom_user_param}}';
+        return '{{%core_user_param}}';
     }
 
     /**

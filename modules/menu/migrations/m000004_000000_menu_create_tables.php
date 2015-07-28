@@ -7,7 +7,7 @@ class m000004_000000_menu_create_tables extends \yii\db\Migration
     public function up()
     {
         // menu type
-        $this->createTable('{{%grom_menu_type}}', [
+        $this->createTable('{{%core_menu_type}}', [
             'id' => Schema::TYPE_PK,
             'title' => Schema::TYPE_STRING . '(1024)',
             'alias' => Schema::TYPE_STRING,
@@ -21,7 +21,7 @@ class m000004_000000_menu_create_tables extends \yii\db\Migration
         ]);
 
         // menu item
-        $this->createTable('{{%grom_menu_item}}', [
+        $this->createTable('{{%core_menu_item}}', [
             'id' => Schema::TYPE_PK,
             'menu_type_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'parent_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
@@ -51,14 +51,14 @@ class m000004_000000_menu_create_tables extends \yii\db\Migration
             'hits' => Schema::TYPE_BIGINT . ' UNSIGNED',
             'lock' => Schema::TYPE_BIGINT . ' UNSIGNED DEFAULT 1',
         ]);
-        $this->createIndex('MenuTypeId_idx', '{{%grom_menu_item}}', 'menu_type_id');
-        $this->createIndex('ParentId_idx', '{{%grom_menu_item}}', 'parent_id');
-        $this->createIndex('Lft_Rgt_idx', '{{%grom_menu_item}}', 'lft, rgt');
-        $this->createIndex('Path_idx', '{{%grom_menu_item}}', 'path');
-        $this->createIndex('Alias_idx', '{{%grom_menu_item}}', 'alias');
-        $this->createIndex('Status_idx', '{{%grom_menu_item}}', 'status');
+        $this->createIndex('MenuTypeId_idx', '{{%core_menu_item}}', 'menu_type_id');
+        $this->createIndex('ParentId_idx', '{{%core_menu_item}}', 'parent_id');
+        $this->createIndex('Lft_Rgt_idx', '{{%core_menu_item}}', 'lft, rgt');
+        $this->createIndex('Path_idx', '{{%core_menu_item}}', 'path');
+        $this->createIndex('Alias_idx', '{{%core_menu_item}}', 'alias');
+        $this->createIndex('Status_idx', '{{%core_menu_item}}', 'status');
         //вставляем рутовый элемент
-        $this->insert('{{%grom_menu_item}}', [
+        $this->insert('{{%core_menu_item}}', [
             'menu_type_id' => 0,
             'status' => 1,
             'title' => 'Root',
@@ -73,7 +73,7 @@ class m000004_000000_menu_create_tables extends \yii\db\Migration
 
     public function down()
     {
-        $this->dropTable('{{%grom_menu_type}}');
-        $this->dropTable('{{%grom_menu_item}}');
+        $this->dropTable('{{%core_menu_type}}');
+        $this->dropTable('{{%core_menu_item}}');
     }
 }

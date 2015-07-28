@@ -10,12 +10,22 @@
 namespace gromver\platform\core\console;
 
 
+use gromver\platform\core\modules\main\models\DbState;
+use yii\caching\ExpressionDependency;
 use yii\helpers\ArrayHelper;
+use Yii;
 
 /**
  * Class Application
  * @package yii2-platform-basic
  * @author Gayazov Roman <gromver5@gmail.com>
+ *
+ * @property \gromver\platform\core\components\ParamsManager $paramsManager
+ * @property string $siteName
+ * @property string $siteTitle
+ * @property string $siteSlogan
+ * @property string[] $adminEmail
+ * @property array $supportEmail
  */
 class Application extends \yii\console\Application
 {
@@ -25,7 +35,14 @@ class Application extends \yii\console\Application
      */
     public $userBehaviors = [];
 
+    /**
+     * @var string
+     */
     private $_modulesHash;
+    /**
+     * @var null|\yii\caching\Dependency
+     */
+    private $_modulesConfigDependency;
 
     /**
      * @inheritdoc
@@ -34,7 +51,7 @@ class Application extends \yii\console\Application
     {
         $coreConfig = [];
         if (isset($config['basePath'])) {
-            $coreConfig = @include($config['basePath'] . '/config/grom/console.php');
+            $coreConfig = @include($config['basePath'] . '/config/core/console.php');
             if (!is_array($coreConfig)) {
                 $coreConfig = [];
             }
@@ -43,15 +60,15 @@ class Application extends \yii\console\Application
 
         $config = ArrayHelper::merge([
             'controllerMap' => [
-                'grom-migrate' => 'gromver\platform\core\console\components\ModuleMigrateController'
+                'core-migrate' => 'gromver\platform\core\console\components\ModuleMigrateController'
             ],
             'components' => [
                 'authManager' => [
                     'class' => 'yii\rbac\DbManager',
-                    'itemTable' => '{{%grom_auth_item}}',
-                    'itemChildTable' => '{{%grom_auth_item_child}}',
-                    'assignmentTable' => '{{%grom_auth_assignment}}',
-                    'ruleTable' => '{{%grom_auth_rule}}'
+                    'itemTable' => '{{%core_auth_item}}',
+                    'itemChildTable' => '{{%core_auth_item_child}}',
+                    'assignmentTable' => '{{%core_auth_assignment}}',
+                    'ruleTable' => '{{%core_auth_rule}}'
                 ],
                 'cache' => ['class' => 'yii\caching\FileCache'],
                 'elasticsearch' => ['class' => 'yii\elasticsearch\Connection'],
@@ -95,9 +112,16 @@ class Application extends \yii\console\Application
      */
     public function init()
     {
-        $this->bootstrap = array_merge($this->bootstrap, ['main']);
-
         parent::init();
+
+        $this->_modulesConfigDependency = new ExpressionDependency(['expression' => '\Yii::$app->getModulesHash()']);
+
+        DbState::bootstrap();
+
+        Yii::$container->set('gromver\modulequery\ModuleQuery', [
+            'cache' => $this->cache,
+            'cacheDependency' => new ExpressionDependency(['expression' => '\Yii::$app->getModulesHash()'])
+        ]);
     }
 
     /**
@@ -105,5 +129,62 @@ class Application extends \yii\console\Application
      */
     public function getModulesHash() {
         return $this->_modulesHash;
+    }
+
+    /**
+     * @return null|\yii\caching\Dependency
+     */
+    public function getModulesConfigDependency()
+    {
+        return $this->_modulesConfigDependency;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiteName()
+    {
+        /** @var \gromver\platform\core\modules\main\models\MainParams $params */
+        $params = $this->paramsManager->params('main');
+
+        return !empty($params->siteName) ? $params->siteName : $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiteTitle()
+    {
+        return $this->paramsManager->params('main')->siteTitle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiteSlogan()
+    {
+        return $this->paramsManager->params('main')->siteSlogan;
+    }
+
+    /**
+     * @return string[]
+     * @throws \yii\base\UnknownPropertyException
+     */
+    public function getAdminEmail()
+    {
+        return $this->paramsManager->params('main')->adminEmail;
+    }
+
+    /**
+     * @return array ['support@example.com' => 'Support Name']
+     * @throws \yii\base\UnknownPropertyException
+     */
+    public function getSupportEmail()
+    {
+        $email = $this->paramsManager->params('main')->supportEmail;
+
+        return [
+            $email['fromEmail'] => $email['fromName']
+        ];
     }
 }

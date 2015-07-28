@@ -7,7 +7,7 @@ class m000007_000000_tag_create_tables extends \yii\db\Migration
     public function up()
     {
         // tag
-        $this->createTable('{{%grom_tag}}', [
+        $this->createTable('{{%core_tag}}', [
             'id' => Schema::TYPE_PK,
             'title' => Schema::TYPE_STRING . '(100)',
             'alias' => Schema::TYPE_STRING,
@@ -22,22 +22,22 @@ class m000007_000000_tag_create_tables extends \yii\db\Migration
             'hits' => Schema::TYPE_BIGINT . ' UNSIGNED',
             'lock' => Schema::TYPE_BIGINT . ' UNSIGNED DEFAULT 1',
         ]);
-        $this->createIndex('Alias_idx', '{{%grom_tag}}', 'alias');
-        $this->createIndex('Status_idx', '{{%grom_tag}}', 'status');
+        $this->createIndex('Alias_idx', '{{%core_tag}}', 'alias');
+        $this->createIndex('Status_idx', '{{%core_tag}}', 'status');
 
         // tag_to_item
-        $this->createTable('{{%grom_tag_to_item}}', [
+        $this->createTable('{{%core_tag_to_item}}', [
             'tag_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'item_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'item_class' => Schema::TYPE_STRING . '(1024) NOT NULL',
         ]);
-        $this->createIndex('TagId_ItemId_idx', '{{%grom_tag_to_item}}', 'tag_id, item_id');
-        $this->addForeignKey('Grom_TagToItem_TagId_fk', '{{%grom_tag_to_item}}', 'tag_id', '{{%grom_tag}}', 'id', 'CASCADE', 'CASCADE');
+        $this->createIndex('TagId_ItemId_idx', '{{%core_tag_to_item}}', 'tag_id, item_id');
+        $this->addForeignKey('Grom_TagToItem_TagId_fk', '{{%core_tag_to_item}}', 'tag_id', '{{%core_tag}}', 'id', 'CASCADE', 'CASCADE');
     }
 
     public function down()
     {
-        $this->dropTable('{{%grom_tag_to_item}}');
-        $this->dropTable('{{%grom_tag}}');
+        $this->dropTable('{{%core_tag_to_item}}');
+        $this->dropTable('{{%core_tag}}');
     }
 }

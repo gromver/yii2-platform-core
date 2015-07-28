@@ -83,7 +83,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function tableName()
     {
-        return '{{%grom_user}}';
+        return '{{%core_user}}';
     }
 
     /**

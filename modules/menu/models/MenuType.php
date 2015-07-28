@@ -40,7 +40,7 @@ class MenuType extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%grom_menu_type}}';
+        return '{{%core_menu_type}}';
     }
 
     /**

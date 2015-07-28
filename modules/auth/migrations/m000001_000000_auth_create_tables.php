@@ -7,7 +7,7 @@ class m000001_000000_auth_create_tables extends \yii\db\Migration
     public function up()
     {
         // auth rule
-        $this->createTable('{{%grom_auth_rule}}', [
+        $this->createTable('{{%core_auth_rule}}', [
             'name' => Schema::TYPE_STRING . '(64) NOT NULL',
             'data' => Schema::TYPE_TEXT,
             'created_at' => Schema::TYPE_INTEGER,
@@ -16,7 +16,7 @@ class m000001_000000_auth_create_tables extends \yii\db\Migration
         ]);
 
         // auth item
-        $this->createTable('{{%grom_auth_item}}', [
+        $this->createTable('{{%core_auth_item}}', [
             'name' => Schema::TYPE_STRING . '(64) NOT NULL',
             'type' => Schema::TYPE_INTEGER . ' NOT NULL',
             'description' => Schema::TYPE_TEXT,
@@ -27,36 +27,36 @@ class m000001_000000_auth_create_tables extends \yii\db\Migration
             'PRIMARY KEY (name)',
         ]);
 
-        $this->addForeignKey('Grom_AuthItem_RuleName_fk', '{{%grom_auth_item}}', 'rule_name', '{{%grom_auth_rule}}', 'name', 'SET NULL', 'CASCADE');
+        $this->addForeignKey('Grom_AuthItem_RuleName_fk', '{{%core_auth_item}}', 'rule_name', '{{%core_auth_rule}}', 'name', 'SET NULL', 'CASCADE');
 
-        $this->createIndex('AuthItem_type_idx', '{{%grom_auth_item}}', 'type');
+        $this->createIndex('AuthItem_type_idx', '{{%core_auth_item}}', 'type');
 
         // auth item child
-        $this->createTable('{{%grom_auth_item_child}}', [
+        $this->createTable('{{%core_auth_item_child}}', [
             'parent' => Schema::TYPE_STRING . '(64) NOT NULL',
             'child' => Schema::TYPE_STRING . '(64) NOT NULL',
             'PRIMARY KEY (parent,child)',
         ]);
 
-        $this->addForeignKey('Grom_AuthItemChild_Parent_fk', '{{%grom_auth_item_child}}', 'parent', '{{%grom_auth_item}}', 'name', 'CASCADE', 'CASCADE');
-        $this->addForeignKey('Grom_AuthItemChild_Child_fk', '{{%grom_auth_item_child}}', 'child', '{{%grom_auth_item}}', 'name', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('Grom_AuthItemChild_Parent_fk', '{{%core_auth_item_child}}', 'parent', '{{%core_auth_item}}', 'name', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('Grom_AuthItemChild_Child_fk', '{{%core_auth_item_child}}', 'child', '{{%core_auth_item}}', 'name', 'CASCADE', 'CASCADE');
 
         // auth assignment
-        $this->createTable('{{%grom_auth_assignment}}', [
+        $this->createTable('{{%core_auth_assignment}}', [
             'item_name' => Schema::TYPE_STRING . '(64) NOT NULL',
             'user_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'created_at' => Schema::TYPE_INTEGER,
             'PRIMARY KEY (item_name,user_id)',
         ]);
 
-        $this->addForeignKey('Grom_AuthAssignment_ItemName_fk', '{{%grom_auth_assignment}}', 'item_name', '{{%grom_auth_item}}', 'name', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('Grom_AuthAssignment_ItemName_fk', '{{%core_auth_assignment}}', 'item_name', '{{%core_auth_item}}', 'name', 'CASCADE', 'CASCADE');
     }
 
     public function down()
     {
-        $this->dropTable('{{%grom_auth_assignment}}');
-        $this->dropTable('{{%grom_auth_item_child}}');
-        $this->dropTable('{{%grom_auth_item}}');
-        $this->dropTable('{{%grom_auth_rule}}');
+        $this->dropTable('{{%core_auth_assignment}}');
+        $this->dropTable('{{%core_auth_item_child}}');
+        $this->dropTable('{{%core_auth_item}}');
+        $this->dropTable('{{%core_auth_rule}}');
     }
 }

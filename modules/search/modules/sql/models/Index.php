@@ -8,7 +8,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "{{%grom_index}}".
+ * This is the model class for table "{{%core_index}}".
  * @package yii2-platform-basic
  * @author Gayazov Roman <gromver5@gmail.com>
  *
@@ -29,7 +29,7 @@ class Index extends \yii\db\ActiveRecord implements ViewableInterface
      */
     public static function tableName()
     {
-        return '{{%grom_index}}';
+        return '{{%core_index}}';
     }
 
     /**

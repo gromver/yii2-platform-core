@@ -27,7 +27,7 @@ class TagToItem extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%grom_tag_to_item}}';
+        return '{{%core_tag_to_item}}';
     }
 
     /**

@@ -65,7 +65,7 @@ class UserProfile extends Widget {
 
     private static function model()
     {
-        return new ObjectModel(\Yii::$app->getModule('grom/user')->userParamsClass);
+        return new ObjectModel(\Yii::$app->getModule('user')->userParamsClass);
     }
 
     public static function params()

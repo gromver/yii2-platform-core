@@ -7,7 +7,7 @@ class m000010_000000_sql_search_create_tables extends \yii\db\Migration
     public function up()
     {
         // index
-        $this->createTable('{{%grom_index}}', [
+        $this->createTable('{{%core_index}}', [
             'id' => Schema::TYPE_PK,
             'model_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'model_class' => Schema::TYPE_STRING . ' NOT NULL',
@@ -25,6 +25,6 @@ class m000010_000000_sql_search_create_tables extends \yii\db\Migration
 
     public function down()
     {
-        $this->dropTable('{{%grom_index}}');
+        $this->dropTable('{{%core_index}}');
     }
 }

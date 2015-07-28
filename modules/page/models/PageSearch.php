@@ -83,28 +83,28 @@ class PageSearch extends Page
         }
 
         $query->andFilterWhere([
-            '{{%grom_page}}.id' => $this->id,
-            '{{%grom_page}}.parent_id' => $this->parent_id,
-            '{{%grom_page}}.created_at' => $this->created_at,
-            '{{%grom_page}}.updated_at' => $this->updated_at,
-            '{{%grom_page}}.status' => $this->status,
-            '{{%grom_page}}.created_by' => $this->created_by,
-            '{{%grom_page}}.updated_by' => $this->updated_by,
-            '{{%grom_page}}.lft' => $this->lft,
-            '{{%grom_page}}.rgt' => $this->rgt,
-            '{{%grom_page}}.level' => $this->level,
-            '{{%grom_page}}.ordering' => $this->ordering,
-            '{{%grom_page}}.hits' => $this->hits,
-            '{{%grom_page}}.lock' => $this->lock,
+            '{{%core_page}}.id' => $this->id,
+            '{{%core_page}}.parent_id' => $this->parent_id,
+            '{{%core_page}}.created_at' => $this->created_at,
+            '{{%core_page}}.updated_at' => $this->updated_at,
+            '{{%core_page}}.status' => $this->status,
+            '{{%core_page}}.created_by' => $this->created_by,
+            '{{%core_page}}.updated_by' => $this->updated_by,
+            '{{%core_page}}.lft' => $this->lft,
+            '{{%core_page}}.rgt' => $this->rgt,
+            '{{%core_page}}.level' => $this->level,
+            '{{%core_page}}.ordering' => $this->ordering,
+            '{{%core_page}}.hits' => $this->hits,
+            '{{%core_page}}.lock' => $this->lock,
         ]);
 
-        $query->andFilterWhere(['like', '{{%grom_page}}.title', $this->title])
-            ->andFilterWhere(['like', '{{%grom_page}}.path', $this->path])
-            ->andFilterWhere(['like', '{{%grom_page}}.alias', $this->alias])
-            ->andFilterWhere(['like', '{{%grom_page}}.preview_text', $this->preview_text])
-            ->andFilterWhere(['like', '{{%grom_page}}.detail_text', $this->detail_text])
-            ->andFilterWhere(['like', '{{%grom_page}}.metakey', $this->metakey])
-            ->andFilterWhere(['like', '{{%grom_page}}.metadesc', $this->metadesc]);
+        $query->andFilterWhere(['like', '{{%core_page}}.title', $this->title])
+            ->andFilterWhere(['like', '{{%core_page}}.path', $this->path])
+            ->andFilterWhere(['like', '{{%core_page}}.alias', $this->alias])
+            ->andFilterWhere(['like', '{{%core_page}}.preview_text', $this->preview_text])
+            ->andFilterWhere(['like', '{{%core_page}}.detail_text', $this->detail_text])
+            ->andFilterWhere(['like', '{{%core_page}}.metakey', $this->metakey])
+            ->andFilterWhere(['like', '{{%core_page}}.metadesc', $this->metadesc]);
 
         if ($this->excludeRoots) {
             $query->excludeRoots();
@@ -116,7 +116,7 @@ class PageSearch extends Page
         }
 
         if($this->tags) {
-            $query->innerJoinWith('tags')->andFilterWhere(['{{%grom_tag}}.id' => $this->tags]);
+            $query->innerJoinWith('tags')->andFilterWhere(['{{%core_tag}}.id' => $this->tags]);
         }
 
         return $dataProvider;

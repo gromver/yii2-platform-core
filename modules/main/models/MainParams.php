@@ -40,9 +40,8 @@ class MainParams extends ParamsObject
      */
     public $adminEmail;
     /**
-     * @field multiple
-     * @multyField text
-     * @email
+     * @field object
+     * @object gromver\platform\core\modules\main\models\SupportSubParams
      * @translation gromver.platform
      */
     public $supportEmail;
@@ -91,4 +90,17 @@ class MainParams extends ParamsObject
     {
         return 'main';
     }
+}
+
+class SupportSubParams
+{
+    /**
+     * @translation gromver.platform
+     * @email
+     */
+    public $fromEmail = 'support@example.com';
+    /**
+     * @translation gromver.platform
+     */
+    public $fromName = 'My Site Support';
 }

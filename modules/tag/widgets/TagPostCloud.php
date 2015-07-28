@@ -38,11 +38,11 @@ class TagPostCloud extends Widget
     protected function launch()
     {
         $tags = Post::find()->category($this->categoryId)->published()->innerJoinWith('tags', false)->select([
-            'id' => '{{%grom_tag}}.id',
-            'title' => '{{%grom_tag}}.title',
-            'alias' => '{{%grom_tag}}.alias',
-            'weight' => 'count({{%grom_tag}}.id)'
-        ])->groupBy('{{%grom_tag}}.id')->asArray()->all();
+            'id' => '{{%core_tag}}.id',
+            'title' => '{{%core_tag}}.title',
+            'alias' => '{{%core_tag}}.alias',
+            'weight' => 'count({{%core_tag}}.id)'
+        ])->groupBy('{{%core_tag}}.id')->asArray()->all();
 
         $maxWeight = 0;
         array_walk($tags, function ($v) use (&$maxWeight){

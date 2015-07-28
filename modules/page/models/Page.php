@@ -66,7 +66,7 @@ class Page extends \yii\db\ActiveRecord implements ViewableInterface, Searchable
      */
     public static function tableName()
     {
-        return '{{%grom_page}}';
+        return '{{%core_page}}';
     }
 
     /**
@@ -411,7 +411,7 @@ class Page extends \yii\db\ActiveRecord implements ViewableInterface, Searchable
             $event->query->andWhere([
                     'AND',
                     ['=', 'model_class', self::className()],
-                    ['NOT IN', 'model_id', Page::find()->unpublished()->select('{{%grom_page}}.id')->column()]
+                    ['NOT IN', 'model_id', Page::find()->unpublished()->select('{{%core_page}}.id')->column()]
                 ]
             );
         }
@@ -431,7 +431,7 @@ class Page extends \yii\db\ActiveRecord implements ViewableInterface, Searchable
                             'term' => ['model_class' => self::className()]
                         ],
                         [
-                            'terms' => ['model_id' => self::find()->unpublished()->select('{{%grom_page}}.id')->column()]
+                            'terms' => ['model_id' => self::find()->unpublished()->select('{{%core_page}}.id')->column()]
                         ],
                     ]
                 ]

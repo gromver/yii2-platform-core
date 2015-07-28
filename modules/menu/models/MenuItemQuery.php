@@ -32,7 +32,7 @@ class MenuItemQuery extends \yii\db\ActiveQuery
      */
     public function type($typeId)
     {
-        return $this->andWhere(['{{%grom_menu_item}}.menu_type_id' => $typeId]);
+        return $this->andWhere(['{{%core_menu_item}}.menu_type_id' => $typeId]);
     }
     /**
      * @return static
@@ -41,15 +41,15 @@ class MenuItemQuery extends \yii\db\ActiveQuery
     {
         $badcatsQuery = new Query([
             'select' => ['badcats.id'],
-            'from' => ['{{%grom_menu_item}} AS unpublished'],
+            'from' => ['{{%core_menu_item}} AS unpublished'],
             'join' => [
-                ['LEFT JOIN', '{{%grom_menu_item}} AS badcats', 'unpublished.lft <= badcats.lft AND unpublished.rgt >= badcats.rgt']
+                ['LEFT JOIN', '{{%core_menu_item}} AS badcats', 'unpublished.lft <= badcats.lft AND unpublished.rgt >= badcats.rgt']
             ],
             'where' => 'unpublished.status = ' . MenuItem::STATUS_UNPUBLISHED,
             'groupBy' => ['badcats.id']
         ]);
 
-        return $this->andWhere(['NOT IN', '{{%grom_menu_item}}.id', $badcatsQuery]);
+        return $this->andWhere(['NOT IN', '{{%core_menu_item}}.id', $badcatsQuery]);
     }
 
     /**
@@ -57,7 +57,7 @@ class MenuItemQuery extends \yii\db\ActiveQuery
      */
     public function excludeRoots()
     {
-        return $this->andWhere('{{%grom_menu_item}}.lft!=1');
+        return $this->andWhere('{{%core_menu_item}}.lft!=1');
     }
 
     /**
@@ -67,6 +67,6 @@ class MenuItemQuery extends \yii\db\ActiveQuery
      */
     public function excludeItem($item)
     {
-        return $this->andWhere('{{%grom_menu_item}}.lft < :excludeLft OR {{%grom_menu_item}}.lft > :excludeRgt', [':excludeLft' => $item->lft, ':excludeRgt' => $item->rgt]);
+        return $this->andWhere('{{%core_menu_item}}.lft < :excludeLft OR {{%core_menu_item}}.lft > :excludeRgt', [':excludeLft' => $item->lft, ':excludeRgt' => $item->rgt]);
     }
 }

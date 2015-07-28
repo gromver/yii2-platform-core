@@ -52,7 +52,7 @@ class Tag extends \yii\db\ActiveRecord implements ViewableInterface
      */
     public static function tableName()
     {
-        return '{{%grom_tag}}';
+        return '{{%core_tag}}';
     }
 
     /**
@@ -60,7 +60,7 @@ class Tag extends \yii\db\ActiveRecord implements ViewableInterface
      */
     public static function pivotTableName()
     {
-        return '{{%grom_tag_to_item}}';
+        return '{{%core_tag_to_item}}';
     }
 
     /**

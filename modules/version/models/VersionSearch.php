@@ -65,21 +65,21 @@ class VersionSearch extends Version
         }
 
         if ($this->created_at) {
-            $query->andWhere('{{%grom_version}}.created_at >= :timestamp', ['timestamp' => $this->created_at]);
+            $query->andWhere('{{%core_version}}.created_at >= :timestamp', ['timestamp' => $this->created_at]);
         }
 
         $query->andFilterWhere([
-            '{{%grom_version}}.id' => $this->id,
-            '{{%grom_version}}.item_id' => $this->item_id,
-            '{{%grom_version}}.character_count' => $this->character_count,
-            '{{%grom_version}}.created_by' => $this->created_by,
+            '{{%core_version}}.id' => $this->id,
+            '{{%core_version}}.item_id' => $this->item_id,
+            '{{%core_version}}.character_count' => $this->character_count,
+            '{{%core_version}}.created_by' => $this->created_by,
         ]);
 
-        $query->andFilterWhere(['like', '{{%grom_version}}.item_class', $this->item_class])
-            ->andFilterWhere(['like', '{{%grom_version}}.version_note', $this->version_note])
-            ->andFilterWhere(['like', '{{%grom_version}}.version_hash', $this->version_hash])
-            ->andFilterWhere(['like', '{{%grom_version}}.version_data', $this->version_data])
-            ->andFilterWhere(['like', '{{%grom_version}}.keep_forever', $this->keep_forever]);
+        $query->andFilterWhere(['like', '{{%core_version}}.item_class', $this->item_class])
+            ->andFilterWhere(['like', '{{%core_version}}.version_note', $this->version_note])
+            ->andFilterWhere(['like', '{{%core_version}}.version_hash', $this->version_hash])
+            ->andFilterWhere(['like', '{{%core_version}}.version_data', $this->version_data])
+            ->andFilterWhere(['like', '{{%core_version}}.keep_forever', $this->keep_forever]);
 
         return $dataProvider;
     }

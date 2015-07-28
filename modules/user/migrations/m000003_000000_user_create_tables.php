@@ -7,7 +7,7 @@ class m000003_000000_user_create_tables extends \yii\db\Migration
     public function up()
     {
         // user
-        $this->createTable('{{%grom_user}}', [
+        $this->createTable('{{%core_user}}', [
             'id' => Schema::TYPE_PK,
             'username' => Schema::TYPE_STRING . '(64) NOT NULL',
             'email' => Schema::TYPE_STRING . '(128) NOT NULL',
@@ -22,25 +22,25 @@ class m000003_000000_user_create_tables extends \yii\db\Migration
             'last_visit_at' => Schema::TYPE_INTEGER,
         ]);
 
-        $this->createIndex('Username_idx', '{{%grom_user}}', 'username');
-        $this->createIndex('Email_idx', '{{%grom_user}}', 'email');
-        $this->createIndex('Status_idx', '{{%grom_user}}', 'status');
+        $this->createIndex('Username_idx', '{{%core_user}}', 'username');
+        $this->createIndex('Email_idx', '{{%core_user}}', 'email');
+        $this->createIndex('Status_idx', '{{%core_user}}', 'status');
 
         // user_param
-        $this->createTable('{{%grom_user_param}}', [
+        $this->createTable('{{%core_user_param}}', [
             'user_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'name' => Schema::TYPE_STRING . '(50) NOT NULL',
             'value' => Schema::TYPE_TEXT,
             'created_at' => Schema::TYPE_INTEGER . ' NOT NULL',
         ]);
-        $this->addPrimaryKey('UserId_Name_pk', '{{%grom_user_param}}', ['user_id', 'name']);
-        $this->createIndex('Value_idx', '{{%grom_user_param}}', 'value(50)');
-        $this->addForeignKey('Grom_UserParam_User_fk', '{{%grom_user_param}}', 'user_id', '{{%grom_user}}', 'id', 'CASCADE', 'CASCADE');
+        $this->addPrimaryKey('UserId_Name_pk', '{{%core_user_param}}', ['user_id', 'name']);
+        $this->createIndex('Value_idx', '{{%core_user_param}}', 'value(50)');
+        $this->addForeignKey('Grom_UserParam_User_fk', '{{%core_user_param}}', 'user_id', '{{%core_user}}', 'id', 'CASCADE', 'CASCADE');
     }
 
     public function down()
     {
-        $this->dropTable('{{%grom_user_param}}');
-        $this->dropTable('{{%grom_user}}');
+        $this->dropTable('{{%core_user_param}}');
+        $this->dropTable('{{%core_user}}');
     }
 }

@@ -23,11 +23,14 @@ class m100000_000001_app_site_setup extends \yii\db\Migration
 
         $model = new \gromver\models\ObjectModel(\gromver\platform\core\modules\main\models\MainParams::className());
         $model->setAttributes($params->toArray());
+        //$supportModel = $model->supportEmail;
 
         echo 'Setup application config: ' . PHP_EOL;
         $this->readStdinUser('Site Name (My Site)', $model, 'siteName', 'My Site');
-        $this->readStdinUser('Admin Email (admin@email.com)', $model, 'adminEmail', 'admin@email.com');
-        $this->readStdinUser('Support Email (support@email.com)', $model, 'supportEmail', 'support@email.com');
+        $this->readStdinUser('Admin Email (admin@example.com)', $model, 'adminEmail', 'admin@example.com');
+        // todo заполнение email данных саппорта
+        //$this->readStdinUser('Support Email (support@example.com)', $supportModel, 'supportEmail', 'support@example.com');
+        //$this->readStdinUser('Support Name (My Site Support)', $supportModel, 'supportName', 'My Site Support');
 
         if ($model->validate()) {
             \gromver\platform\core\modules\main\models\MainParams::create($model->toArray())->save();

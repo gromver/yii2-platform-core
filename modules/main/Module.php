@@ -22,9 +22,6 @@ use Yii;
  * Class Module
  * @package yii2-platform-basic
  * @author Gayazov Roman <gromver5@gmail.com>
- *
- * @property string $siteName
- * @property bool $isEditMode
  */
 class Module extends \yii\base\Module implements ModuleEventsInterface
 {

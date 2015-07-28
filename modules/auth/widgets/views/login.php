@@ -43,8 +43,8 @@ use yii\captcha\Captcha;
     </div>
 </div>
 <div class="form-group links">
-    <?= Html::a(Yii::t('gromver.platform', 'Registration'), ['/grom/auth/default/signup'], ['class' => 'signup', 'target' => '_parent']) ?>
-    <?= Html::a(Yii::t('gromver.platform', 'Forgot your password?'), ['/grom/auth/default/request-password-reset-token'], ['class' => 'forgot-password', 'target' => '_parent']) ?>
+    <?= Html::a(Yii::t('gromver.platform', 'Registration'), ['/auth/default/signup'], ['class' => 'signup', 'target' => '_parent']) ?>
+    <?= Html::a(Yii::t('gromver.platform', 'Forgot your password?'), ['/auth/default/request-password-reset-token'], ['class' => 'forgot-password', 'target' => '_parent']) ?>
 </div>
 
 <?php ActiveForm::end(); ?>

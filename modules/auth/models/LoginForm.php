@@ -39,7 +39,7 @@ class LoginForm extends \yii\base\Model
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
-            ['verifyCode', 'captcha', 'captchaAction' => 'grom/auth/default/captcha', 'on' => 'withCaptcha']
+            ['verifyCode', 'captcha', 'captchaAction' => 'auth/default/captcha', 'on' => 'withCaptcha']
         ];
     }
 

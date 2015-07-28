@@ -80,7 +80,7 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface
      */
     public static function tableName()
     {
-        return '{{%grom_menu_item}}';
+        return '{{%core_menu_item}}';
     }
 
     /**
@@ -492,7 +492,7 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface
      */
     public function getBackendViewLink()
     {
-        return ['/grom/menu/backend/item/view', 'id' => $this->id];
+        return ['/menu/backend/item/view', 'id' => $this->id];
     }
 
     /**
@@ -500,7 +500,7 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface
      */
     public static function backendViewLink($model)
     {
-        return ['/grom/menu/backend/item/view', 'id' => $model['id']];
+        return ['/menu/backend/item/view', 'id' => $model['id']];
     }
 
     public function getBreadcrumbs($includeSelf = false)
