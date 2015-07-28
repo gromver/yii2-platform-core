@@ -488,6 +488,16 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @param $name string
+     * @param mixed $default
+     * @return null|string
+     */
+    public function getParam($name, $default = null)
+    {
+        return isset($this->params[$name]) ? $this->params[$name]->value : $default;
+    }
+
+    /**
      * @param $permissionName
      * @param array $params
      * @return bool
