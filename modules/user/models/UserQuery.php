@@ -77,4 +77,21 @@ class UserQuery extends ActiveQuery {
         return $this->leftJoin($auth->assignmentTable . ' auth', 'auth.user_id=id')
             ->andWhere(['auth.item_name' => $permissions]);
     }
+
+    /**
+     * Аналогично self::can() только условия накладываются через AND
+     * @param string|array $permissions
+     * @return $this
+     */
+    public function andCan($permissions)
+    {
+        static $uid = 1;
+
+        /** @var \yii\rbac\DbManager $auth */
+        $auth = \Yii::$app->authManager;
+        $alias = 'auth_' . $uid++;
+
+        return $this->leftJoin("{$auth->assignmentTable} {$alias}", "{$alias}.user_id=id")
+            ->andWhere(["{$alias}.item_name" => $permissions]);
+    }
 }
