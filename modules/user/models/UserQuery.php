@@ -62,4 +62,19 @@ class UserQuery extends ActiveQuery {
     {
         return $this->andWhere(['status' => User::STATUS_SUSPENDED, 'deleted_at' => null]);
     }
+
+    /**
+     * Фильтрация по принадлежности пользователя к правилам доступа
+     * Если передан массив правил - то проверка осуществляется через 'OR'
+     * @param string|array $permissions
+     * @return $this
+     */
+    public function can($permissions)
+    {
+        /** @var \yii\rbac\DbManager $auth */
+        $auth = \Yii::$app->authManager;
+
+        return $this->leftJoin($auth->assignmentTable . ' auth', 'auth.user_id=id')
+            ->andWhere(['auth.item_name' => $permissions]);
+    }
 }
