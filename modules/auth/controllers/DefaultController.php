@@ -156,6 +156,7 @@ class DefaultController extends \yii\web\Controller
 
     public function actionResetPassword($token)
     {
+        /** @var User $model */
         $model = User::findOne([
             'password_reset_token' => $token,
             'status' => User::STATUS_ACTIVE,
@@ -167,7 +168,7 @@ class DefaultController extends \yii\web\Controller
 
         $model->scenario = 'resetPassword';
         if ($model->load($_POST) && $model->save()) {
-            Yii::$app->getSession()->setFlash(Alert::TYPE_SUCCESS, Yii::t('gromver.platform', 'New password was saved.'));
+            Yii::$app->getSession()->setFlash(Alert::TYPE_SUCCESS, Yii::t('gromver.platform', 'New password has been saved.'));
             return $this->goHome();
         }
 
@@ -178,6 +179,7 @@ class DefaultController extends \yii\web\Controller
 
     private function sendPasswordResetEmail($email)
     {
+        /** @var User $user */
         $user = User::findOne([
             'status' => User::STATUS_ACTIVE,
             'email' => $email,
@@ -192,9 +194,9 @@ class DefaultController extends \yii\web\Controller
             $mailer = Instance::ensure($this->mailer, BaseMailer::className());
 
             return $mailer->compose('@gromver/platform/core/modules/auth/views/emails/passwordResetToken', ['user' => $user])
-                ->setFrom(Yii::$app->paramsManager->main->supportEmail, Yii::t('gromver.platform', '{name} robot', ['name' => Yii::$app->siteName]))
+                ->setFrom(Yii::$app->supportEmail)
                 ->setTo($user->email)
-                ->setSubject(Yii::t('gromver.platform', 'Password reset for {name}.', ['name' => Yii::$app->siteName]))
+                ->setSubject(Yii::t('gromver.platform', 'Password reset for {name}.', ['name' => isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']]))
                 ->send();
         }
 

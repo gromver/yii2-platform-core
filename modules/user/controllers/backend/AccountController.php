@@ -37,7 +37,7 @@ class AccountController extends \gromver\platform\core\controllers\BackendContro
                     [
                         'allow' => true,
                         'actions' => ['index', 'profile', 'reset-password'],
-                        'roles' => ['authenticated'],
+                        'roles' => ['administrate'],
                     ],
                 ]
             ]
