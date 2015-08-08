@@ -42,7 +42,7 @@ use yii\bootstrap\ActiveForm;
                         ],
                         'label' => '<i class="glyphicon glyphicon-folder-open"></i>',
                         'url' => ['select', 'modal' => true, 'PageSearch[excludePage]' => $model->isNewRecord ? null : $model->id],
-                        'handler' =>
+                        'dataHandler' =>
 <<<JS
 function(data) {
     $("#{$idParent_id}").html('<option value="' + data.id + '">' + data.title + '</option>').val(data.id).trigger('change');
@@ -86,7 +86,7 @@ JS;
                         ],
                         'label' => '<i class="glyphicon glyphicon-folder-open"></i>',
                         'url' => ['/tag/backend/default/select', 'modal' => true],
-                        'handler' => $handlerJs,
+                        'dataHandler' => $handlerJs,
                     ]) . \gromver\widgets\ModalIFrame::widget([
                         'options' => [
                             'class' => 'input-group-addon',
@@ -94,7 +94,7 @@ JS;
                         ],
                         'label' => '<i class="glyphicon glyphicon-plus"></i>',
                         'url' => ['/tag/backend/default/create', 'modal' => true],
-                        'handler' => $handlerJs,
+                        'dataHandler' => $handlerJs,
                     ]) . '</div>',
             ])->widget(\kartik\select2\Select2::className(), [
                 'data' => \yii\helpers\ArrayHelper::map($model->tags, 'id', 'title'),

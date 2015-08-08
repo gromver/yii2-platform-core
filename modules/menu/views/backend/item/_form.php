@@ -45,7 +45,7 @@ use yii\bootstrap\ActiveForm;
                         ],
                         'label' => '<i class="glyphicon glyphicon-folder-open"></i>',
                         'url' => ['select', 'modal' => true, 'MenuItemSearch[excludeItem]' => $model->isNewRecord ? null : $model->id],
-                        'handler' =>
+                        'dataHandler' =>
                             <<<JS
                             function(data) {
     $("#{$idParent_id}").html('<option value="' + data.id + '">' + data.title + '</option>').val(data.id).trigger('change');
@@ -113,7 +113,7 @@ JS
                         ],
                         'url' => ['routers'],
                         'label' => Html::tag('span', '<span class="glyphicon glyphicon-folder-open"></span>', ['class'=>'btn btn-default']),
-                        'handler' => "function(data){
+                        'dataHandler' => "function(data){
                                     $('#{$linkInputId}').val(data.route)
                                 }"
                     ])
