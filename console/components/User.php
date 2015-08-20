@@ -19,12 +19,12 @@ use yii\web\IdentityInterface;
  * @package yii2-platform-basic
  * @author Gayazov Roman <gromver5@gmail.com>
  */
-class User extends \gromver\platform\basic\components\User {
+class User extends \gromver\platform\core\components\User {
     public function init()
     {
         parent::init();
 
-        /* @var $class \gromver\platform\basic\modules\user\models\User */
+        /* @var $class \gromver\platform\core\modules\user\models\User */
         $class = $this->identityClass;
         /* @var $identity IdentityInterface */
         $identity = $class::find()->orderBy(['id' => SORT_ASC])->one();
