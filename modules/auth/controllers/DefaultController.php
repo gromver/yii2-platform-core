@@ -76,11 +76,6 @@ class DefaultController extends \yii\web\Controller
 
         $model = new LoginForm();
 
-        //make the captcha required if the unsuccessful attempts are more of thee
-        if ($this->getLoginAttempts() >= $this->module->attemptsBeforeCaptcha) {
-            $model->scenario = 'withCaptcha';
-        }
-
         if ($model->load($_POST)) {
             if($model->login()) {
                 $this->setLoginAttempts(0); //if login is successful, reset the attempts
@@ -93,6 +88,11 @@ class DefaultController extends \yii\web\Controller
                 $this->setLoginAttempts($this->getLoginAttempts() + 1);
                 Yii::$app->session->setFlash(Alert::TYPE_DANGER, Yii::t('gromver.platform', 'Authorization is failed.'));
             }
+        }
+
+        //make the captcha required if the unsuccessful attempts are more of thee
+        if ($this->getLoginAttempts() >= $this->module->attemptsBeforeCaptcha) {
+            $model->scenario = 'withCaptcha';
         }
 
         if ($modal) {
