@@ -4,7 +4,7 @@ use gromver\platform\core\modules\search\modules\elastic\models\Index;
 use yii\console\Exception;
 use yii\elasticsearch\ActiveRecord;
 
-class m000010_000000_grom_elastic_search_create_tables extends \yii\db\Migration
+class m000011_000000_grom_elastic_search_create_tables extends \yii\db\Migration
 {
     public function up()
     {

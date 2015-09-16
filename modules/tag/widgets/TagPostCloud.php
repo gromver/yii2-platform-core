@@ -10,7 +10,7 @@
 namespace gromver\platform\core\modules\tag\widgets;
 
 
-use gromver\platform\core\modules\news\models\Post;
+use gromver\platform\news\models\Post;
 use gromver\platform\core\modules\tag\widgets\assets\TagAsset;
 use gromver\platform\core\modules\widget\widgets\Widget;
 

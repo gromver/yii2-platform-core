@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title; ?>
 
             <?= \gromver\models\widgets\Fields::widget(['model' => $model]) ?>
 
-            <div>
+            <div class="row">
                 <?= Html::submitButton('<i class="glyphicon glyphicon-save"></i> ' . Yii::t('gromver.platform', 'Save'), ['class' => 'btn btn-success']) ?>
                 <?//= Html::submitButton('<i class="glyphicon glyphicon-refresh"></i> ' . Yii::t('gromver.platform', 'Refresh'), ['class' => 'btn btn-default', 'name' => 'task', 'value' => 'refresh']) ?>
             </div>
