@@ -17,6 +17,7 @@ use gromver\platform\core\modules\widget\widgets\WidgetCacheTrait;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\helpers\Json;
 
 /**
@@ -133,6 +134,13 @@ class Menu extends Widget
         while ($model = array_shift($rawItems)){
             if ($level == $model->level) {
                 $linkParams = (array)Json::decode($model->link_params);
+                $linkOptions = [
+                    'class' => @$linkParams['class'] ? $linkParams['class'] : null,
+                    'target' => @$linkParams['target'] ? $linkParams['target'] : null,
+                    'style' => @$linkParams['style'] ? $linkParams['style'] : null,
+                    'rel' => @$linkParams['rel'] ? $linkParams['rel'] : null,
+                    'onclick' => @$linkParams['onclick'] ? $linkParams['onclick'] : null,
+                ];
                 $items[] = [
                     'id' => $model->id,
                     'label' => @$linkParams['title'] ? $linkParams['title'] : $model->title,
@@ -141,13 +149,8 @@ class Menu extends Widget
                     'submenuOptions' => [
                         'class' => 'level-' . $model->level
                     ],
-                    'options' => [
-                        'class' => @$linkParams['class'] ? $linkParams['class'] : null,
-                        'target' => @$linkParams['target'] ? $linkParams['target'] : null,
-                        'style' => @$linkParams['style'] ? $linkParams['style'] : null,
-                        'rel' => @$linkParams['rel'] ? $linkParams['rel'] : null,
-                        'onclick' => @$linkParams['onclick'] ? $linkParams['onclick'] : null,
-                    ]
+                    'template' => Html::a('{label}', '{url}', $linkOptions),
+                    'linkOptions' => $linkOptions,
                 ];
             } elseif ($level < $model->level) {
                 array_unshift($rawItems, $model);
