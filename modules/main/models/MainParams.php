@@ -97,10 +97,12 @@ class SupportSubParams
     /**
      * @translation gromver.platform
      * @email
+     * @label Email
      */
     public $fromEmail = 'support@example.com';
     /**
      * @translation gromver.platform
+     * @label Name
      */
     public $fromName = 'My Site Support';
 }

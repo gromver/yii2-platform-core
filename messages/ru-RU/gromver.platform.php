@@ -158,7 +158,12 @@ return [
     'Add Category' => 'Добавить категорию',
     'Update Category: {title}' => 'Редактировать категорию: {title}',
     'Select Category' => 'Выберите категорию',
+    'Category Params' => 'Категории',
+    'Preview Width' => 'Ширина превью',
+    'Preview Height' => 'Высота превью',
+    'Resize' => 'Маштабировать',
     //post manager
+    'Post Params' => 'Статьи',
     'Add Post' => 'Добавить статью',
     'Update Post: {title}' => 'Редактировать статью: {title}',
     'Select Post' => 'Выберите статью',
@@ -208,6 +213,9 @@ return [
     'Admin Email' => 'Email администратора',
     'Support Email' => 'Email техподдержки',
     'Index' => 'Индекс',
+    'Main Params' => 'Основные',
+    'Site Title' => 'Заголовок',
+    'Site Slogan' => 'Слоган',
     // FRONTEND
     'Admin Panel' => 'Админка',
     'Editing mode' => 'Режим редактирования',
