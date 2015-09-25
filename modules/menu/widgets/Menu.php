@@ -135,6 +135,7 @@ class Menu extends Widget
             if ($level == $model->level) {
                 $linkParams = (array)Json::decode($model->link_params);
                 $linkOptions = [
+                    // todo добавлять определенный($inaccessibleClass) класс для пунктов меню к которым нет доступа
                     'class' => @$linkParams['class'] ? $linkParams['class'] : null,
                     'target' => @$linkParams['target'] ? $linkParams['target'] : null,
                     'style' => @$linkParams['style'] ? $linkParams['style'] : null,

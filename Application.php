@@ -58,18 +58,12 @@ class Application extends \yii\web\Application {
      */
     public $listFieldItems = [];
     /**
-     * @var array список компонентов к которым нельзя попасть на прямую(post/frontend/..., page/frontend/...)
-     * эта блокировка нужна для того чтобы управлять структурой сайта только через меню
-     * во время разработки проекта ету блокировку можно снять указав в конфиге приложения
-     * [
-     *      'blockedUrlRules' => []
-     * ]
+     * @var array список предустановленных (системных) правил
      */
-    public $blockingUrlRules = [
-        /*'grom/news/frontend<path:(/.*)?>',
-        'grom/page/frontend<path:(/.*)?>',
-        'grom/tag/frontend<path:(/.*)?>',
-        'grom/user/frontend<path:(/.*)?>',*/
+    public $defaultUrlRules = [
+        'auth' => 'auth/default/login',
+        'admin' => 'main/backend/default/index',
+/*        'grom/page/frontend<path:(/.*)?>' => 'main/default/page-not-found',*/
     ];
     /**
      * @var array список дополнительных поведений для модели пользователя
@@ -105,11 +99,7 @@ class Application extends \yii\web\Application {
 
         $config = ArrayHelper::merge([
             'components' => [
-                /*'request' => [
-                    'class' => 'gromver\platform\core\components\Request',
-                ],*/
                 'urlManager' => [
-                    //'class' => 'gromver\platform\core\components\UrlManager',
                     'enablePrettyUrl' => true,
                     'showScriptName' => false,
                 ],
@@ -222,16 +212,7 @@ class Application extends \yii\web\Application {
             'cacheDependency' => $this->_modulesConfigDependency
         ]);
 
-        /** @var MenuManager $manager */
-        $rules['auth'] = 'auth/default/login';
-        $rules['admin'] = 'main/backend/default/index';
-        if (is_array($this->blockingUrlRules) && count($this->blockingUrlRules)) {
-            foreach ($this->blockingUrlRules as $rule) {
-                $rules[$rule] = 'main/default/page-not-found'; //блокируем доступ напрямую
-            }
-        }
-
-        $this->urlManager->addRules($rules, false); //вставляем в начало списка
+        $this->urlManager->addRules($this->defaultUrlRules, false); //вставляем в начало списка системные правила
 
         $this->set('menuManager', \Yii::createObject(MenuManager::className()));
 
