@@ -94,4 +94,21 @@ class UserQuery extends ActiveQuery {
         return $this->leftJoin("{$auth->assignmentTable} {$alias}", "{$alias}.user_id=id")
             ->andWhere(["{$alias}.item_name" => $permissions]);
     }
+
+    /**
+     * Фильтр по параметрам
+     * @param string $name      Название параметра
+     * @param string $value     Значение
+     * @return $this
+     */
+    public function andParam($name, $value)
+    {
+        static $uid = 1;
+
+        $alias = 'param_' . $uid++;
+        $param = ':userParam_' . $uid;
+
+        return $this->leftJoin("{{%core_user_param}} {$alias}", "{$alias}.user_id=id AND {$alias}.name={$param}", [$param => $name])
+            ->andWhere(['like', "{$alias}.value", $value]);
+    }
 }
