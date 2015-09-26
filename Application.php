@@ -66,6 +66,11 @@ class Application extends \yii\web\Application {
 /*        'grom/page/frontend<path:(/.*)?>' => 'main/default/page-not-found',*/
     ];
     /**
+     * Ссылка на страницу "Главная" в бекенде
+     * @var array
+     */
+    public $homeUrlBackend = ['/main/backend/default/index'];
+    /**
      * @var array список дополнительных поведений для модели пользователя
      * Используется в \gromver\platform\core\modules\user\models\User::behaviors()
      */

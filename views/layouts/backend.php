@@ -33,7 +33,7 @@ AppAsset::register($this);
             <?= Breadcrumbs::widget([
                 'homeLink' => [
                     'label' => Yii::t('yii', 'Home'),
-                    'url' => \yii\helpers\Url::toRoute('/main/backend/default/index')
+                    'url' => Yii::$app->homeUrlBackend,
                 ],
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             ]) ?>
