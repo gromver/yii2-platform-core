@@ -14,9 +14,9 @@ use yii\bootstrap\ActiveForm;
         'layout' => 'horizontal'
     ]); ?>
 
-    <?= $form->field($model, 'username')->textInput(['maxlength' => 64, 'disabled' => ($model->scenario !== 'create' ? true : false)]) ?>
+    <?= $form->field($model, 'username')->textInput(['maxlength' => 64, 'disabled' => ($model->scenario !== $model::SCENARIO_CREATE ? true : false), 'autocomplete'=>'off']) ?>
 
-    <?= $form->field($model, 'email')->textInput(['maxlength' => 128, 'disabled' => ($model->scenario !== 'create' ? true : false)]) ?>
+    <?= $form->field($model, 'email')->textInput(['maxlength' => 128, 'disabled' => ($model->scenario !== $model::SCENARIO_CREATE ? true : false), 'autocomplete'=>'off']) ?>
 
     <?= $form->field($model, 'status')->dropDownList(\gromver\platform\core\modules\user\models\User::statusLabels()) ?>
 

@@ -134,7 +134,7 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
     public function actionCreate()
     {
         $model = new User();
-        $model->scenario = 'create';
+        $model->scenario = User::SCENARIO_CREATE;
         $model->status = User::STATUS_ACTIVE;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

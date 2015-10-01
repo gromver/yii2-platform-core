@@ -35,7 +35,7 @@ class m000003_000000_user_create_tables extends \yii\db\Migration
         ]);
         $this->addPrimaryKey('UserId_Name_pk', '{{%core_user_param}}', ['user_id', 'name']);
         $this->createIndex('Value_idx', '{{%core_user_param}}', 'value(50)');
-        $this->addForeignKey('Grom_UserParam_User_fk', '{{%core_user_param}}', 'user_id', '{{%core_user}}', 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('Core_UserParam_User_fk', '{{%core_user_param}}', 'user_id', '{{%core_user}}', 'id', 'CASCADE', 'CASCADE');
     }
 
     public function down()

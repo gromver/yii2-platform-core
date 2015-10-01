@@ -46,6 +46,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
     const SCENARIO_LOGIN = 'login';
     const SCENARIO_UPDATE = 'update';
+    const SCENARIO_CREATE = 'create';
     const SCENARIO_RESET_PASSWORD = 'resetPassword';
 
     const STATUS_INACTIVE = 1;
@@ -131,7 +132,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
                 return $this->isNewRecord;
             }],
             [['password'], 'string', 'max' => 128],
-            [['passwordConfirm'], 'compare', 'compareAttribute' => 'password', 'skipOnEmpty' => false, 'on' => [$this::SCENARIO_UPDATE, $this::SCENARIO_RESET_PASSWORD]],
+            [['passwordConfirm'], 'compare', 'compareAttribute' => 'password', 'skipOnEmpty' => false, 'on' => [$this::SCENARIO_CREATE, $this::SCENARIO_UPDATE, $this::SCENARIO_RESET_PASSWORD]],
         ];
     }
 
@@ -166,11 +167,11 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
 //            'signup' => ['username', 'email', 'password'],
-//            'create' => ['username', 'email', 'password', 'password_confirm', 'status', 'roles'],
 //            'signupWithCaptcha' => ['username', 'email', 'password','verifyCode'],
 //            'profile' => ['username', 'email', 'password', 'password_confirm'],
 //            'resetPassword' => ['password', 'password_confirm'],
 //            'requestPasswordResetToken' => ['email'],
+            $this::SCENARIO_CREATE => ['username', 'email', 'password', 'passwordConfirm', 'status', 'roles'],
             $this::SCENARIO_LOGIN => ['last_visit_time', 'login_ip'],
             $this::SCENARIO_UPDATE => ['status', 'roles', 'password', 'passwordConfirm'],
             $this::SCENARIO_RESET_PASSWORD => ['password', 'passwordConfirm'],
