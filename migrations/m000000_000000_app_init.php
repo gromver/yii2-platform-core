@@ -9,16 +9,6 @@ class m000000_000000_app_init extends Migration
     {
         // создаем дефолтные конфигурационные файлы
         \yii\helpers\FileHelper::createDirectory(Yii::getAlias('@app/config/core/params'), 0777);
-
-        // конфиг консольного приложения
-        $filePath = Yii::getAlias('@app/config/core/console.php');
-        file_put_contents($filePath, '<?php return [];');
-        @chmod($filePath, 0775);
-
-        // конфиг веб приложения
-        $filePath = Yii::getAlias('@app/config/core/web.php');
-        file_put_contents($filePath, '<?php return [];');
-        @chmod($filePath, 0775);
     }
 
     public function down()

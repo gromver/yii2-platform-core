@@ -49,15 +49,6 @@ class Application extends \yii\console\Application
      */
     public function __construct($config = [])
     {
-        $coreConfig = [];
-        if (isset($config['basePath'])) {
-            $coreConfig = @include($config['basePath'] . '/config/core/console.php');
-            if (!is_array($coreConfig)) {
-                $coreConfig = [];
-            }
-        }
-
-
         $config = ArrayHelper::merge([
             'controllerMap' => [
                 'core-migrate' => 'gromver\platform\core\console\components\ModuleMigrateController'
@@ -100,7 +91,7 @@ class Application extends \yii\console\Application
                     ]
                 ],
             ]
-        ], $coreConfig, $config);
+        ], $config);
 
         $this->_modulesHash = md5(json_encode($config['modules']));
 

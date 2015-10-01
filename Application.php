@@ -94,14 +94,6 @@ class Application extends \yii\web\Application {
      */
     public function __construct($config = [])
     {
-        $coreConfig = [];
-        if (isset($config['basePath'])) {
-            $coreConfig = @include($config['basePath'] . '/config/core/web.php');
-            if (!is_array($coreConfig)) {
-                $coreConfig = [];
-            }
-        }
-
         $config = ArrayHelper::merge([
             'components' => [
                 'urlManager' => [
@@ -162,7 +154,7 @@ class Application extends \yii\web\Application {
                 ],
                 'gridview' => ['class' => 'kartik\grid\Module']
             ]
-        ], $coreConfig, $config);
+        ], $config);
 
         $this->_modulesHash = md5(json_encode(ArrayHelper::getValue($config, 'modules', [])));
 

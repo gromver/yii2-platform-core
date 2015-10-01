@@ -19,6 +19,7 @@ class ModuleMigrateController extends \bariew\moduleMigration\ModuleMigrateContr
      * @inheritdoc
      */
     public $migrationPath = '@gromver/platform/core/migrations';
+    public $migrationTable = '{{%core_migration}}';
 
     /**
      * creates $allMigrationPaths attribute from module base paths
