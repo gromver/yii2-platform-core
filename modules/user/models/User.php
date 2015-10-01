@@ -68,10 +68,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      * @var string the raw password confirmation. Used to check password input and isn't saved in database
      */
     public $passwordConfirm;
-    /**
-     * @var string код капчи введеный пользователем
-     */
-//    public $verifyCode;
 
     private $_isSuperAdmin = null;
 
@@ -95,12 +91,11 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             [['password_reset_token'], 'string', 'max' => 32],
             [['username'], 'string', 'max' => 64],
 
-            [['status'], 'default', 'value' => static::STATUS_ACTIVE/*, 'on' => ['signup', 'signupWithCaptcha']*/],
+            [['status'], 'default', 'value' => static::STATUS_ACTIVE],
             [['status'], 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_SUSPENDED]],
 
             [['username'], 'filter', 'filter' => 'trim'],
             [['username'], 'required'],
-//            [['username'], 'unique', 'message' => Yii::t('gromver.platform', 'This username has already been taken.'), 'on' => ['create', 'signup', 'signupWithCaptcha']],
             [['username'], 'unique', 'message' => Yii::t('gromver.platform', 'This username has already been taken.')],
             [['username'], 'string', 'min' => 2, 'max' => 255],
 
@@ -108,29 +103,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             [['email'], 'required'],
             [['email'], 'email'],
             [['email'], 'unique', 'message' => Yii::t('gromver.platform', 'This email address has already been taken.')],
-//            ['email', 'unique', 'filter' => function ($query) {
-//                    /** @var $query \yii\db\ActiveQuery */
-//                    $query->andWhere('status!='.self::STATUS_DELETED);
-//                }, 'message' => Yii::t('gromver.platform', 'This email address has already been taken.'), 'on' => ['create', 'signup', 'signupWithCaptcha']],
-//            ['email', 'unique', 'filter' => function ($query) {
-//                    /** @var $query \yii\db\ActiveQuery */
-//                    $query->andWhere('status!='.self::STATUS_DELETED);
-//                },
-//                'when' => function () {
-//                        /** @var $query static */
-//                        return $this->status != self::STATUS_DELETED;
-//                    },
-//                'message' => Yii::t('gromver.platform', 'This email address has already been taken.'), 'on' => 'default'],
-//            [['email'], 'exist', 'message' => Yii::t('gromver.platform', 'There is no user with such email.'), 'on' => 'requestPasswordResetToken'],
-//
-//            [['password'], 'required', 'on' => ['create', 'signup', 'resetPassword', 'signupWithCaptcha']],
-//            [['password'], 'string', 'min' => 6],
-//
-//            [['password_confirm'], 'compare', 'compareAttribute' => 'password', 'skipOnEmpty' => false, 'on' => ['create', 'resetPassword', 'update', 'profile']],
-//            [['verifyCode'], 'captcha', 'captchaAction' => 'auth/default/captcha', 'on' => 'signupWithCaptcha']
-            [['password'], 'required', 'when' => function () {
-                return $this->isNewRecord;
-            }],
+            [['password'], 'required', 'on' => $this::SCENARIO_CREATE],
             [['password'], 'string', 'max' => 128],
             [['passwordConfirm'], 'compare', 'compareAttribute' => 'password', 'skipOnEmpty' => false, 'on' => [$this::SCENARIO_CREATE, $this::SCENARIO_UPDATE, $this::SCENARIO_RESET_PASSWORD]],
         ];
@@ -166,11 +139,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function scenarios()
     {
         return [
-//            'signup' => ['username', 'email', 'password'],
-//            'signupWithCaptcha' => ['username', 'email', 'password','verifyCode'],
-//            'profile' => ['username', 'email', 'password', 'password_confirm'],
-//            'resetPassword' => ['password', 'password_confirm'],
-//            'requestPasswordResetToken' => ['email'],
             $this::SCENARIO_CREATE => ['username', 'email', 'password', 'passwordConfirm', 'status', 'roles'],
             $this::SCENARIO_LOGIN => ['last_visit_time', 'login_ip'],
             $this::SCENARIO_UPDATE => ['status', 'roles', 'password', 'passwordConfirm'],
@@ -381,7 +349,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function trash()
     {
         if ($this->beforeTrash()) {
-            //$this->status = self::STATUS_INACTIVE;
             if ($this->save(false)) {
                 $this->afterTrash();
             }
