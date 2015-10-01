@@ -1,9 +1,9 @@
 <?php
 /**
- * @link https://github.com/gromver/yii2-platform-basic.git#readme
+ * @link https://github.com/gromver/yii2-platform-core.git#readme
  * @copyright Copyright (c) Gayazov Roman, 2014
- * @license https://github.com/gromver/yii2-platform-basic/blob/master/LICENSE
- * @package yii2-platform-basic
+ * @license https://github.com/gromver/yii2-platform-core/blob/master/LICENSE
+ * @package yii2-platform-core
  * @version 1.0.0
  */
 
@@ -19,7 +19,7 @@ use yii\db\ActiveRecord;
  * Данное поведение инициирует соответсвующие модульные события [[ModuleEvent::trigger]] после удаления/записи модели
  * Эти события используют поисковые модули (Sql, Elasticsearch) для построения поискового индекса
  * Важно: модель использующее данное поведение должна наследовать \gromver\platform\core\interfaces\model\ViewableInterface и \gromver\platform\core\interfaces\model\SearchableInterface
- * @package yii2-platform-basic
+ * @package yii2-platform-core
  * @author Gayazov Roman <gromver5@gmail.com>
  */
 class SearchBehavior extends \yii\base\Behavior

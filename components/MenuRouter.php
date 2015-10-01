@@ -1,9 +1,9 @@
 <?php
 /**
- * @link https://github.com/gromver/yii2-platform-basic.git#readme
+ * @link https://github.com/gromver/yii2-platform-core.git#readme
  * @copyright Copyright (c) Gayazov Roman, 2014
- * @license https://github.com/gromver/yii2-platform-basic/blob/master/LICENSE
- * @package yii2-platform-basic
+ * @license https://github.com/gromver/yii2-platform-core/blob/master/LICENSE
+ * @package yii2-platform-core
  * @version 1.0.0
  */
 
@@ -14,7 +14,7 @@ namespace gromver\platform\core\components;
  * Class MenuRouter
  * Базовый класс для описания правил маршрутизации
  * используется на уровне модулей в связке с \gromver\platform\core\interfaces\module\MenuRouterInterface
- * @package yii2-platform-basic
+ * @package yii2-platform-core
  * @author Gayazov Roman <gromver5@gmail.com>
  */
 class MenuRouter extends \yii\base\Object

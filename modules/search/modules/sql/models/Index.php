@@ -9,7 +9,7 @@ use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%core_index}}".
- * @package yii2-platform-basic
+ * @package yii2-platform-core
  * @author Gayazov Roman <gromver5@gmail.com>
  *
  * @property integer $id

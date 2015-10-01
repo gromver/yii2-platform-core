@@ -1,9 +1,9 @@
 <?php
 /**
- * @link https://github.com/gromver/yii2-platform-basic.git#readme
+ * @link https://github.com/gromver/yii2-platform-core.git#readme
  * @copyright Copyright (c) Gayazov Roman, 2014
- * @license https://github.com/gromver/yii2-platform-basic/blob/master/LICENSE
- * @package yii2-platform-basic
+ * @license https://github.com/gromver/yii2-platform-core/blob/master/LICENSE
+ * @package yii2-platform-core
  * @version 1.0.0
  */
 
@@ -15,7 +15,7 @@ namespace gromver\platform\core\components;
  * @property \gromver\platform\core\modules\user\models\User $identity The identity object associated with the currently logged user. Null
  * is returned if the user is not logged in (not authenticated).
  *
- * @package yii2-platform-basic
+ * @package yii2-platform-core
  * @author Gayazov Roman <gromver5@gmail.com>
  */
 class User extends \yii\web\User
