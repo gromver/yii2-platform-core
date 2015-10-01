@@ -32,7 +32,7 @@ class DefaultController extends \yii\web\Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['update', 'index'],
+                        'actions' => ['index'],
                         'roles' => ['@'],
                     ],
                 ]
@@ -44,49 +44,5 @@ class DefaultController extends \yii\web\Controller
     {
         //todo простую карточку пользователя
         return $this->render('index');
-    }
-
-    public function actionUpdate()
-    {
-        /** @var \gromver\platform\core\modules\user\models\User $user */
-        $user = Yii::$app->user->getIdentity();
-
-        $model = $this->extractParamsModel($user);
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $user->setProfile($model->toArray());
-
-            if ($user->save()) {
-                Yii::$app->session->setFlash(Alert::TYPE_SUCCESS, Yii::t('gromver.platform', "Profile saved."));
-                return $this->redirect('');
-            } else {
-                Yii::$app->session->setFlash(Alert::TYPE_DANGER, Yii::t('gromver.platform', "It wasn't succeeded to keep the user's parameters. Error:\n{error}", ['error' => implode("\n", $user->getFirstErrors())]));
-            }
-        }
-
-        return $this->render('update', [
-            'user' => $user,
-            'model' => $model
-        ]);
-    }
-
-    /**
-     * @param $user User
-     * @return ObjectModel | null
-     */
-    protected function extractParamsModel($user)
-    {
-        if ($this->module->userParamsClass) {
-            try {
-                $attributes = $user->getProfile();
-            } catch(InvalidParamException $e) {
-                $attributes = [];
-            }
-
-            $model = new ObjectModel($this->module->userParamsClass);
-            $model->setAttributes($attributes);
-
-            return $model;
-        }
     }
 }
