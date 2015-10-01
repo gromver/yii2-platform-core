@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $form->field($model, 'password')->passwordInput(['autocomplete'=>'off']) ?>
 
-    <?= $form->field($model, 'password_confirm')->passwordInput(['autocomplete'=>'off']) ?>
+    <?= $form->field($model, 'passwordConfirm')->passwordInput(['autocomplete'=>'off']) ?>
 
     <div>
         <?= Html::submitButton('<i class="glyphicon glyphicon-pencil"></i> ' . Yii::t('gromver.platform', 'Update'), ['class' => 'btn btn-primary']) ?>

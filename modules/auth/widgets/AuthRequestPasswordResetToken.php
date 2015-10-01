@@ -10,6 +10,7 @@
 namespace gromver\platform\core\modules\auth\widgets;
 
 
+use gromver\platform\core\modules\auth\models\ForgotPasswordForm;
 use gromver\platform\core\modules\user\models\User;
 use yii\base\Widget;
 
@@ -25,6 +26,14 @@ class AuthRequestPasswordResetToken extends Widget
      */
     public $url;
     /**
+     * @var string|array
+     */
+    public $withCaptcha = false;
+    /**
+     * @var string|array
+     */
+    public $captchaAction = '/auth/default/captcha';
+    /**
      * @var User
      */
     public $model;
@@ -38,7 +47,13 @@ class AuthRequestPasswordResetToken extends Widget
         parent::init();
 
         if (!isset($this->model)) {
-            $this->model = new User();
+            $this->model = new ForgotPasswordForm();
+        }
+
+        if ($this->withCaptcha) {
+            $this->model->scenario = ForgotPasswordForm::SCENARIO_REQUEST_WITH_CAPTCHA;
+        } else {
+            $this->model->scenario = ForgotPasswordForm::SCENARIO_REQUEST;
         }
     }
 
@@ -46,7 +61,8 @@ class AuthRequestPasswordResetToken extends Widget
     {
         echo $this->render($this->layout, [
             'model' => $this->model,
-            'url' => $this->url
+            'url' => $this->url,
+            'captchaAction' => $this->captchaAction,
         ]);
     }
 }

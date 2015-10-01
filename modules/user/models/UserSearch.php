@@ -27,7 +27,10 @@ class UserSearch extends User
     {
         return [
             [['id', 'status', 'created_at', 'updated_at', 'deleted_at', 'last_visit_at'], 'integer'],
-            [['username', 'email', 'password_hash', 'password_reset_token', 'auth_key', 'roles'], 'safe'],
+            [['username', 'email', 'password_hash', 'password_reset_token', 'auth_key', 'roles', 'login_ip'], 'safe'],
+            [['login_ip'], 'filter', 'filter' => function ($value) {
+                return strpos($value, '.') === false ? $value : ip2long($value);
+            }]
         ];
     }
 
@@ -74,6 +77,7 @@ class UserSearch extends User
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
             'last_visit_at' => $this->last_visit_at,
+            'login_ip' => $this->login_ip,
         ]);
 
         $query->andFilterWhere(['like', 'username', $this->username])

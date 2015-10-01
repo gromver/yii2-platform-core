@@ -10,7 +10,7 @@
 namespace gromver\platform\core\modules\auth\widgets;
 
 
-use gromver\platform\core\modules\user\models\User;
+use gromver\platform\core\modules\auth\models\SignupForm;
 use yii\base\Widget;
 
 /**
@@ -25,7 +25,15 @@ class AuthSignup extends Widget
      */
     public $url;
     /**
-     * @var User
+     * @var string|array
+     */
+    public $withCaptcha = false;
+    /**
+     * @var string|array
+     */
+    public $captchaAction = '/auth/default/captcha';
+    /**
+     * @var SignupForm
      */
     public $model;
     /**
@@ -38,7 +46,11 @@ class AuthSignup extends Widget
         parent::init();
 
         if (!isset($this->model)) {
-            $this->model = new User();
+            $this->model = new SignupForm();
+        }
+
+        if ($this->withCaptcha) {
+            $this->model->scenario = SignupForm::SCENARIO_WITH_CAPTCHA;
         }
     }
 
@@ -47,6 +59,7 @@ class AuthSignup extends Widget
         echo $this->render($this->layout, [
             'model' => $this->model,
             'url' => $this->url,
+            'captchaAction' => $this->captchaAction,
         ]);
     }
 }

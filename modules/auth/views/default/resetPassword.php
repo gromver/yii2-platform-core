@@ -13,7 +13,7 @@ if ($menu) {
 } else {
     $this->title = Yii::t('gromver.platform', 'Reset Password');
 }
-//$this->params['breadcrumbs'][] = $this->title;?>
+$this->params['breadcrumbs'][] = $this->title; ?>
 
 <div class="form-auth-heading">
     <h1><?= \yii\helpers\Html::encode($this->title) ?></h1>

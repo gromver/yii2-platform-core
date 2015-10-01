@@ -36,8 +36,12 @@ class AccountController extends \gromver\platform\core\controllers\BackendContro
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'profile', 'reset-password'],
-                        'roles' => ['administrate'],
+                        'actions' => ['index', 'reset-password'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['params'],
+                        'roles' => ['administrator'],
                     ],
                 ]
             ]
@@ -69,7 +73,7 @@ class AccountController extends \gromver\platform\core\controllers\BackendContro
     {
         /** @var User $model */
         $model = Yii::$app->user->getIdentity();
-        $model->scenario = 'resetPassword';
+        $model->scenario = User::SCENARIO_RESET_PASSWORD;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash(Alert::TYPE_SUCCESS, Yii::t('gromver.platform', "Your password has been changed."));
@@ -86,63 +90,14 @@ class AccountController extends \gromver\platform\core\controllers\BackendContro
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
-    public function actionProfile()
+    public function actionParams()
     {
         /** @var User $user */
         $user = Yii::$app->user->getIdentity();
 
-        $model = $this->extractParamsModel($user);
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $user->setProfile($model->toArray());
-
-            if ($user->save()) {
-                $this->redirect(['index']);
-            } else {
-                Yii::$app->session->setFlash(Alert::TYPE_DANGER, Yii::t('gromver.platform', "It wasn't succeeded to keep the user's parameters. Error:\n{error}", ['error' => implode("\n", $user->getFirstErrors())]));
-            }
-        }
-
-        return $this->render('profile', [
+        return $this->render('params', [
             'user' => $user,
-            'model' => $model
+            'params' => $user->params,
         ]);
-    }
-
-    /**
-     * @param $user User
-     * @return ObjectModel
-     */
-    protected function extractParamsModel($user)
-    {
-        if ($this->module->userParamsClass) {
-            try {
-                $attributes = $user->getProfile();
-            } catch(InvalidParamException $e) {
-                $attributes = [];
-            }
-
-            $model = new ObjectModel($this->module->userParamsClass);
-            $model->setAttributes($attributes);
-
-            return $model;
-        }
-    }
-
-
-    /**
-     * Finds the User model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return User the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = User::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException(Yii::t('gromver.platform', 'The requested page does not exist.'));
-        }
     }
 }

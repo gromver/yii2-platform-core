@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('<i class="glyphicon glyphicon-pencil"></i> ' . Yii::t('gromver.platform', 'Reset Password'), ['reset-password'], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('<i class="glyphicon glyphicon-user"></i> ' . Yii::t('gromver.platform', 'Profile'), ['profile'], ['class' => 'btn btn-default']) ?>
+        <?= Html::a('<i class="glyphicon glyphicon-th-list"></i> ' . Yii::t('gromver.platform', 'Params'), ['params'], ['class' => 'btn btn-default']) ?>
     </p>
 
     <?= DetailView::widget([

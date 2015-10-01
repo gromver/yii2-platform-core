@@ -8,13 +8,11 @@ class m100000_000000_app_user_setup extends yii\db\Migration
     {
         // Creates the default admin user
         $adminUser = new User();
-        $adminUser->setScenario('signup');
         $adminUser->username = 'admin';
         $adminUser->status = User::STATUS_ACTIVE;
 
         echo 'Please type the admin user info: ' . PHP_EOL;
         $this->readStdinUser('Email (e.g. admin@mydomain.com)', $adminUser, 'email');
-        //$this->readStdinUser('Type Username', $adminUser, 'username', $adminUser->email);
         $this->readStdinUser('Type Password', $adminUser, 'password', 'admin');
 
         if (!$adminUser->save()) {

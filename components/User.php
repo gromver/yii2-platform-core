@@ -46,9 +46,8 @@ class User extends \yii\web\User
 	{
 		parent::afterLogin($identity, $cookieBased, $duration);
 		$this->identity->setScenario(self::EVENT_AFTER_LOGIN);
-		$this->identity->setAttribute('last_visit_at', time());
-		//todo сэйвить или не сэйвить ип юзера?
-		// $this->identity->setAttribute('login_ip', ip2long(\Yii::$app->getRequest()->getUserIP()));
+		$this->identity->last_visit_at = time();
+		$this->identity->login_ip = ip2long(\Yii::$app->getRequest()->getUserIP());
 		$this->identity->save(false);
 	}
 

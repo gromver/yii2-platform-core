@@ -10,7 +10,9 @@
 namespace gromver\platform\core\modules\auth\controllers;
 
 
+use gromver\platform\core\modules\auth\models\ForgotPasswordForm;
 use gromver\platform\core\modules\auth\models\LoginForm;
+use gromver\platform\core\modules\auth\models\SignupForm;
 use gromver\platform\core\modules\user\models\User;
 use gromver\widgets\ModalIFrame;
 use kartik\widgets\Alert;
@@ -31,7 +33,7 @@ class DefaultController extends \yii\web\Controller
 {
     public $mailer = 'mailer';
 
-    private $loginAttemptsVar = '__LoginAttemptsCount';
+    private $loginAttemptsVar = '__loginAttemptsCount';
 
     public function behaviors()
     {
@@ -58,13 +60,7 @@ class DefaultController extends \yii\web\Controller
     public function actions()
     {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
+            'captcha' => Yii::$app->getModule('auth')->captchaConfig
         ];
     }
 
@@ -76,12 +72,14 @@ class DefaultController extends \yii\web\Controller
 
         $model = new LoginForm();
 
-        if ($model->load($_POST)) {
+        if ($model->load(Yii::$app->request->post())) {
             if($model->login()) {
                 $this->setLoginAttempts(0); //if login is successful, reset the attempts
+
                 if ($modal) {
                     ModalIFrame::refreshParent();
                 }
+
                 return $this->goBack();
             } else {
                 //if login is not successful, increase the attempts
@@ -92,11 +90,10 @@ class DefaultController extends \yii\web\Controller
 
         //make the captcha required if the unsuccessful attempts are more of thee
         if ($this->getLoginAttempts() >= $this->module->attemptsBeforeCaptcha) {
-            $model->scenario = 'withCaptcha';
+            $model->scenario = LoginForm::SCENARIO_WITH_CAPTCHA;
         }
 
         if ($modal) {
-            $this->module->layout = null;
             Yii::$app->applyModalLayout();
         }
 
@@ -118,17 +115,34 @@ class DefaultController extends \yii\web\Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
+
         return $this->goHome();
     }
 
-    public function actionSignup()
+    public function actionSignup($modal = null)
     {
-        $model = new User();
-        $model->setScenario('signup');
-        if ($model->load($_POST) && $model->save()) {
-            if (Yii::$app->getUser()->login($model)) {
-                return $this->goHome();
+        $model = new SignupForm();
+        //$model->scenario = $model::SCENARIO_WITH_CAPTCHA;
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $user = new User();
+            $user->username = $model->username;
+            $user->email = $model->email;
+            $user->password = $model->password;
+
+            if ($user->save() && Yii::$app->getUser()->login($user)) {
+                Yii::$app->session->setFlash(Alert::TYPE_SUCCESS, Yii::t('gromver.platform', 'Registration complete.'));
+
+                if ($modal) {
+                    ModalIFrame::refreshParent();
+                }
+
+                return $this->goBack();
             }
+        }
+
+        if ($modal) {
+            Yii::$app->applyModalLayout();
         }
 
         return $this->render('signup', [
@@ -136,17 +150,27 @@ class DefaultController extends \yii\web\Controller
         ]);
     }
 
-    public function actionRequestPasswordResetToken()
+    public function actionRequestPasswordResetToken($modal = null)
     {
-        $model = new User();
-        $model->scenario = 'requestPasswordResetToken';
-        if ($model->load($_POST) && $model->validate()) {
+        $model = new ForgotPasswordForm();
+        $model->scenario = ForgotPasswordForm::SCENARIO_REQUEST;
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($this->sendPasswordResetEmail($model->email)) {
                 Yii::$app->getSession()->setFlash(Alert::TYPE_SUCCESS, Yii::t('gromver.platform', 'Check your email for further instructions.'));
-                return $this->goHome();
+
+                if ($modal) {
+                    ModalIFrame::refreshParent();
+                }
+
+                return $this->goBack();
             } else {
                 Yii::$app->getSession()->setFlash(Alert::TYPE_DANGER, Yii::t('gromver.platform', 'There was an error sending email.'));
             }
+        }
+
+        if ($modal) {
+            Yii::$app->applyModalLayout();
         }
 
         return $this->render('requestPasswordResetToken', [
@@ -156,20 +180,26 @@ class DefaultController extends \yii\web\Controller
 
     public function actionResetPassword($token)
     {
-        /** @var User $model */
-        $model = User::findOne([
+        /** @var User $user */
+        $user = User::findOne([
             'password_reset_token' => $token,
             'status' => User::STATUS_ACTIVE,
         ]);
 
-        if (!$model) {
+        if (!$user) {
             throw new BadRequestHttpException(Yii::t('gromver.platform', 'Wrong password reset token.'));
         }
 
-        $model->scenario = 'resetPassword';
-        if ($model->load($_POST) && $model->save()) {
-            Yii::$app->getSession()->setFlash(Alert::TYPE_SUCCESS, Yii::t('gromver.platform', 'New password has been saved.'));
-            return $this->goHome();
+        $model = new ForgotPasswordForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $user->password = $model->password;
+
+            if ($user->save()) {
+                Yii::$app->getSession()->setFlash(Alert::TYPE_SUCCESS, Yii::t('gromver.platform', 'New password has been saved.'));
+
+                return $this->goHome();
+            }
         }
 
         return $this->render('resetPassword', [
@@ -191,9 +221,11 @@ class DefaultController extends \yii\web\Controller
 
         $user->password_reset_token = Yii::$app->security->generateRandomString();
         if ($user->save(false)) {
-            $mailer = Instance::ensure($this->mailer, BaseMailer::className());
+            /** @var \gromver\platform\core\modules\auth\Module $authModule */
+            $authModule = $this->module;
+            $mailer = Instance::ensure($authModule->mailer, BaseMailer::className());
 
-            return $mailer->compose('@gromver/platform/core/modules/auth/views/emails/passwordResetToken', ['user' => $user])
+            return $mailer->compose($authModule->emailLayoutPasswordResetToken, ['user' => $user])
                 ->setFrom(Yii::$app->supportEmail)
                 ->setTo($user->email)
                 ->setSubject(Yii::t('gromver.platform', 'Password reset for {name}.', ['name' => isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']]))

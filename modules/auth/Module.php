@@ -33,12 +33,20 @@ class Module extends \yii\base\Module implements ModuleEventsInterface
     public $rememberMeTime = 2592000;           // 30 дней
     public $passwordResetTokenExpire = 3600;    // час
     public $attemptsBeforeCaptcha = 3;          // Unsuccessful Login Attempts before Captcha
-    public $authLayout = 'auth';                // если null то применится макет приложения
+    public $authLayout = '@gromver/platform/core/modules/auth/views/layouts/auth';                // если null то применится макет приложения
+    // mail
+    public $mailer = 'mailer';
+    public $emailLayoutPasswordResetToken = '@gromver/platform/core/modules/auth/views/emails/passwordResetToken';
+    // todo captcha settings
+    public $captchaConfig = [
+        'class' => 'yii\captcha\CaptchaAction',
+        'transparent' => true,
+    ];
 
     public function init()
     {
         if ($this->authLayout) {
-            $this->layout = $this->authLayout;
+            Yii::$app->layout = $this->authLayout;
         }
     }
 

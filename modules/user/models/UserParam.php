@@ -17,6 +17,8 @@ use yii\behaviors\TimestampBehavior;
  */
 class UserParam extends \yii\db\ActiveRecord
 {
+    const SCENARIO_UPDATE = 'update';
+
     /**
      * @inheritdoc
      */
@@ -38,6 +40,17 @@ class UserParam extends \yii\db\ActiveRecord
             [['user_id'], 'exist'/*, 'skipOnError' => true*/, 'targetClass' => User::className(), 'targetAttribute' => 'id'],
         ];
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            $this::SCENARIO_UPDATE => ['value'],
+        ] + parent::scenarios();
+    }
+
 
     /**
      * @inheritdoc

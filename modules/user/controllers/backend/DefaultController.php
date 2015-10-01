@@ -51,7 +51,7 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view', 'params'],
+                        'actions' => ['index', 'view'],
                         'roles' => ['readUser'],
                     ],
                     [
@@ -61,7 +61,7 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update', 'profile'],
+                        'actions' => ['update'],
                         'roles' => ['updateUser'],
                     ],
                     [
@@ -168,7 +168,7 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
             throw new ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
         }
 
-        $model->scenario = 'update';
+        $model->scenario = User::SCENARIO_UPDATE;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -350,53 +350,6 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
 
         return $this->redirect(ArrayHelper::getValue(Yii::$app->request, 'referrer', ['index']));
     }
-    /**
-     * @param $id integer User id
-     * @return string
-     * @throws ForbiddenHttpException
-     * @throws NotFoundHttpException
-     */
-    public function actionProfile($id)
-    {
-        $user = $this->findModel($id);
-
-        // проверка на право админить данного пользователя
-        if (!Yii::$app->user->can('administrateUser', ['user' => $user])) {
-            throw new ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
-        }
-
-        $model = $this->extractParamsModel($user);
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $user->setProfile($model->toArray());
-
-            if ($user->save()) {
-                $this->redirect(['view', 'id' => $user->id]);
-            } else {
-                Yii::$app->session->setFlash(Alert::TYPE_DANGER, Yii::t('gromver.platform', "It wasn't succeeded to keep the user's parameters. Error:\n{error}", ['error' => implode("\n", $user->getFirstErrors())]));
-            }
-        }
-
-        return $this->render('profile', [
-            'user' => $user,
-            'model' => $model
-        ]);
-    }
-
-    /**
-     * @param $id integer
-     * @return string
-     * @throws NotFoundHttpException
-     */
-    public function actionParams($id)
-    {
-        $user = $this->findModel($id);
-
-        return $this->render('params', [
-            'user' => $user,
-            'params' => $user->params,
-        ]);
-    }
 
     public function actionLoginAs($id)
     {
@@ -415,27 +368,6 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
         $model->login(3600);
         $this->redirect(['view', 'id' => $model->id]);
     }
-
-    /**
-     * @param $user User
-     * @return ObjectModel
-     */
-    protected function extractParamsModel($user)
-    {
-        if ($this->module->userParamsClass) {
-            try {
-                $attributes = $user->getProfile();
-            } catch(InvalidParamException $e) {
-                $attributes = [];
-            }
-
-            $model = new ObjectModel($this->module->userParamsClass);
-            $model->setAttributes($attributes);
-
-            return $model;
-        }
-    }
-
 
     /**
      * Finds the User model based on its primary key value.

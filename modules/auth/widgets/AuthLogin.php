@@ -25,6 +25,14 @@ class AuthLogin extends Widget
      */
     public $url;
     /**
+     * @var string|array
+     */
+    public $withCaptcha = false;
+    /**
+     * @var string|array
+     */
+    public $captchaAction = '/auth/default/captcha';
+    /**
      * @var LoginForm
      */
     public $model;
@@ -39,6 +47,10 @@ class AuthLogin extends Widget
 
         if (!isset($this->model)) {
             $this->model = new LoginForm();
+        }
+
+        if ($this->withCaptcha) {
+            $this->model->scenario = LoginForm::SCENARIO_WITH_CAPTCHA;
         }
     }
 

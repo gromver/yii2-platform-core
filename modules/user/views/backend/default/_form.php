@@ -22,7 +22,7 @@ use yii\bootstrap\ActiveForm;
 
     <?= $form->field($model, 'password')->passwordInput(['autocomplete'=>'off']) ?>
 
-    <?= $form->field($model, 'password_confirm')->passwordInput(['autocomplete'=>'off']) ?>
+    <?= $form->field($model, 'passwordConfirm')->passwordInput(['autocomplete'=>'off']) ?>
 
     <?= $form->field($model, 'roles')->listBox(\yii\helpers\ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name'), [
         'multiple' => 'multiple'

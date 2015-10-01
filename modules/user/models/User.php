@@ -30,22 +30,24 @@ use yii\web\IdentityInterface;
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $auth_key
- * @property string $profile_data
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
  * @property integer $deleted_at
  * @property integer $last_visit_at
+ * @property integer $login_ip
  *
  * @property string[] $roles
  * @property bool $isSuperAdmin
  * @property bool $isTrashed
  * @property UserParam[] $params
- * @property array $profile
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
-    const STATUS_DELETED = 0;
+    const SCENARIO_LOGIN = 'login';
+    const SCENARIO_UPDATE = 'update';
+    const SCENARIO_RESET_PASSWORD = 'resetPassword';
+
     const STATUS_INACTIVE = 1;
     const STATUS_ACTIVE = 2;
     const STATUS_SUSPENDED = 3;
@@ -64,17 +66,11 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     /**
      * @var string the raw password confirmation. Used to check password input and isn't saved in database
      */
-    public $password_confirm;
+    public $passwordConfirm;
     /**
      * @var string код капчи введеный пользователем
      */
-    public $verifyCode;
-
-    private static $_statuses = [
-        self::STATUS_SUSPENDED => 'Suspended',
-        self::STATUS_ACTIVE => 'Active',
-        self::STATUS_INACTIVE => 'Inactive',
-    ];
+//    public $verifyCode;
 
     private $_isSuperAdmin = null;
 
@@ -92,42 +88,50 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'email', 'password_hash', 'created_at'], 'required'],
-            [['status', 'created_at', 'updated_at', 'deleted_at', 'last_visit_at'], 'integer'],
-            [['username'], 'string', 'max' => 64],
+            [['username', 'email'], 'required'],
+            [['status', 'created_at', 'updated_at', 'deleted_at', 'last_visit_at', 'login_ip'], 'integer'],
             [['email', 'password_hash', 'auth_key'], 'string', 'max' => 128],
             [['password_reset_token'], 'string', 'max' => 32],
+            [['username'], 'string', 'max' => 64],
 
-            ['status', 'default', 'value' => static::STATUS_ACTIVE, 'on' => ['signup', 'signupWithCaptcha']],
-            ['username', 'filter', 'filter' => 'trim'],
-            ['username', 'string', 'max' => 64],
-            ['username', 'required'],
-            ['username', 'unique', 'message' => Yii::t('gromver.platform', 'This username has already been taken.'), 'on' => ['create', 'signup', 'signupWithCaptcha']],
-            ['username', 'string', 'min' => 2, 'max' => 255],
+            [['status'], 'default', 'value' => static::STATUS_ACTIVE/*, 'on' => ['signup', 'signupWithCaptcha']*/],
+            [['status'], 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_SUSPENDED]],
 
-            ['email', 'filter', 'filter' => 'trim'],
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'unique', 'filter' => function ($query) {
-                    /** @var $query \yii\db\ActiveQuery */
-                    $query->andWhere('status!='.self::STATUS_DELETED);
-                }, 'message' => Yii::t('gromver.platform', 'This email address has already been taken.'), 'on' => ['create', 'signup', 'signupWithCaptcha']],
-            ['email', 'unique', 'filter' => function ($query) {
-                    /** @var $query \yii\db\ActiveQuery */
-                    $query->andWhere('status!='.self::STATUS_DELETED);
-                },
-                'when' => function () {
-                        /** @var $query static */
-                        return $this->status != self::STATUS_DELETED;
-                    },
-                'message' => Yii::t('gromver.platform', 'This email address has already been taken.'), 'on' => 'default'],
-            ['email', 'exist', 'message' => Yii::t('gromver.platform', 'There is no user with such email.'), 'on' => 'requestPasswordResetToken'],
+            [['username'], 'filter', 'filter' => 'trim'],
+            [['username'], 'required'],
+//            [['username'], 'unique', 'message' => Yii::t('gromver.platform', 'This username has already been taken.'), 'on' => ['create', 'signup', 'signupWithCaptcha']],
+            [['username'], 'unique', 'message' => Yii::t('gromver.platform', 'This username has already been taken.')],
+            [['username'], 'string', 'min' => 2, 'max' => 255],
 
-            ['password', 'required', 'on' => ['create', 'signup', 'resetPassword', 'signupWithCaptcha']],
-            ['password', 'string', 'min' => 6],
-
-            ['password_confirm', 'compare', 'compareAttribute' => 'password', 'skipOnEmpty' => false, 'on' => ['create', 'resetPassword', 'update', 'profile']],
-            ['verifyCode', 'captcha', 'captchaAction' => 'auth/default/captcha', 'on' => 'signupWithCaptcha']
+            [['email'], 'filter', 'filter' => 'trim'],
+            [['email'], 'required'],
+            [['email'], 'email'],
+            [['email'], 'unique', 'message' => Yii::t('gromver.platform', 'This email address has already been taken.')],
+//            ['email', 'unique', 'filter' => function ($query) {
+//                    /** @var $query \yii\db\ActiveQuery */
+//                    $query->andWhere('status!='.self::STATUS_DELETED);
+//                }, 'message' => Yii::t('gromver.platform', 'This email address has already been taken.'), 'on' => ['create', 'signup', 'signupWithCaptcha']],
+//            ['email', 'unique', 'filter' => function ($query) {
+//                    /** @var $query \yii\db\ActiveQuery */
+//                    $query->andWhere('status!='.self::STATUS_DELETED);
+//                },
+//                'when' => function () {
+//                        /** @var $query static */
+//                        return $this->status != self::STATUS_DELETED;
+//                    },
+//                'message' => Yii::t('gromver.platform', 'This email address has already been taken.'), 'on' => 'default'],
+//            [['email'], 'exist', 'message' => Yii::t('gromver.platform', 'There is no user with such email.'), 'on' => 'requestPasswordResetToken'],
+//
+//            [['password'], 'required', 'on' => ['create', 'signup', 'resetPassword', 'signupWithCaptcha']],
+//            [['password'], 'string', 'min' => 6],
+//
+//            [['password_confirm'], 'compare', 'compareAttribute' => 'password', 'skipOnEmpty' => false, 'on' => ['create', 'resetPassword', 'update', 'profile']],
+//            [['verifyCode'], 'captcha', 'captchaAction' => 'auth/default/captcha', 'on' => 'signupWithCaptcha']
+            [['password'], 'required', 'when' => function () {
+                return $this->isNewRecord;
+            }],
+            [['password'], 'string', 'max' => 128],
+            [['passwordConfirm'], 'compare', 'compareAttribute' => 'password', 'skipOnEmpty' => false, 'on' => [$this::SCENARIO_UPDATE, $this::SCENARIO_RESET_PASSWORD]],
         ];
     }
 
@@ -146,7 +150,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'password_new' => Yii::t('gromver.platform', 'New Password'),
             'password_confirm' => Yii::t('gromver.platform', 'Confirm Password'),
             'auth_key' => Yii::t('gromver.platform', 'Auth Key'),
-            'profile_data' => Yii::t('gromver.platform', 'Profile Data'),
             'status' => Yii::t('gromver.platform', 'Status'),
             'roles' => Yii::t('gromver.platform', 'Roles'),
             'created_at' => Yii::t('gromver.platform', 'Created At'),
@@ -162,14 +165,15 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function scenarios()
     {
         return [
-            'signup' => ['username', 'email', 'password'],
-            'create' => ['username', 'email', 'password', 'password_confirm', 'status', 'roles'],
-            'signupWithCaptcha' => ['username', 'email', 'password','verifyCode'],
-            'profile' => ['username', 'email', 'password', 'password_confirm'],
-            'resetPassword' => ['password', 'password_confirm'],
-            'requestPasswordResetToken' => ['email'],
-            'login' => ['last_visit_time'],
-            'update' => ['status', 'roles', 'password', 'password_confirm'],
+//            'signup' => ['username', 'email', 'password'],
+//            'create' => ['username', 'email', 'password', 'password_confirm', 'status', 'roles'],
+//            'signupWithCaptcha' => ['username', 'email', 'password','verifyCode'],
+//            'profile' => ['username', 'email', 'password', 'password_confirm'],
+//            'resetPassword' => ['password', 'password_confirm'],
+//            'requestPasswordResetToken' => ['email'],
+            $this::SCENARIO_LOGIN => ['last_visit_time', 'login_ip'],
+            $this::SCENARIO_UPDATE => ['status', 'roles', 'password', 'passwordConfirm'],
+            $this::SCENARIO_RESET_PASSWORD => ['password', 'passwordConfirm'],
         ] + parent::scenarios();
     }
 
@@ -195,6 +199,13 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             ]
         ] + Yii::$app->userBehaviors;
     }
+
+    // status label
+    private static $_statuses = [
+        self::STATUS_SUSPENDED => 'Suspended',
+        self::STATUS_ACTIVE => 'Active',
+        self::STATUS_INACTIVE => 'Inactive',
+    ];
 
     public function getStatusLabel($status = null)
     {
@@ -298,24 +309,30 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
-
+    /**
+     * @inheritdoc
+     */
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
-            if (($this->isNewRecord || in_array($this->getScenario(), ['resetPassword', 'profile', 'update'])) && !empty($this->password)) {
+            if (!empty($this->password)) {
                 $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
                 $this->password_reset_token = null;
             }
 
-            if ($this->isNewRecord) {
+            if ($insert) {
                 $this->auth_key = Yii::$app->security->generateRandomString();
             }
 
             return true;
         }
+
         return false;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
@@ -397,25 +414,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         $this->trigger(self::EVENT_AFTER_TRASH);
     }
-    /**
-     * Returns whether the logged in user is an administrator.
-     *
-     * @return boolean the result.
-     */
-    public function getIsSuperAdmin()
-    {
-        if ($this->_isSuperAdmin !== null) {
-            return $this->_isSuperAdmin;
-        }
-
-        $this->_isSuperAdmin = in_array($this->username, Yii::$app->user->superAdmins);
-        return $this->_isSuperAdmin;
-    }
-
-    public function login($duration = 0)
-    {
-        return Yii::$app->user->login($this, $duration);
-    }
 
     private $_roles;
 
@@ -432,16 +430,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         }
 
         return $this->_roles;
-    }
-
-    public function getProfile()
-    {
-        return Json::decode($this->profile_data);
-    }
-
-    public function setProfile($value)
-    {
-        $this->profile_data = Json::encode($value);
     }
 
     public function getParams()
@@ -495,6 +483,43 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function getParam($name, $default = null)
     {
         return isset($this->params[$name]) ? $this->params[$name]->value : $default;
+    }
+
+    /**
+     * @param string $name
+     * @param integer $relationId
+     * @param mixed $default
+     * @return null|string
+     */
+    public function getRelativeParam($name, $relationId, $default = null)
+    {
+        return $this->getParam("{$name}_{$relationId}", $default);
+    }
+
+    /**
+     * @param string $name
+     * @param integer $relationId
+     * @param mixed $value
+     */
+    public function setRelativeParam($name, $relationId, $value)
+    {
+        $this->setParam("{$name}_{$relationId}", $value);
+    }
+
+
+    /**
+     * Returns whether the logged in user is an administrator.
+     *
+     * @return boolean the result.
+     */
+    public function getIsSuperAdmin()
+    {
+        if ($this->_isSuperAdmin !== null) {
+            return $this->_isSuperAdmin;
+        }
+
+        $this->_isSuperAdmin = in_array($this->username, Yii::$app->user->superAdmins);
+        return $this->_isSuperAdmin;
     }
 
     /**

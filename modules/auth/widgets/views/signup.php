@@ -6,9 +6,12 @@ use yii\captcha\Captcha;
 /**
  * @var yii\web\View $this
  * @var yii\widgets\ActiveForm $form
- * @var gromver\platform\core\modules\user\models\User $model
+ * @var gromver\platform\core\modules\auth\models\SignupForm $model
  * @var string|array|null $url
+ * @var string|array|null $captchaAction
  */
+
+\gromver\platform\core\modules\auth\widgets\assets\AuthAsset::register($this);
 ?>
 <?php $form = ActiveForm::begin([
     'id' => 'signup-form',
@@ -28,8 +31,9 @@ use yii\captcha\Captcha;
 
 <?= $form->field($model, 'password', ['options' => ['class' => 'form-group input-group input-group-lg'], 'template' => '<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>{input}'])->passwordInput(['placeholder' => $model->getAttributeLabel('password'), 'autocomplete'=>'off']) ?>
 
-<?php if ($model->scenario == 'signupWithCaptcha')
-    echo $form->field($model, 'verifyCode'/*, ['template'=>'{label}{input}{error}']*/)->widget(Captcha::className(), ['captchaAction' => 'default/captcha', 'options' => ['class' => 'form-control']]) ?>
+<?php if ($model->scenario == $model::SCENARIO_WITH_CAPTCHA) {
+    echo $form->field($model, 'verifyCode', ['options' => ['class' => 'form-group input-group input-group-lg captcha-group'], 'template' => '<span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>{input}'])->widget(Captcha::className(), ['captchaAction' => $captchaAction, 'options' => ['placeholder' => $model->getAttributeLabel('verifyCode'), 'class' => 'form-control']]);
+} ?>
 
 <div class="form-group">
     <div class="text-center">

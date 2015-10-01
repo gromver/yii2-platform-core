@@ -50,15 +50,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'email',
             ],
             [
-                'attribute' => 'status',
-                'vAlign' => GridView::ALIGN_MIDDLE,
-                'value' => function($model) {
-                        /** @var User $model */
-                        return $model->getStatusLabel();
-                    },
-                'filter' => User::statusLabels()
-            ],
-            [
                 'attribute' => 'roles',
                 'vAlign' => GridView::ALIGN_MIDDLE,
                 'value' => function($model) {

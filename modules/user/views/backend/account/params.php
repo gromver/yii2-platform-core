@@ -6,13 +6,9 @@ use yii\helpers\Html;
 /* @var $user gromver\platform\core\modules\user\models\User */
 /* @var $params gromver\platform\core\modules\user\models\UserParam[] */
 
-$this->title = Yii::t('gromver.platform', 'User Params: {name} (ID: {id})', [
-    'id' => $user->id,
-    'name' => $user->username,
-]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('gromver.platform', $user->getIsTrashed() ? 'Trash' : 'Users'), 'url' => [$user->getIsTrashed() ? 'index-trash' : 'index']];
-$this->params['breadcrumbs'][] = ['label' => $user->username . " (ID: $user->id)", 'url' => ['view', 'id' => $user->id]];
-$this->params['breadcrumbs'][] = Yii::t('gromver.platform', 'Update');
+$this->title = Yii::t('gromver.platform', 'Params');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('gromver.platform', 'Account'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-update">
 
@@ -28,4 +24,5 @@ $this->params['breadcrumbs'][] = Yii::t('gromver.platform', 'Update');
         <?php } ?>
         </tbody>
     </table>
+
 </div>

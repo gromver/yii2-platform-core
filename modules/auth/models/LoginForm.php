@@ -20,6 +20,8 @@ use Yii;
  */
 class LoginForm extends \yii\base\Model
 {
+    const SCENARIO_WITH_CAPTCHA = 'withCaptcha';
+
     public $username;
     public $password;
     public $rememberMe = true;
@@ -36,11 +38,21 @@ class LoginForm extends \yii\base\Model
             // username and password are both required
             [['username', 'password'], 'required'],
             // rememberMe must be a boolean value
-            ['rememberMe', 'boolean'],
+            [['rememberMe'], 'boolean'],
             // password is validated by validatePassword()
-            ['password', 'validatePassword'],
-            ['verifyCode', 'captcha', 'captchaAction' => 'auth/default/captcha', 'on' => 'withCaptcha']
+            [['password'], 'validatePassword'],
+            [['verifyCode'], 'captcha', 'captchaAction' => 'auth/default/captcha', 'on' => $this::SCENARIO_WITH_CAPTCHA]
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            $this::SCENARIO_WITH_CAPTCHA => ['username', 'email', 'password', 'rememberMe', 'verifyCode'],
+        ] + parent::scenarios();
     }
 
     /**
@@ -91,7 +103,7 @@ class LoginForm extends \yii\base\Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = User::find()->published()->andWhere(['or', ['username' => $this->username], ['email' => $this->username]])->one();
         }
 
         return $this->_user;

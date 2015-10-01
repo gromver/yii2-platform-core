@@ -68,6 +68,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'html',
                 'filter' => \yii\helpers\ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name')
             ],
+            [
+                'attribute' => 'login_ip',
+                'hAlign' => GridView::ALIGN_CENTER,
+                'vAlign' => GridView::ALIGN_MIDDLE,
+                'value' => function($model) {
+                    /** @var User $model */
+                    return long2ip($model->login_ip);
+                },
+                'width' => '100px'
+            ],
             // 'created_at',
             // 'updated_at',
             // 'deleted_at',
@@ -79,7 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                     'params' => function ($url, $model, $key) {
                             /** @var User $model */
-                            return Html::a('<i class="glyphicon glyphicon-user"></i>', ['profile', 'id' => $model->id], ['title' => Yii::t('gromver.platform', 'User Profile')]);
+                            return Html::a('<i class="glyphicon glyphicon-th-list"></i>', ['backend/param/index', 'user_id' => $model->id], ['title' => Yii::t('gromver.platform', 'Params'), 'data-pjax' => 0]);
                         },
                     'login' => function ($url, $model, $key) {
                         /** @var User $model */
@@ -91,7 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'title' => Yii::t('gromver.platform', 'Delete User'),
                             'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
                             'data-method' => 'delete',
-                            'data-pjax' => '0'
+                            'data-pjax' => 0
                         ]);
                     },
                 ]
