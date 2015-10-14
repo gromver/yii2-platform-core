@@ -365,7 +365,7 @@ class DefaultController extends \gromver\platform\core\controllers\BackendContro
             throw new ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
         }
 
-        $model->login(3600);
+        Yii::$app->user->login($model, 3600);
         $this->redirect(['view', 'id' => $model->id]);
     }
 

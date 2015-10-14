@@ -4,6 +4,7 @@
  * @var $widget gromver\platform\core\modules\main\widgets\PlatformPanel
  */
 
+use gromver\platform\core\Application;
 use yii\bootstrap\NavBar;
 use yii\bootstrap\Nav;
 use yii\helpers\Html;
@@ -26,7 +27,21 @@ $navBar = NavBar::begin(\yii\helpers\ArrayHelper::merge([
     'context' => '',
 ]); ?>
 
-<?php
+<?php if (Yii::$app->user->can('customizeWidget')) { ?>
+    <div class="input-group navbar-left">
+        <?= Html::tag('span', Yii::t('gromver.platform', 'Editing mode'), ['class' => 'navbar-text']) . '&nbsp;' ?>
+        <div class="btn-group">
+            <?php if (Yii::$app->mode === Application::MODE_EDIT) {
+                echo Html::button(Yii::t('gromver.platform', 'On'), ['class'=>'btn btn-success navbar-btn btn-xs active']);
+                echo Html::a(Yii::t('gromver.platform', 'Off'), ['/main/backend/default/mode', 'mode' => Application::MODE_VIEW, 'backUrl' => Yii::$app->request->getUrl()], ['class'=>'btn btn-default navbar-btn btn-xs']);
+            } else {
+                echo Html::a(Yii::t('gromver.platform', 'On'), ['/main/backend/default/mode', 'mode' => Application::MODE_EDIT, 'backUrl' => Yii::$app->request->getUrl()], ['class'=>'btn btn-default navbar-btn btn-xs']);
+                echo Html::button(Yii::t('gromver.platform', 'Off'), ['class'=>'btn btn-success navbar-btn btn-xs active']);
+            } ?>
+        </div>
+    </div>
+<?php }
+
 $menuItems = [
     ['label' => Yii::t('gromver.platform', 'System'), 'items' => [
         ['label' => Yii::t('gromver.platform', 'Control Panel'), 'url' => ['/main/backend/default/index']],

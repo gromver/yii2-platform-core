@@ -497,6 +497,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function can($permissionName, $params = [])
     {
-        return $this->getIsSuperAdmin() ? $this->getIsSuperAdmin() : Yii::$app->authManager->checkAccess($this->id, $permissionName, $params);
+        return $this->getIsSuperAdmin() ? true : Yii::$app->authManager->checkAccess($this->id, $permissionName, $params);
     }
 }
