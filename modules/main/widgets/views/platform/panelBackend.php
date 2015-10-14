@@ -15,7 +15,7 @@ $navBar = NavBar::begin(\yii\helpers\ArrayHelper::merge([
     'brandLabel' => Yii::$app->siteName,
     'brandUrl' => ['/main/backend/default/index'],
     'options' => [
-        'class' => 'navbar-inverse navbar-fixed-top platform-panel'
+        'class' => 'navbar-inverse navbar-fixed-top platform-panel platform-panel_backend'
     ],
 ], $widget->options)); ?>
 
@@ -97,15 +97,6 @@ if (Yii::$app->user->isGuest) {
         'items' => $menuItems,
         'encodeLabels' => false
     ]) ?>
-
-    <?/*<div class="input-group navbar-left">
-        <?= Html::tag('span', Yii::t('gromver.platform', 'Language'), ['class' => 'navbar-text']) . '&nbsp;' ?>
-        <div class="btn-group">
-            <?= implode('', array_map(function($language) {
-                return Html::a($language, Yii::$app->urlManager->createUrl([Yii::$app->request->getPathInfo()] + Yii::$app->request->getQueryParams(), $language), ['class' => 'btn navbar-btn btn-xs' . ($language === Yii::$app->language ? ' btn-primary active' : ' btn-default')]);
-            }, Yii::$app->acceptedLanguages)) ?>
-        </div>
-    </div>*/?>
 
 </div>
 <?php NavBar::end() ?>

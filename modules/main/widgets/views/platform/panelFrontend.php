@@ -17,7 +17,7 @@ $navBar = NavBar::begin(\yii\helpers\ArrayHelper::merge([
     'brandLabel' => Yii::$app->siteName,
     'brandUrl' => Yii::$app->homeUrl,
     'options' => [
-        'class' => 'navbar-inverse navbar-fixed-top platform-panel'
+        'class' => 'navbar-inverse navbar-fixed-top platform-panel platform-panel_frontend'
     ],
 ], $widget->options)); ?>
 
