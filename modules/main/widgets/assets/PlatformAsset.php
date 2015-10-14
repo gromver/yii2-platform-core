@@ -17,8 +17,8 @@ namespace gromver\platform\core\modules\main\widgets\assets;
  */
 class PlatformAsset extends \yii\web\AssetBundle
 {
-    public $sourcePath = '@gromver/platform/core/modules/main/widgets/assets';
+    public $sourcePath = '@gromver/platform/core/modules/main/widgets/assets/platform';
     public $css = [
-        'platform/css/style.css'
+        'css/style.css'
     ];
 } 
