@@ -209,7 +209,7 @@ class Application extends \yii\web\Application {
             'cacheDependency' => $this->_modulesConfigDependency
         ]);
 
-        $this->urlManager->addRules($this->defaultUrlRules, false); //вставляем в начало списка системные правила
+        $this->urlManager->addRules($this->defaultUrlRules);
 
         $this->set('menuManager', \Yii::createObject(MenuManager::className()));
 
