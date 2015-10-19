@@ -118,11 +118,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'id' => Yii::t('gromver.platform', 'ID'),
             'username' => Yii::t('gromver.platform', 'Username'),
             'email' => Yii::t('gromver.platform', 'Email'),
-            'password' => Yii::t('gromver.platform', 'Password'),
             'password_hash' => Yii::t('gromver.platform', 'Password Hash'),
             'password_reset_token' => Yii::t('gromver.platform', 'Password Reset Token'),
-            'password_new' => Yii::t('gromver.platform', 'New Password'),
-            'password_confirm' => Yii::t('gromver.platform', 'Confirm Password'),
             'auth_key' => Yii::t('gromver.platform', 'Auth Key'),
             'status' => Yii::t('gromver.platform', 'Status'),
             'roles' => Yii::t('gromver.platform', 'Roles'),
@@ -130,6 +127,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'updated_at' => Yii::t('gromver.platform', 'Updated At'),
             'deleted_at' => Yii::t('gromver.platform', 'Deleted At'),
             'last_visit_at' => Yii::t('gromver.platform', 'Last Visit At'),
+            'password' => Yii::t('gromver.platform', 'Password'),
+            'passwordConfirm' => Yii::t('gromver.platform', 'Confirm Password'),
         ];
     }
 
