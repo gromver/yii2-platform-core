@@ -21,10 +21,7 @@ use yii\captcha\Captcha;
                 <?= $form->field($model, 'subject') ?>
                 <?= $form->field($model, 'body')->textArea(['rows' => 6]) ?>
                 <?php if ($model->scenario == 'withCaptcha') {
-                    echo $form->field($model, 'verifyCode')->widget(Captcha::className(), [
-                        'captchaAction' => '/main/common/default/captcha',
-                        'template' => '<div class="row"><div class="col-lg-4">{image}</div><div class="col-lg-6">{input}</div></div>',
-                    ]);
+                    echo $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::className(), ['captchaAction' => '/main/common/default/captcha', 'options' => ['class' => 'form-control'], 'template' => '<div class="row"><div class="col-xs-6">{image}</div><div class="col-xs-6">{input}</div></div>']);
                 } ?>
                 <div class="form-group">
                     <?= Html::submitButton(Yii::t('gromver.platform', 'Submit'), ['class' => 'btn btn-primary', 'name' => 'contact-button']) ?>

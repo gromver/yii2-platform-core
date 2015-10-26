@@ -44,20 +44,33 @@ class Contact extends Widget
      * @translation gromver.platform
      */
     public $email;
+    /**
+     * @var ContactForm
+     * @ignore
+     */
+    public $model;
 
-    protected function launch()
+    public function init()
     {
-        $model = new ContactForm();
+        if (!isset($this->model)) {
+            $this->model = new ContactForm();
+        }
+
         if ($this->withCaptcha) {
-            $model->scenario = 'withCaptcha';
+            $this->model->scenario = 'withCaptcha';
         }
 
         if (!Yii::$app->user->isGuest) {
             /** @var \gromver\platform\core\modules\user\models\User $user */
             $user = Yii::$app->user->identity;
-            $model->name = $user->getParam('name', $user->username);
-            $model->email = $user->email;
+            $this->model->name or $this->model->name = $user->getParam('name', $user->username);
+            $this->model->email or $this->model->email = $user->email;
         }
+    }
+
+    protected function launch()
+    {
+        $model = $this->model;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail(!empty($this->email) ? $this->email : Yii::$app->paramsManager->main->adminEmail)) {
