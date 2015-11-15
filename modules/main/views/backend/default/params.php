@@ -28,6 +28,9 @@ $this->params['breadcrumbs'][] = $this->title; ?>
 
             <?php $form = \yii\bootstrap\ActiveForm::begin([
                 'layout' => 'horizontal',
+                'options' => [
+                    'class' => 'form-params col-xs-12'
+                ],
             ]); ?>
 
             <?= \gromver\models\widgets\Fields::widget(['model' => $model]) ?>
