@@ -17,12 +17,12 @@ use gromver\platform\core\modules\widget\models\WidgetConfig;
 
 \gromver\platform\core\modules\widget\assets\WidgetConfigureAsset::register($this); ?>
 
-    <h2><?= $widget->name() ?> <small><?= "(ID: {$widget->id}), " . $widget->description() ?></small></h2>
+<h2><?= $widget->name() ?> <small><?= "(ID: {$widget->id}), " . $widget->description() ?></small></h2>
 
 <?php $form = \yii\bootstrap\ActiveForm::begin([
     'layout' => 'horizontal',
     'options' => [
-        'class' => 'form-configure'
+        'class' => 'form-configure col-xs-12'
     ],
     'fieldConfig' => [
         'horizontalCssClasses' => [
@@ -44,7 +44,7 @@ use gromver\platform\core\modules\widget\models\WidgetConfig;
 <?= Html::hiddenInput('widget_config', $widget_config) ?>
 
     <div class="controls">
-        <div class="controls-bar well">
+        <div class="controls-bar well row">
             <div class="controls-bar__actions">
                 <?= Html::submitButton('<span class="glyphicon glyphicon-floppy-save"></span> ' . Yii::t('gromver.platform', 'Save'), ['class' => 'btn btn-success', 'name'=>'task', 'value'=>'save']) ?>
                 <?php if (WidgetConfig::find()->where(['widget_id' => $widget_id, 'context' => $selected_context])->exists()) {
