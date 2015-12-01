@@ -45,6 +45,7 @@ class Module extends \yii\base\Module implements ModuleEventsInterface
 
     public function init()
     {
+        // todo fix
         if ($this->authLayout) {
             Yii::$app->layout = $this->authLayout;
         }
