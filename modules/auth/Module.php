@@ -37,19 +37,10 @@ class Module extends \yii\base\Module implements ModuleEventsInterface
     // mail
     public $mailer = 'mailer';
     public $emailLayoutPasswordResetToken = '@gromver/platform/core/modules/auth/views/emails/passwordResetToken';
-    // todo captcha settings
     public $captchaConfig = [
         'class' => 'yii\captcha\CaptchaAction',
         'transparent' => true,
     ];
-
-    public function init()
-    {
-        // todo fix
-        if ($this->authLayout) {
-            Yii::$app->layout = $this->authLayout;
-        }
-    }
 
     /**
      * @param $event \gromver\platform\core\modules\menu\widgets\events\MenuItemRoutesEvent

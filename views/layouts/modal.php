@@ -1,5 +1,4 @@
 <?php
-use app\assets\AppAsset;
 use yii\helpers\Html;
 use yii\web\View;
 
@@ -7,7 +6,7 @@ use yii\web\View;
  * @var \yii\web\View $this
  * @var string $content
  */
-AppAsset::register($this);
+\gromver\platform\core\assets\ModalAsset::register($this);
 \gromver\widgets\ModalIFrameResizerAsset::register($this);
 
 if($debug=Yii::$app->getModule('debug'))
@@ -25,7 +24,7 @@ if($debug=Yii::$app->getModule('debug'))
 </head>
 <body>
 <?php $this->beginBody() ?>
-<div class="container-fluid">
+<div class="container-fluid modal-container">
     <?php foreach (Yii::$app->session->getAllFlashes() as $type => $body)
         echo \kartik\alert\Alert::widget([
             'type' => $type,

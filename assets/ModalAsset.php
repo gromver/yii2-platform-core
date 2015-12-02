@@ -13,15 +13,16 @@ namespace gromver\platform\core\assets;
 use yii\web\AssetBundle;
 
 /**
- * Class BackendAsset
+ * Class ModalAsset
  * @package yii2-platform-core
  * @author Gayazov Roman <gromver5@gmail.com>
  */
-class BackendAsset extends AssetBundle {
+class ModalAsset extends AssetBundle {
     public $sourcePath = '@gromver/platform/core/assets/layout';
-    public $css = ['css/backend.css'];
+    public $css = ['css/modal.css'];
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
     ];
+
 } 

@@ -27,7 +27,7 @@ use yii\web\BadRequestHttpException;
  * @package yii2-platform-core
  * @author Gayazov Roman <gromver5@gmail.com>
  *
- * @property \gromver\platform\core\modules\auth\Module Module
+ * @property \gromver\platform\core\modules\auth\Module $module
  */
 class DefaultController extends \yii\web\Controller
 {
@@ -60,7 +60,7 @@ class DefaultController extends \yii\web\Controller
     public function actions()
     {
         return [
-            'captcha' => Yii::$app->getModule('auth')->captchaConfig
+            'captcha' => $this->module->captchaConfig
         ];
     }
 
@@ -95,7 +95,10 @@ class DefaultController extends \yii\web\Controller
 
         if ($modal) {
             Yii::$app->applyModalLayout();
+        } elseif ($this->module->authLayout) {
+            Yii::$app->layout = $this->module->authLayout;
         }
+
 
         return $this->render('login', [
             'model' => $model,
@@ -143,6 +146,8 @@ class DefaultController extends \yii\web\Controller
 
         if ($modal) {
             Yii::$app->applyModalLayout();
+        } elseif ($this->module->authLayout) {
+            Yii::$app->layout = $this->module->authLayout;
         }
 
         return $this->render('signup', [
@@ -171,6 +176,8 @@ class DefaultController extends \yii\web\Controller
 
         if ($modal) {
             Yii::$app->applyModalLayout();
+        } elseif ($this->module->authLayout) {
+            Yii::$app->layout = $this->module->authLayout;
         }
 
         return $this->render('requestPasswordResetToken', [
@@ -200,6 +207,10 @@ class DefaultController extends \yii\web\Controller
 
                 return $this->goHome();
             }
+        }
+
+        if ($this->module->authLayout) {
+            Yii::$app->layout = $this->module->authLayout;
         }
 
         return $this->render('resetPassword', [

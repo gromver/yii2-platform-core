@@ -1,5 +1,4 @@
 <?php
-use app\assets\AppAsset;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 
@@ -8,7 +7,6 @@ use yii\widgets\Breadcrumbs;
  * @var \yii\web\View $this
  * @var string $content
  */
-AppAsset::register($this);
 \gromver\platform\core\assets\BackendAsset::register($this);
 
 ?>
