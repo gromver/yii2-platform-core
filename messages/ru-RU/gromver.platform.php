@@ -13,6 +13,7 @@ return [
     'Detail Image' => 'Картинка',
     'Meta keywords' => 'Ключевые слова',
     'Meta description' => 'Мета описание',
+    'Meta image' => 'Мета картинка',
     'Created At' => 'Создано',
     'Updated At' => 'Обновлено',
     'Published At' => 'Опубликовано',

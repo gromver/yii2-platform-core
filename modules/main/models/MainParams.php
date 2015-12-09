@@ -57,6 +57,12 @@ class MainParams extends ParamsObject
      */
     public $keywords;
     /**
+     * @field media
+     * @translation gromver.platform
+     * @label Meta image
+     */
+    public $image;
+    /**
      * @field list
      * @items robots
      * @translation gromver.platform

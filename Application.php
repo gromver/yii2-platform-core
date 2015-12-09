@@ -347,7 +347,7 @@ class Application extends \yii\web\Application {
     }
 
     /**
-     * apply platform's frontend layout
+     * apply platform's frontend metadata
      */
     public function applyDefaultMetadata()
     {
@@ -365,6 +365,9 @@ class Application extends \yii\web\Application {
         }
         if (!empty($params->robots)) {
             $view->registerMetaTag(['name' => 'robots', 'content' => $params->robots], 'robots');
+        }
+        if (!empty($params->image)) {
+            $view->registerLinkTag(['rel' => 'image_src', 'href' => $params->image], 'image_src');
         }
         $view->registerMetaTag(['name' => 'generator', 'content' => 'Grom Platform - Open Source Yii2 Development Platform.'], 'generator');
     }
