@@ -170,7 +170,15 @@ JS
 
             <?= $form->field($model, 'metadesc')->textarea(['maxlength' => 2048]) ?>
 
-            <?= $form->field($model, 'metaimg')->textInput(['maxlength' => 1024]) ?>
+            <?= $form->field($model, 'metaimg')->widget(\mihaildev\elfinder\InputFile::className(), [
+                'language'      => Yii::$app->language,
+                'controller'    => 'media/manager',
+                'filter'        => 'image',
+                'template'      => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
+                'options'       => ['class' => 'form-control'],
+                'buttonOptions' => ['class' => 'btn btn-default'],
+                'multiple'      => false
+            ]); ?>
 
             <?= $form->field($model, 'robots')->dropDownList([
                     'index, follow' => 'Index, Follow',

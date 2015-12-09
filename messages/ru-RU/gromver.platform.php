@@ -226,6 +226,7 @@ return [
     'Append' => 'Добавить',
     'Save' => 'Сохранить',
     'Submit' => 'Отправить',
+    'Browse' => 'Обзор',
     //----
     'Forgot Password?' => 'Забыли пароль?',
     'Reset Password' => 'Сменить пароль',
