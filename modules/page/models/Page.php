@@ -15,7 +15,6 @@ use gromver\platform\core\behaviors\NestedSetsBehavior;
 use gromver\platform\core\behaviors\SearchBehavior;
 use gromver\platform\core\behaviors\TaggableBehavior;
 use gromver\platform\core\behaviors\VersionBehavior;
-use gromver\platform\core\components\UrlManager;
 use gromver\platform\core\interfaces\model\SearchableInterface;
 use gromver\platform\core\interfaces\model\ViewableInterface;
 use gromver\platform\core\modules\user\models\User;
@@ -39,6 +38,7 @@ use yii\helpers\Inflector;
  * @property string $detail_text
  * @property string $metakey
  * @property string $metadesc
+ * @property string $metaimg
  * @property integer $created_at
  * @property integer $updated_at
  * @property integer $status
@@ -79,7 +79,7 @@ class Page extends \yii\db\ActiveRecord implements ViewableInterface, Searchable
             [['preview_text', 'detail_text'], 'string'],
             [['detail_text'], 'filter', 'filter' => 'yii\helpers\HtmlPurifier::process'],
             [['parent_id', 'created_at', 'updated_at', 'status', 'created_by', 'updated_by', 'lft', 'rgt', 'level', 'ordering', 'hits', 'lock'], 'integer'],
-            [['title'], 'string', 'max' => 1024],
+            [['title', 'metaimg'], 'string', 'max' => 1024],
             [['title'], 'filter', 'filter' => 'strip_tags'],
             [['alias', 'metakey'], 'string', 'max' => 255],
             [['metadesc'], 'string', 'max' => 2048],
@@ -124,6 +124,7 @@ class Page extends \yii\db\ActiveRecord implements ViewableInterface, Searchable
             'detail_text' => Yii::t('gromver.platform', 'Detail Text'),
             'metakey' => Yii::t('gromver.platform', 'Meta keywords'),
             'metadesc' => Yii::t('gromver.platform', 'Meta description'),
+            'metaimg' => Yii::t('gromver.platform', 'Meta image'),
             'created_at' => Yii::t('gromver.platform', 'Created At'),
             'updated_at' => Yii::t('gromver.platform', 'Updated At'),
             'status' => Yii::t('gromver.platform', 'Status'),
@@ -153,7 +154,7 @@ class Page extends \yii\db\ActiveRecord implements ViewableInterface, Searchable
             NestedSetsBehavior::className(),
             [
                 'class' => VersionBehavior::className(),//todo затестить чекаут в версию с уже занятым алиасом
-                'attributes' => ['title', 'alias', 'preview_text', 'detail_text', 'metakey', 'metadesc']
+                'attributes' => ['title', 'alias', 'preview_text', 'detail_text', 'metakey', 'metadesc', 'metaimg']
             ],
         ];
     }

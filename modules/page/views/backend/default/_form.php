@@ -148,6 +148,8 @@ JS;
             <?= $form->field($model, 'metakey')->textInput(['maxlength' => 255]) ?>
 
             <?= $form->field($model, 'metadesc')->textarea(['maxlength' => 2048]) ?>
+
+            <?= $form->field($model, 'metaimg')->textInput(['maxlength' => 1024]) ?>
         </div>
     </div>
 

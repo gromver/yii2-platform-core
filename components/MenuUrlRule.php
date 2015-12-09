@@ -250,6 +250,9 @@ class MenuUrlRule extends Object implements UrlRuleInterface
         if (!empty($metaData['robots'])) {
             Yii::$app->getView()->registerMetaTag(['name' => 'robots', 'content' => $metaData['robots']], 'robots');
         }
+        if (!empty($metaData['image'])) {
+            Yii::$app->getView()->registerLinkTag(['rel' => 'image_src', 'href' => $metaData['image']], 'image_src');
+        }
     }
 
     /**
@@ -317,6 +320,9 @@ class MenuUrlRule extends Object implements UrlRuleInterface
             }
             if (!empty($value->robots)) {
                 $metaData['robots'] = $value->robots;
+            }
+            if (!empty($value->metaimg)) {
+                $metaData['image'] = $value->metaimg;
             }
             if (!empty($value->layout_path)) {
                 $metaData['layout'] = $value->layout_path;

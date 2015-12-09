@@ -42,6 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'detail_text:ntext',
             'metakey',
             'metadesc',
+            'metaimg',
             'created_at:datetime',
             'updated_at:datetime',
             'status',

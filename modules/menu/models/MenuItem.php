@@ -43,6 +43,7 @@ use yii\helpers\Json;
  * @property string $access_rule
  * @property string $metakey
  * @property string $metadesc
+ * @property string $metaimg
  * @property string $robots
  * @property integer $secure
  * @property integer $created_at
@@ -96,7 +97,7 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface
                 // если во вьюхе используется select2, отфильтровываем значение из массива [0 => 'значение'] -> 'значение'
                 return is_array($value) ? reset($value) : $value;
             }],
-            [['title', 'link', 'layout_path'], 'string', 'max' => 1024],
+            [['title', 'link', 'layout_path', 'metaimg'], 'string', 'max' => 1024],
             [['alias', 'note', 'metakey'], 'string', 'max' => 255],
             [['metadesc'], 'string', 'max' => 2048],
             [['access_rule', 'robots'], 'string', 'max' => 50],
@@ -158,6 +159,7 @@ class MenuItem extends \yii\db\ActiveRecord implements ViewableInterface
             'access_rule' => Yii::t('gromver.platform', 'Access Rule'),
             'metakey' => Yii::t('gromver.platform', 'Meta keywords'),
             'metadesc' => Yii::t('gromver.platform', 'Meta description'),
+            'metaimg' => Yii::t('gromver.platform', 'Meta image'),
             'robots' => Yii::t('gromver.platform', 'Robots'),
             'secure' => Yii::t('gromver.platform', 'Secure'),
             'created_at' => Yii::t('gromver.platform', 'Created At'),

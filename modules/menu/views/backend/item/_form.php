@@ -170,6 +170,8 @@ JS
 
             <?= $form->field($model, 'metadesc')->textarea(['maxlength' => 2048]) ?>
 
+            <?= $form->field($model, 'metaimg')->textInput(['maxlength' => 1024]) ?>
+
             <?= $form->field($model, 'robots')->dropDownList([
                     'index, follow' => 'Index, Follow',
                     'noindex, follow' => 'No index, follow',

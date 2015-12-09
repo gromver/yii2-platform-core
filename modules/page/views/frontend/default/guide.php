@@ -29,7 +29,9 @@ if ($model->metakey) {
 if ($model->metadesc) {
     $this->registerMetaTag(['name' => 'description', 'content' => $model->metadesc], 'description');
 }
-
+if ($model->metaimg) {
+    $this->registerLinkTag(['rel' => 'image_src', 'href' => $model->metaimg], 'image_src');
+}
 
 echo \gromver\platform\core\modules\page\widgets\PageGuide::widget([
     'id' => 'page-guide',

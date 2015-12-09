@@ -48,6 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'access_rule',
             'metakey',
             'metadesc',
+            'metaimg',
             'robots',
             'secure',
             'created_at:datetime',
