@@ -41,6 +41,7 @@ use yii\web\IdentityInterface;
  * @property bool $isSuperAdmin
  * @property bool $isTrashed
  * @property UserParam[] $params
+ * @property UserAuthClient[] $authClients
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
@@ -168,6 +169,10 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         ] + Yii::$app->userBehaviors;
     }
 
+    public function getAuthClients() {
+        return $this->hasMany(UserAuthClient::className(), ['user_id' => 'id'])->indexBy('source')->inverseOf('user');
+    }
+
     // status label
     private static $_statuses = [
         self::STATUS_SUSPENDED => 'Suspended',
@@ -277,6 +282,16 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
+    public function generateAuthKey()
+    {
+        $this->auth_key = Yii::$app->security->generateRandomString();
+    }
+
+    public function generatePasswordResetToken()
+    {
+        $this->password_reset_token = Yii::$app->security->generateRandomString();
+    }
+
     /**
      * @inheritdoc
      */
@@ -289,7 +304,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             }
 
             if ($insert) {
-                $this->auth_key = Yii::$app->security->generateRandomString();
+                //$this->auth_key = Yii::$app->security->generateRandomString();
+                $this->generateAuthKey();
             }
 
             return true;

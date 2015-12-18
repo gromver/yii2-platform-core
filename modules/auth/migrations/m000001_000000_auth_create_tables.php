@@ -27,29 +27,8 @@ class m000001_000000_auth_create_tables extends \yii\db\Migration
             'PRIMARY KEY (name)',
         ]);
 
-        $this->addForeignKey('Grom_AuthItem_RuleName_fk', '{{%core_auth_item}}', 'rule_name', '{{%core_auth_rule}}', 'name', 'SET NULL', 'CASCADE');
-
-        $this->createIndex('AuthItem_type_idx', '{{%core_auth_item}}', 'type');
-
-        // auth item child
-        $this->createTable('{{%core_auth_item_child}}', [
-            'parent' => Schema::TYPE_STRING . '(64) NOT NULL',
-            'child' => Schema::TYPE_STRING . '(64) NOT NULL',
-            'PRIMARY KEY (parent,child)',
-        ]);
-
-        $this->addForeignKey('Grom_AuthItemChild_Parent_fk', '{{%core_auth_item_child}}', 'parent', '{{%core_auth_item}}', 'name', 'CASCADE', 'CASCADE');
-        $this->addForeignKey('Grom_AuthItemChild_Child_fk', '{{%core_auth_item_child}}', 'child', '{{%core_auth_item}}', 'name', 'CASCADE', 'CASCADE');
-
-        // auth assignment
-        $this->createTable('{{%core_auth_assignment}}', [
-            'item_name' => Schema::TYPE_STRING . '(64) NOT NULL',
-            'user_id' => Schema::TYPE_INTEGER . ' NOT NULL',
-            'created_at' => Schema::TYPE_INTEGER,
-            'PRIMARY KEY (item_name,user_id)',
-        ]);
-
-        $this->addForeignKey('Grom_AuthAssignment_ItemName_fk', '{{%core_auth_assignment}}', 'item_name', '{{%core_auth_item}}', 'name', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('Core_AuthItem_RuleName_fk', '{{%core_auth_item}}', 'rule_name', '{{%core_auth_rule}}', 'name', 'SET NULL', 'CASCADE');
+        $this->createIndex('AuthItem_idx', '{{%core_auth_item}}', 'type');
     }
 
     public function down()

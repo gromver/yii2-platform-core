@@ -230,7 +230,8 @@ class DefaultController extends \yii\web\Controller
             return false;
         }
 
-        $user->password_reset_token = Yii::$app->security->generateRandomString();
+        //$user->password_reset_token = Yii::$app->security->generateRandomString();
+        $user->generatePasswordResetToken();
         if ($user->save(false)) {
             /** @var \gromver\platform\core\modules\auth\Module $authModule */
             $authModule = $this->module;
