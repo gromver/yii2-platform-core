@@ -15,6 +15,7 @@
         "yiisoft/yii2-swiftmailer": "*",
         "yiisoft/yii2-elasticsearch": "*",
         "yiisoft/yii2-imagine": "*",
+        "yiisoft/yii2-authclient": "^2.0",
         "bariew/yii2-module-migration-controller": "*",
         "mihaildev/yii2-ckeditor": "*",
         "mihaildev/yii2-elfinder": "*",
