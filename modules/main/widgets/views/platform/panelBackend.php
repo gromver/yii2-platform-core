@@ -12,7 +12,7 @@ use yii\helpers\Html;
 $this->registerAssetBundle(\gromver\platform\core\modules\main\widgets\assets\PlatformAsset::className());
 
 $navBar = NavBar::begin(\yii\helpers\ArrayHelper::merge([
-    'brandLabel' => Yii::$app->siteName,
+    'brandLabel' => Yii::$app->name,
     'brandUrl' => ['/main/backend/default/index'],
     'options' => [
         'class' => 'navbar-inverse navbar-fixed-top platform-panel platform-panel_backend'
