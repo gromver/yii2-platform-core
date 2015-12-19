@@ -50,8 +50,8 @@ class Application extends \yii\web\Application {
     /**
      * Здесь можно указать дополнительные опции для списков, см. \gromver\models\fields\ListField
      * 'foo\bar\SomeClass::listAttribute' => [
-     *      ['value1' => 'Доп опция 1'],
-     *      [value => text],
+     *      'value1' => 'Доп опция 1',
+     *      'value2' => 'Доп опция 2',
      *      ...
      * ]
      * @var array
