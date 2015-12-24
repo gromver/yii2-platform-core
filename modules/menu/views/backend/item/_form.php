@@ -110,7 +110,7 @@ JS
                         'options' => [
                             'id' => 'router',
                             'class' => 'input-group-btn'
-                        ],'popupOptions' => ['width' => '500px'],
+                        ],
                         'url' => ['routers'],
                         'label' => Html::tag('span', '<span class="glyphicon glyphicon-folder-open"></span>', ['class'=>'btn btn-default']),
                         'dataHandler' => "function(data){
