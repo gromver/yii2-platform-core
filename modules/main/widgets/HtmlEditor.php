@@ -13,7 +13,7 @@ namespace gromver\platform\core\modules\main\widgets;
 use gromver\platform\core\modules\widget\widgets\WidgetPersonal;
 use mihaildev\ckeditor\CKEditor;
 use mihaildev\elfinder\ElFinder;
-use vova07\imperavi\Widget;
+use vova07\imperavi\Widget as Imperavi;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\helpers\Html;
@@ -61,7 +61,16 @@ class HtmlEditor extends WidgetPersonal {
      * @items editorLabels
      */
     public $editor = self::EDITOR_CKEDITOR_FULL;
-
+    /**
+     * @var array
+     * @ignore
+     */
+    public $ckEditorOptions = [];
+    /**
+     * @var array {@link http://imperavi.com/redactor/docs/ redactor options}.
+     * @ignore
+     */
+    public $imperaviOptions = [];
 
     /**
      * Initializes the widget.
@@ -96,14 +105,14 @@ class HtmlEditor extends WidgetPersonal {
                     'name' => $this->name,
                     'value' => $this->value,
                     'options' => ['class' => 'form-control', 'rows' => 10],
-                    'editorOptions' => ElFinder::ckeditorOptions('media/manager', [
+                    'editorOptions' => ElFinder::ckeditorOptions('media/manager', array_merge($this->ckEditorOptions, [
                         'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
                         //'extraPlugins' => 'codesnippet',
                         'preset' => 'basic',
                         'tabSpaces' => 4,
                         'autoGrow_onStartup' => true,
                         'autoGrow_bottomSpace' => 50,
-                    ])
+                    ]))
                 ]);
                 break;
             case self::EDITOR_CKEDITOR_STANDARD:
@@ -113,14 +122,14 @@ class HtmlEditor extends WidgetPersonal {
                     'name' => $this->name,
                     'value' => $this->value,
                     'options' => ['class' => 'form-control', 'rows' => 10],
-                    'editorOptions' => ElFinder::ckeditorOptions('media/manager', [
+                    'editorOptions' => ElFinder::ckeditorOptions('media/manager', array_merge($this->ckEditorOptions, [
                         'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
                         //'extraPlugins' => 'codesnippet',
                         'preset' => 'standard',
                         'tabSpaces' => 4,
                         'autoGrow_onStartup' => true,
                         'autoGrow_bottomSpace' => 50,
-                    ])
+                    ]))
                 ]);
                 break;
             case self::EDITOR_CKEDITOR_FULL:
@@ -130,22 +139,23 @@ class HtmlEditor extends WidgetPersonal {
                     'name' => $this->name,
                     'value' => $this->value,
                     'options' => ['class' => 'form-control', 'rows' => 10],
-                    'editorOptions' => ElFinder::ckeditorOptions('media/manager', [
+                    'editorOptions' => ElFinder::ckeditorOptions('media/manager', array_merge($this->ckEditorOptions, [
                         'filebrowserBrowseUrl' => ['/menu/backend/item/ckeditor-select'],
                         //'extraPlugins' => 'autogrow',//'codesnippet',
                         'preset' => 'full',
                         'tabSpaces' => 4,
                         'autoGrow_onStartup' => true,
                         'autoGrow_bottomSpace' => 50,
-                    ])
+                    ]))
                 ]);
                 break;
             case self::EDITOR_IMPERAVI:
-                echo Widget::widget([
+                echo Imperavi::widget([
                     'model' => $this->model,
                     'attribute' => $this->attribute,
                     'name' => $this->name,
                     'value' => $this->value,
+                    'settings' => $this->imperaviOptions
                 ]);
                 break;
             default:
