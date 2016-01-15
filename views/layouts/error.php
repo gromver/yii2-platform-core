@@ -22,7 +22,7 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 <?php
 \yii\bootstrap\NavBar::begin([
-    'brandLabel' => Yii::$app->siteName,
+    'brandLabel' => Yii::$app->name,
     'brandUrl' => Yii::$app->homeUrl,
     'options' => [
         'class' => 'navbar-inverse navbar-fixed-top',
