@@ -36,6 +36,12 @@ class Contact extends Widget
      */
     public $successLayout = 'contact/success';
     /**
+     * Если вьюху письма оставить пустой то будет просто отослано сообщение пользователя
+     * @translation gromver.platform
+     */
+    public $emailLayout = '@gromver/platform/core/modules/main/widgets/views/contact/email';
+    /**
+     * Адреса куда будут поступать сообщения
      * @var string
      * @field multiple
      * @multyfield text
@@ -43,7 +49,14 @@ class Contact extends Widget
      * @placeholder Default
      * @translation gromver.platform
      */
-    public $email;
+    public $emailTo;
+    /**
+     * Если не указан емеил отправителя то будет использован емеил пользователя оставившего сообщение
+     * @var string
+     * @email
+     * @translation gromver.platform
+     */
+    public $emailFrom;
     /**
      * @var ContactForm
      * @ignore
@@ -73,7 +86,7 @@ class Contact extends Widget
         $model = $this->model;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(!empty($this->email) ? $this->email : Yii::$app->paramsManager->main->adminEmail)) {
+            if ($this->sendEmail()) {
                 echo $this->render($this->successLayout);
                 return;
             } else {
@@ -84,5 +97,23 @@ class Contact extends Widget
         echo $this->render($this->layout, [
             'model' => $model
         ]);
+    }
+
+    protected function sendEmail()
+    {
+        if ($this->emailLayout) {
+            return Yii::$app->mailer->compose($this->emailLayout, ['model' => $this->model])
+                ->setTo(!empty($this->emailTo) ? $this->emailTo : Yii::$app->paramsManager->main->adminEmail)
+                ->setFrom(!empty($this->emailFrom) ? $this->emailFrom : [$this->model->email => $this->model->name])
+                ->setSubject($this->model->subject)
+                ->send();
+        } else {
+            return Yii::$app->mailer->compose()
+                ->setTo(!empty($this->emailTo) ? $this->emailTo : Yii::$app->paramsManager->main->adminEmail)
+                ->setFrom(!empty($this->emailFrom) ? $this->emailFrom : [$this->model->email => $this->model->name])
+                ->setSubject($this->model->subject)
+                ->setTextBody($this->model->body)
+                ->send();
+        }
     }
 }
